@@ -192,7 +192,6 @@ public:
 		T& data
 	)
 	{
-		std::lock_guard<std::mutex> lock(mutex_);
 		dc->UpdateSubresource(cb, 0, 0, &data, 0, 0);
 	}
 
@@ -294,9 +293,6 @@ private:
 
 	// --- シャドウマップ ---
 	static std::unique_ptr<ShadowMap> shadowMap_;
-
-
-	static std::mutex mutex_;
 };
 
 

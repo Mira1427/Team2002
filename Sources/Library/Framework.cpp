@@ -193,7 +193,10 @@ void Framework::Update(float elapsedTime)
 			index++;
 		}
 
-		Shader::UpdateConstantBuffer(RootsLib::DX11::GetDeviceContext(), Shader::GetConstantBuffer(ConstantBuffer::SCENE), data);
+		{
+			std::lock_guard<std::mutex> lock(Graphics::Instance().GetMutex());
+			Shader::UpdateConstantBuffer(RootsLib::DX11::GetDeviceContext(), Shader::GetConstantBuffer(ConstantBuffer::SCENE), data);
+		}
 	}
 }
 

@@ -74,6 +74,7 @@ enum class MaterialLabel
 	EMISSIVE,
 	ROUGHNESS,
 	METARIC,
+	AMBIENT_OCCLUSION,
 	MAX
 };
 

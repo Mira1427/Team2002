@@ -20,8 +20,6 @@ Microsoft::WRL::ComPtr<ID3D11PixelShader> Shader::pixelShaders_[static_cast<size
 // --- 頂点シェーダー ---
 Microsoft::WRL::ComPtr<ID3D11VertexShader> Shader::vertexShaders_[static_cast<size_t>(VertexShader::MAX)];
 
-std::mutex Shader::mutex_;
-
 
 
 // --- インデックスバッファの作成 ---

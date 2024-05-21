@@ -23,6 +23,7 @@
 #define EMISSIVE_MAP 2
 #define ROUGHNESS_MAP 3
 #define METARIC_MAP 4
+#define AO_MAP 5
 
 #define PI 3.14159265358979
 

@@ -76,7 +76,7 @@ void SceneExperiment::Initialize()
 		MeshRendererComponent* renderer = obj_->AddComponent<MeshRendererComponent>();
 		renderer->model_ = ModelManager::Instance().LoadModel(RootsLib::DX11::GetDevice(), "./Data/Model/stan.fbx", true, true);
 		TextureManager& texManager = TextureManager::Instance();
-		MeshRenderer::Material& material = renderer->model_->materials.at(40);
+		MeshRenderer::Material& material = renderer->model_->materials.begin()->second;
 		material.shaderResourceViews[static_cast<size_t>(MaterialLabel::DIFFUSE)] = texManager.GetTexture(L"./Data/Model/stagure_color.png")->srv_;
 		material.shaderResourceViews[static_cast<size_t>(MaterialLabel::NORMAL)] = texManager.GetTexture(L"./Data/Model/stagure_normal.png")->srv_;
 		material.shaderResourceViews[static_cast<size_t>(MaterialLabel::ROUGHNESS)] = texManager.GetTexture(L"./Data/Model/stagure_roughness.png")->srv_;
@@ -111,7 +111,7 @@ void SceneExperiment::Initialize()
 	}
 
 	instancedMesh_ = std::make_unique<InstancedMesh>(RootsLib::DX11::GetDevice(), "./Data/Model/LandScape.fbx", true, 1000);
-	instancedMesh_->materials_.at(6298).shaderResourceViews[0] = TextureManager::Instance().GetTexture(L"./Data/Texture/Cold Sunset Equirect.png")->srv_;;
+	instancedMesh_->materials_.begin()->second.shaderResourceViews[0] = TextureManager::Instance().GetTexture(L"./Data/Texture/Cold Sunset Equirect.png")->srv_;;
 
 	particle_ = std::make_unique<Particle>(RootsLib::DX11::GetDevice(), 1000);
 	particle_->Initialize(RootsLib::DX11::GetDeviceContext(), 0.0f);

@@ -3,7 +3,7 @@
 #include "Common.hlsli"
 
 SamplerState samplerStates[3] : register(s0);
-Texture2D textureMaps[5] : register(t0);
+Texture2D textureMaps[6] : register(t0);
 
 SamplerComparisonState comparisonSamplerState : register(s4);
 Texture2D shadowMap : register(t8);

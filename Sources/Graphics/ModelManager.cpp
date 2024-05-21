@@ -58,7 +58,7 @@ void ModelManager::UpdateDebugGui()
 			// --- テクスチャの種類の配列 ---
 			static const char* materialTypes[static_cast<size_t>(MaterialLabel::MAX)] =
 			{
-				u8"カラー", u8"法線", u8"エミッシブ", u8"ラフネス", u8"メタリック"
+				u8"カラー", u8"法線", u8"エミッシブ", u8"ラフネス", u8"メタリック", u8"アンビエントオクルージョン"
 			};
 
 			// --- マテリアルの表示 ---
