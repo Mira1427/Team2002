@@ -219,6 +219,12 @@
     <ClInclude Include="Sources\Audio\Audio.h">
       <Filter>Sources\Audio</Filter>
     </ClInclude>
+    <ClInclude Include="Sources\GameObject\BehaviorManager.h">
+      <Filter>Sources\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\GameObject\CameraBehavior.h">
+      <Filter>Sources\GameObject</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sources\Library\Application.cpp">
@@ -346,6 +352,12 @@
     </ClCompile>
     <ClCompile Include="Sources\Audio\Audio.cpp">
       <Filter>Sources\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\GameObject\BehaviorManager.cpp">
+      <Filter>Sources\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\GameObject\CameraBehavior.cpp">
+      <Filter>Sources\GameObject</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -208,6 +208,8 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="Sources\Algorithm\PerlinNoise.h" />
     <ClInclude Include="Sources\Audio\Audio.h" />
+    <ClInclude Include="Sources\GameObject\BehaviorManager.h" />
+    <ClInclude Include="Sources\GameObject\CameraBehavior.h" />
     <ClInclude Include="Sources\GameObject\GameObject.h" />
     <ClInclude Include="Sources\Graphics\DebugLineRenderer.h" />
     <ClInclude Include="Sources\Graphics\DebugRenderer.h" />
@@ -253,6 +255,8 @@
     <ClCompile Include="External\ImGui\imgui_widgets.cpp" />
     <ClCompile Include="Sources\Algorithm\PerlinNoise.cpp" />
     <ClCompile Include="Sources\Audio\Audio.cpp" />
+    <ClCompile Include="Sources\GameObject\BehaviorManager.cpp" />
+    <ClCompile Include="Sources\GameObject\CameraBehavior.cpp" />
     <ClCompile Include="Sources\GameObject\GameObject.cpp" />
     <ClCompile Include="Sources\Graphics\DebugLineRenderer.cpp" />
     <ClCompile Include="Sources\Graphics\DebugRenderer.cpp" />
