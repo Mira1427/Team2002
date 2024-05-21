@@ -589,6 +589,7 @@ void MeshRenderer::createCOMObject(ID3D11Device* device, const char* fbxFileName
 				case static_cast<size_t>(MaterialLabel::EMISSIVE)			: value = 0xFF000000; break;
 				case static_cast<size_t>(MaterialLabel::ROUGHNESS)			: value = 0xFF000000; break;
 				case static_cast<size_t>(MaterialLabel::METARIC)			: value = 0xFF000000; break;
+				case static_cast<size_t>(MaterialLabel::AMBIENT_OCCLUSION)	: value = 0xFFFFFFFF; break;
 				}
 
 				Shader::MakeDummyTexture(device, iterator->second.shaderResourceViews[textureIndex].GetAddressOf(), value, 16);
