@@ -232,6 +232,7 @@
     <ClInclude Include="Sources\Input\InputManager.h" />
     <ClInclude Include="Sources\Library\Application.h" />
     <ClInclude Include="Sources\Library\Camera.h" />
+    <ClInclude Include="Sources\Library\CameraManager.h" />
     <ClInclude Include="Sources\Library\FileManager.h" />
     <ClInclude Include="Sources\Library\Framework.h" />
     <ClInclude Include="Sources\Library\HighResolutionTimer.h" />
@@ -279,6 +280,7 @@
     <ClCompile Include="Sources\Input\InputManager.cpp" />
     <ClCompile Include="Sources\Library\Application.cpp" />
     <ClCompile Include="Sources\Library\Camera.cpp" />
+    <ClCompile Include="Sources\Library\CameraManager.cpp" />
     <ClCompile Include="Sources\Library\FileManager.cpp" />
     <ClCompile Include="Sources\Library\Framework.cpp" />
     <ClCompile Include="Sources\Library\Library.cpp" />

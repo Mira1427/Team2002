@@ -19,6 +19,7 @@
 
 #include "../Library/Library.h"
 #include "../Library/Camera.h"
+#include "../Library/CameraManager.h"
 
 
 
@@ -249,16 +250,18 @@ void SceneExperiment::Render(ID3D11DeviceContext* dc)
 	SceneConstant data;
 	// --- シーン定数バッファの更新 ---
 	{
-		auto& camera = Camera::Instance();
 		auto* light = Graphics::Instance().GetLightingManager();
 
 		data.invGamma_ = 2.2f;
 		data.gamma_ = 2.2f;
 		data.windowSize_ = { RootsLib::Window::GetWidth(), RootsLib::Window::GetHeight() };
 
-		data.viewProjection_ = camera.GetViewProjection();
-		data.invViewProjection_ = Matrix::Inverse(camera.GetViewProjection());
-		Vector3 position = camera.GetPosition();
+		// --- カメラの処理 ---
+		GameObject* camera = CameraManager::Instance().currentCamera_;
+		CameraComponent* cameraComp = camera->GetComponent<CameraComponent>();
+		data.viewProjection_ = cameraComp->viewProjection_;
+		data.invViewProjection_ = cameraComp->invViewProjection_;
+		Vector3 position = camera->transform_->position_;
 		data.cameraPosition_ = { position.x, position.y, position.z, 1.0f };
 
 
@@ -319,8 +322,8 @@ void SceneExperiment::Render(ID3D11DeviceContext* dc)
 
 	// --- カメラ行列の更新 ---
 	{
-		auto& camera = Camera::Instance();
-		data.viewProjection_ = camera.GetViewProjection();
+		CameraComponent* cameraComp = CameraManager::Instance().currentCamera_->GetComponent<CameraComponent>();
+		data.viewProjection_ = cameraComp->viewProjection_;
 
 		Shader::UpdateConstantBuffer(RootsLib::DX11::GetDeviceContext(), Shader::GetConstantBuffer(ConstantBuffer::SCENE), data);
 	}

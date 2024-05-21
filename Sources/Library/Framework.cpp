@@ -14,8 +14,14 @@
 
 #include "../Audio/Audio.h"
 
+#include "../Input/InputManager.h"
+
+#include "../GameObject/GameObject.h"
+#include "../GameObject/BehaviorManager.h"
+
 #include "Library.h"
 #include "Camera.h"
+#include "CameraManager.h"
 
 
 void Framework::Run()
@@ -107,8 +113,24 @@ bool Framework::Initialize()
 	Shader::CreateShadowMap(RootsLib::DX11::GetDevice(), 2048, 2048);
 
 
-	AudioManager::instance().LoadMusic("./Data/Music/bgm.wav", 0.01f);
-	AudioManager::instance().PlayMusic(0);
+	// --- デバッグカメラ追加 ---
+	{
+		GameObject* camera = GameObjectManager::Instance().Add(
+			std::make_shared<GameObject>(),
+			Vector3(),
+			BehaviorManager::Instance().GetBehavior("DebugCamera")
+		);
+
+		CameraManager::Instance().currentCamera_ = camera;
+
+		camera->transform_->rotation_.x = -20.0f;
+		camera->transform_->position_.z = -10.0f;
+
+		camera->AddComponent<CameraComponent>();
+	}
+
+	//AudioManager::instance().LoadMusic("./Data/Music/bgm.wav", 0.05f);
+	//AudioManager::instance().PlayMusic(0);
 
 
 	return true;
@@ -153,7 +175,6 @@ void Framework::Update(float elapsedTime)
 
 	// --- シーン定数バッファの更新 ---
 	{
-		auto& camera = Camera::Instance();
 		auto* light = Graphics::Instance().GetLightingManager();
 
 		SceneConstant data;
@@ -161,9 +182,13 @@ void Framework::Update(float elapsedTime)
 		data.gamma_ = 2.2f;
 		data.windowSize_ = { RootsLib::Window::GetWidth(), RootsLib::Window::GetHeight() };
 
-		data.viewProjection_ = camera.GetViewProjection();
-		data.invViewProjection_ = Matrix::Inverse(camera.GetViewProjection());
-		Vector3 position = camera.GetPosition();
+
+		// --- カメラの処理 ---
+		GameObject* camera = CameraManager::Instance().currentCamera_;
+		CameraComponent* cameraComp = camera->GetComponent<CameraComponent>();
+		data.viewProjection_ = cameraComp->viewProjection_;
+		data.invViewProjection_ = cameraComp->invViewProjection_;
+		Vector3 position = camera->transform_->position_;
 		data.cameraPosition_ = { position.x, position.y, position.z, 1.0f };
 
 
@@ -171,7 +196,7 @@ void Framework::Update(float elapsedTime)
 		data.ambientLight_.color_ = light->ambientLight_.color_;	// アンビエントライト
 
 		data.directionLight_.direction_ = light->directionLight_.direction_;	// ディレクションライト
-		data.directionLight_.color_		= light->directionLight_.color_;
+		data.directionLight_.color_ = light->directionLight_.color_;
 		data.directionLight_.intensity_ = light->directionLight_.intensity_;
 
 
@@ -198,6 +223,8 @@ void Framework::Update(float elapsedTime)
 			Shader::UpdateConstantBuffer(RootsLib::DX11::GetDeviceContext(), Shader::GetConstantBuffer(ConstantBuffer::SCENE), data);
 		}
 	}
+
+	InputManager::instance().m_.wheel_ = 0;
 }
 
 

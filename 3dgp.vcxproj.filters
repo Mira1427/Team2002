@@ -225,6 +225,9 @@
     <ClInclude Include="Sources\GameObject\CameraBehavior.h">
       <Filter>Sources\GameObject</Filter>
     </ClInclude>
+    <ClInclude Include="Sources\Library\CameraManager.h">
+      <Filter>Sources\Library</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sources\Library\Application.cpp">
@@ -358,6 +361,9 @@
     </ClCompile>
     <ClCompile Include="Sources\GameObject\CameraBehavior.cpp">
       <Filter>Sources\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Library\CameraManager.cpp">
+      <Filter>Sources\Library</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
