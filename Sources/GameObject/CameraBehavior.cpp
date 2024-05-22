@@ -43,8 +43,8 @@ void DebugCameraBehavior::ApplyControl(GameObject* obj, float elapsedTime)
 	InputManager& input = InputManager::instance();
 
 	{
-		obj->transform_->position_ += camera->frontVec_ * input.m_.wheel_;
-		camera->target_ += camera->frontVec_ * input.m_.wheel_;
+		obj->transform_->position_ += camera->frontVec_ * static_cast<float>(input.m_.wheel_);
+		camera->target_ += camera->frontVec_ * static_cast<float>(input.m_.wheel_);
 	}
 
 	if (input.state(0) & input::RMB)

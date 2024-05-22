@@ -106,12 +106,27 @@ void SceneExperiment::Initialize()
 			std::make_shared<GameObject>()
 		);
 
-		obj2_->name_ = u8"";
+		playerObj_->name_ = u8"ƒvƒŒƒCƒ„[";
 
-		obj2_->transform_->scaling_ *= 0.1f;
+		playerObj_->transform_->scaling_ *= 0.005f;
 
-		MeshRendererComponent* renderer = obj2_->AddComponent<MeshRendererComponent>();
-		renderer->model_ = ModelManager::Instance().GetModel("./Data/Model/Land.fbx");
+		MeshRendererComponent* renderer = playerObj_->AddComponent<MeshRendererComponent>();
+		renderer->model_ = ModelManager::Instance().GetModel("./Data/Model/plantune.fbx");
+	}
+
+
+	{
+		enemyObj_ = GameObjectManager::Instance().Add(
+			std::make_shared<GameObject>(),
+			Vector3(10.0f, 0.0f, 0.0f)
+		);
+
+		enemyObj_->name_ = u8"“G";
+
+		enemyObj_->transform_->scaling_ *= 0.005f;
+
+		MeshRendererComponent* renderer = enemyObj_->AddComponent<MeshRendererComponent>();
+		renderer->model_ = ModelManager::Instance().GetModel("./Data/Model/plantune.fbx");
 	}
 
 
@@ -153,6 +168,39 @@ void SceneExperiment::Update(float elapsedTime)
 
 	particle_->Update(RootsLib::DX11::GetDeviceContext(), elapsedTime);
 
+	GameObject* camera = CameraManager::Instance().currentCamera_;
+	CameraComponent* cameraComp = camera->GetComponent<CameraComponent>();
+
+	InputManager& input = InputManager::instance();
+
+	Vector3 right = cameraComp->rightVec_;
+	Vector3 front = cameraComp->frontVec_;
+	right.y = 0.0f;
+	front.y = 0.0f;
+
+
+	if (input.state(0) & input::LEFT)
+		playerObj_->transform_->position_ -= right * 3.0f * elapsedTime;
+
+	if (input.state(0) & input::RIGHT)
+		playerObj_->transform_->position_ += right * 3.0f * elapsedTime;
+
+	if (input.state(0) & input::UP)
+		playerObj_->transform_->position_ += front * 3.0f * elapsedTime;
+
+	if (input.state(0) & input::DOWN)
+		playerObj_->transform_->position_ -= front * 3.0f * elapsedTime;
+
+	Vector3 vec = playerObj_->transform_->position_ - enemyObj_->transform_->position_;
+	vec *= 2.0f;
+	vec.y += 5.0f;
+	camera->transform_->position_ = enemyObj_->transform_->position_ + vec;
+	cameraComp->target_ = enemyObj_->transform_->position_;
+
+	float atan = DirectX::XMConvertToDegrees(atan2(enemyObj_->transform_->position_.z - playerObj_->transform_->position_.z, enemyObj_->transform_->position_.x - playerObj_->transform_->position_.x ));
+	playerObj_->transform_->rotation_.y = -atan + 90.0f;
+
+	ImGui::DragFloat(u8"atan2", &atan);
 
 	GameObjectManager::Instance().Update(elapsedTime);
 	GameObjectManager::Instance().ShowDebugList();
@@ -363,36 +411,36 @@ void SceneExperiment::Render(ID3D11DeviceContext* dc)
 	RootsLib::Depth::SetState(DepthState::TEST_ON, DepthState::WRITE_ON);
 	RootsLib::Raster::SetState(static_cast<RasterState>(rasterState_));
 
-	instancedMesh_->Begin(dc);
+	//instancedMesh_->Begin(dc);
 
-	for (size_t i = 0; i < 10; i++)
-	{
-		for (size_t j = 0; j < 10; j++)
-		{
-			Matrix T;
-			Vector3 translation = modelData_.translation_;
-			translation.x += static_cast<float>(i * 3.0f);
-			translation.z += static_cast<float>(j * 3.0f);
-			T.MakeTranslation(translation);
+	//for (size_t i = 0; i < 10; i++)
+	//{
+	//	for (size_t j = 0; j < 10; j++)
+	//	{
+	//		Matrix T;
+	//		Vector3 translation = modelData_.translation_;
+	//		translation.x += static_cast<float>(i * 3.0f);
+	//		translation.z += static_cast<float>(j * 3.0f);
+	//		T.MakeTranslation(translation);
 
-			Vector3 scaling = modelData_.scaling_;
-			scaling *= 0.001f;
+	//		Vector3 scaling = modelData_.scaling_;
+	//		scaling *= 0.001f;
 
-			Matrix S;
-			S.MakeScaling(scaling);
+	//		Matrix S;
+	//		S.MakeScaling(scaling);
 
-			Quaternion rot;
-			rot.SetRotationDegFromVector(modelData_.rotation_);
-			Matrix R;
-			R.MakeRotationFromQuaternion(rot);
+	//		Quaternion rot;
+	//		rot.SetRotationDegFromVector(modelData_.rotation_);
+	//		Matrix R;
+	//		R.MakeRotationFromQuaternion(rot);
 
-			Matrix W = S * R * T;
+	//		Matrix W = S * R * T;
 
-			instancedMesh_->Draw(dc, W, { i / 10.0f + 0.5f, i / 10.0f + 0.5f, i / 10.0f + 0.5f, 1.0f });
-		}
-	}
+	//		instancedMesh_->Draw(dc, W, { i / 10.0f + 0.5f, i / 10.0f + 0.5f, i / 10.0f + 0.5f, 1.0f });
+	//	}
+	//}
 
-	instancedMesh_->End(dc);
+	//instancedMesh_->End(dc);
 
 	//RootsLib::Blender::SetState(BlendState::ADD);
 
