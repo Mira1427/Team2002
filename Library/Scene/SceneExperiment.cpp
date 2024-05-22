@@ -198,7 +198,7 @@ void SceneExperiment::Update(float elapsedTime)
 	cameraComp->target_ = enemyObj_->transform_->position_;
 
 	float atan = DirectX::XMConvertToDegrees(atan2(enemyObj_->transform_->position_.z - playerObj_->transform_->position_.z, enemyObj_->transform_->position_.x - playerObj_->transform_->position_.x ));
-	playerObj_->transform_->rotation_.y = -atan + 90.0f;
+	//playerObj_->transform_->rotation_.y = -atan + 90.0f;
 
 	ImGui::DragFloat(u8"atan2", &atan);
 

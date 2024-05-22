@@ -14,26 +14,8 @@
     <Filter Include="External\ImGui">
       <UniqueIdentifier>{108b8ab5-7893-4878-9e1c-9663cf8248c1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Sources">
-      <UniqueIdentifier>{fff8a176-8648-4f24-ab63-f817bc5191ba}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Sources\Graphics">
-      <UniqueIdentifier>{29536bf9-654c-4e9c-8fe8-d57a7f8e21e2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Sources\Library">
-      <UniqueIdentifier>{5b037b9a-0c24-4b21-a1cf-212cd32051c7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Sources\Math">
-      <UniqueIdentifier>{ed09f621-e815-4fff-bf10-af290af250fd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Sources\ImGui">
-      <UniqueIdentifier>{4bff9f88-0429-4be5-bb2e-0a609a624fba}</UniqueIdentifier>
-    </Filter>
     <Filter Include="HLSL\Primitive">
       <UniqueIdentifier>{4d99313b-4861-440e-977a-6d945f11b9b2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Sources\Scene">
-      <UniqueIdentifier>{15a240df-cb6e-4573-a763-978e073c5b45}</UniqueIdentifier>
     </Filter>
     <Filter Include="HLSL\Sprite">
       <UniqueIdentifier>{0f025619-5ac7-4e3d-8340-fe0df8f43738}</UniqueIdentifier>
@@ -41,20 +23,11 @@
     <Filter Include="HLSL\DebugRenderer">
       <UniqueIdentifier>{128764d4-a76b-4dcc-93be-18a9f24474c4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Sources\Algorithm">
-      <UniqueIdentifier>{8840d7da-62f4-44ad-b1ee-3e73a40c1aa9}</UniqueIdentifier>
-    </Filter>
     <Filter Include="HLSL\SkyMap">
       <UniqueIdentifier>{5dd1d7ad-7af5-4d60-b850-444d0e0ece97}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Sources\Input">
-      <UniqueIdentifier>{16bb2597-88c1-4675-8f46-c32ac54de5d5}</UniqueIdentifier>
-    </Filter>
     <Filter Include="HLSL\GeometricPrimitive">
       <UniqueIdentifier>{bf192150-5498-4410-8c2e-1e6a9ac01154}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Sources\GameObject">
-      <UniqueIdentifier>{a05d1e17-4166-4f68-8dcf-88690c214cb6}</UniqueIdentifier>
     </Filter>
     <Filter Include="HLSL\MeshRenderer">
       <UniqueIdentifier>{a717d989-3675-4dee-aa89-742acb960267}</UniqueIdentifier>
@@ -71,7 +44,34 @@
     <Filter Include="HLSL\Particle">
       <UniqueIdentifier>{6dcda56d-75f5-4188-be33-1d20a130e683}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Sources\Audio">
+    <Filter Include="Library">
+      <UniqueIdentifier>{fff8a176-8648-4f24-ab63-f817bc5191ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library\Graphics">
+      <UniqueIdentifier>{29536bf9-654c-4e9c-8fe8-d57a7f8e21e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library\Library">
+      <UniqueIdentifier>{5b037b9a-0c24-4b21-a1cf-212cd32051c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library\Math">
+      <UniqueIdentifier>{ed09f621-e815-4fff-bf10-af290af250fd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library\ImGui">
+      <UniqueIdentifier>{4bff9f88-0429-4be5-bb2e-0a609a624fba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library\Scene">
+      <UniqueIdentifier>{15a240df-cb6e-4573-a763-978e073c5b45}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library\Algorithm">
+      <UniqueIdentifier>{8840d7da-62f4-44ad-b1ee-3e73a40c1aa9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library\Input">
+      <UniqueIdentifier>{16bb2597-88c1-4675-8f46-c32ac54de5d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library\GameObject">
+      <UniqueIdentifier>{a05d1e17-4166-4f68-8dcf-88690c214cb6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library\Audio">
       <UniqueIdentifier>{70e6bcae-d815-4b9a-839c-64600561d5da}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -83,27 +83,6 @@
   <ItemGroup>
     <ClInclude Include="resource.h">
       <Filter>Resources</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Library\Application.h">
-      <Filter>Sources\Library</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Library\Framework.h">
-      <Filter>Sources\Library</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Library\Library.h">
-      <Filter>Sources\Library</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Graphics\Graphics.h">
-      <Filter>Sources\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Library\Misc.h">
-      <Filter>Sources\Library</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Math\Matrix.h">
-      <Filter>Sources\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Math\Vector.h">
-      <Filter>Sources\Math</Filter>
     </ClInclude>
     <ClInclude Include="External\ImGui\imconfig.h">
       <Filter>External\ImGui</Filter>
@@ -129,128 +108,128 @@
     <ClInclude Include="External\ImGui\imstb_truetype.h">
       <Filter>External\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\ImGui\ImGuiManager.h">
-      <Filter>Sources\ImGui</Filter>
+    <ClInclude Include="Library\Scene\SceneExperiment.h">
+      <Filter>Library\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\Library\HighResolutionTimer.h">
-      <Filter>Sources\Library</Filter>
+    <ClInclude Include="Library\Scene\SceneGame.h">
+      <Filter>Library\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\Graphics\Shader.h">
-      <Filter>Sources\Graphics</Filter>
+    <ClInclude Include="Library\Scene\SceneLoading.h">
+      <Filter>Library\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\Graphics\Primitive.h">
-      <Filter>Sources\Graphics</Filter>
+    <ClInclude Include="Library\Scene\SceneManager.h">
+      <Filter>Library\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\Scene\SceneManager.h">
-      <Filter>Sources\Scene</Filter>
+    <ClInclude Include="Library\Scene\SceneModelEditor.h">
+      <Filter>Library\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\Scene\SceneExperiment.h">
-      <Filter>Sources\Scene</Filter>
+    <ClInclude Include="Library\Scene\SceneTitle.h">
+      <Filter>Library\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\Scene\SceneModelEditor.h">
-      <Filter>Sources\Scene</Filter>
+    <ClInclude Include="Library\Math\Matrix.h">
+      <Filter>Library\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\Graphics\SpriteRenderer.h">
-      <Filter>Sources\Graphics</Filter>
+    <ClInclude Include="Library\Math\Vector.h">
+      <Filter>Library\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\Library\Camera.h">
-      <Filter>Sources\Library</Filter>
+    <ClInclude Include="Library\Library\Application.h">
+      <Filter>Library\Library</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\Graphics\DebugLineRenderer.h">
-      <Filter>Sources\Graphics</Filter>
+    <ClInclude Include="Library\Library\Camera.h">
+      <Filter>Library\Library</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\Algorithm\PerlinNoise.h">
-      <Filter>Sources\Algorithm</Filter>
+    <ClInclude Include="Library\Library\CameraManager.h">
+      <Filter>Library\Library</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\Graphics\MeshRenderer.h">
-      <Filter>Sources\Graphics</Filter>
+    <ClInclude Include="Library\Library\FileManager.h">
+      <Filter>Library\Library</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\Graphics\SkyMap.h">
-      <Filter>Sources\Graphics</Filter>
+    <ClInclude Include="Library\Library\Framework.h">
+      <Filter>Library\Library</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\Input\InputManager.h">
-      <Filter>Sources\Input</Filter>
+    <ClInclude Include="Library\Library\HighResolutionTimer.h">
+      <Filter>Library\Library</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\Library\FileManager.h">
-      <Filter>Sources\Library</Filter>
+    <ClInclude Include="Library\Library\Library.h">
+      <Filter>Library\Library</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\Graphics\PrimitiveBatch.h">
-      <Filter>Sources\Graphics</Filter>
+    <ClInclude Include="Library\Library\Misc.h">
+      <Filter>Library\Library</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\Graphics\GeometricPrimitiveBatch.h">
-      <Filter>Sources\Graphics</Filter>
+    <ClInclude Include="Library\Input\InputManager.h">
+      <Filter>Library\Input</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\Graphics\LightingManager.h">
-      <Filter>Sources\Graphics</Filter>
+    <ClInclude Include="Library\ImGui\ImGuiManager.h">
+      <Filter>Library\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\Graphics\TextureManager.h">
-      <Filter>Sources\Graphics</Filter>
+    <ClInclude Include="Library\Graphics\DebugLineRenderer.h">
+      <Filter>Library\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\GameObject\GameObject.h">
-      <Filter>Sources\GameObject</Filter>
+    <ClInclude Include="Library\Graphics\DebugRenderer.h">
+      <Filter>Library\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\Graphics\DebugRenderer.h">
-      <Filter>Sources\Graphics</Filter>
+    <ClInclude Include="Library\Graphics\FrameBuffer.h">
+      <Filter>Library\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\Graphics\ModelManager.h">
-      <Filter>Sources\Graphics</Filter>
+    <ClInclude Include="Library\Graphics\GeometricPrimitiveBatch.h">
+      <Filter>Library\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\Graphics\FrameBuffer.h">
-      <Filter>Sources\Graphics</Filter>
+    <ClInclude Include="Library\Graphics\Graphics.h">
+      <Filter>Library\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\Graphics\Particle.h">
-      <Filter>Sources\Graphics</Filter>
+    <ClInclude Include="Library\Graphics\InstancedMesh.h">
+      <Filter>Library\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\Graphics\InstancedMesh.h">
-      <Filter>Sources\Graphics</Filter>
+    <ClInclude Include="Library\Graphics\LightingManager.h">
+      <Filter>Library\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\Graphics\ShadowMap.h">
-      <Filter>Sources\Graphics</Filter>
+    <ClInclude Include="Library\Graphics\MeshRenderer.h">
+      <Filter>Library\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\Scene\SceneTitle.h">
-      <Filter>Sources\Scene</Filter>
+    <ClInclude Include="Library\Graphics\ModelManager.h">
+      <Filter>Library\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\Scene\SceneLoading.h">
-      <Filter>Sources\Scene</Filter>
+    <ClInclude Include="Library\Graphics\Particle.h">
+      <Filter>Library\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\Scene\SceneGame.h">
-      <Filter>Sources\Scene</Filter>
+    <ClInclude Include="Library\Graphics\Primitive.h">
+      <Filter>Library\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\Audio\Audio.h">
-      <Filter>Sources\Audio</Filter>
+    <ClInclude Include="Library\Graphics\PrimitiveBatch.h">
+      <Filter>Library\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\GameObject\BehaviorManager.h">
-      <Filter>Sources\GameObject</Filter>
+    <ClInclude Include="Library\Graphics\Shader.h">
+      <Filter>Library\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\GameObject\CameraBehavior.h">
-      <Filter>Sources\GameObject</Filter>
+    <ClInclude Include="Library\Graphics\ShadowMap.h">
+      <Filter>Library\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\Library\CameraManager.h">
-      <Filter>Sources\Library</Filter>
+    <ClInclude Include="Library\Graphics\SkyMap.h">
+      <Filter>Library\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Library\Graphics\SpriteRenderer.h">
+      <Filter>Library\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Library\Graphics\TextureManager.h">
+      <Filter>Library\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Library\GameObject\BehaviorManager.h">
+      <Filter>Library\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Library\GameObject\CameraBehavior.h">
+      <Filter>Library\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Library\GameObject\GameObject.h">
+      <Filter>Library\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Library\Audio\Audio.h">
+      <Filter>Library\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="Library\Algorithm\PerlinNoise.h">
+      <Filter>Library\Algorithm</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Sources\Library\Application.cpp">
-      <Filter>Sources\Library</Filter>
-    </ClCompile>
-    <ClCompile Include="Sources\Library\Framework.cpp">
-      <Filter>Sources\Library</Filter>
-    </ClCompile>
-    <ClCompile Include="Sources\Library\Library.cpp">
-      <Filter>Sources\Library</Filter>
-    </ClCompile>
-    <ClCompile Include="Sources\Library\Main.cpp">
-      <Filter>Sources\Library</Filter>
-    </ClCompile>
-    <ClCompile Include="Sources\Graphics\Graphics.cpp">
-      <Filter>Sources\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="Sources\Math\Matrix.cpp">
-      <Filter>Sources\Math</Filter>
-    </ClCompile>
-    <ClCompile Include="Sources\Math\Vector.cpp">
-      <Filter>Sources\Math</Filter>
-    </ClCompile>
     <ClCompile Include="External\ImGui\imgui.cpp">
       <Filter>External\ImGui</Filter>
     </ClCompile>
@@ -269,101 +248,122 @@
     <ClCompile Include="External\ImGui\imgui_widgets.cpp">
       <Filter>External\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\ImGui\ImGuiManager.cpp">
-      <Filter>Sources\ImGui</Filter>
+    <ClCompile Include="Library\Scene\SceneExperiment.cpp">
+      <Filter>Library\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\Graphics\Shader.cpp">
-      <Filter>Sources\Graphics</Filter>
+    <ClCompile Include="Library\Scene\SceneGame.cpp">
+      <Filter>Library\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\Graphics\Primitive.cpp">
-      <Filter>Sources\Graphics</Filter>
+    <ClCompile Include="Library\Scene\SceneLoading.cpp">
+      <Filter>Library\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\Scene\SceneManager.cpp">
-      <Filter>Sources\Scene</Filter>
+    <ClCompile Include="Library\Scene\SceneManager.cpp">
+      <Filter>Library\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\Scene\SceneExperiment.cpp">
-      <Filter>Sources\Scene</Filter>
+    <ClCompile Include="Library\Scene\SceneModelEditor.cpp">
+      <Filter>Library\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\Scene\SceneModelEditor.cpp">
-      <Filter>Sources\Scene</Filter>
+    <ClCompile Include="Library\Scene\SceneTitle.cpp">
+      <Filter>Library\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\Graphics\SpriteRenderer.cpp">
-      <Filter>Sources\Graphics</Filter>
+    <ClCompile Include="Library\Math\Matrix.cpp">
+      <Filter>Library\Math</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\Library\Camera.cpp">
-      <Filter>Sources\Library</Filter>
+    <ClCompile Include="Library\Math\Vector.cpp">
+      <Filter>Library\Math</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\Graphics\DebugLineRenderer.cpp">
-      <Filter>Sources\Graphics</Filter>
+    <ClCompile Include="Library\Library\Application.cpp">
+      <Filter>Library\Library</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\Algorithm\PerlinNoise.cpp">
-      <Filter>Sources\Algorithm</Filter>
+    <ClCompile Include="Library\Library\Camera.cpp">
+      <Filter>Library\Library</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\Graphics\MeshRenderer.cpp">
-      <Filter>Sources\Graphics</Filter>
+    <ClCompile Include="Library\Library\CameraManager.cpp">
+      <Filter>Library\Library</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\Graphics\SkyMap.cpp">
-      <Filter>Sources\Graphics</Filter>
+    <ClCompile Include="Library\Library\FileManager.cpp">
+      <Filter>Library\Library</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\Input\InputManager.cpp">
-      <Filter>Sources\Input</Filter>
+    <ClCompile Include="Library\Library\Framework.cpp">
+      <Filter>Library\Library</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\Library\FileManager.cpp">
-      <Filter>Sources\Library</Filter>
+    <ClCompile Include="Library\Library\Library.cpp">
+      <Filter>Library\Library</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\Graphics\PrimitiveBatch.cpp">
-      <Filter>Sources\Graphics</Filter>
+    <ClCompile Include="Library\Library\Main.cpp">
+      <Filter>Library\Library</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\Graphics\GeometricPrimitiveBatch.cpp">
-      <Filter>Sources\Graphics</Filter>
+    <ClCompile Include="Library\Input\InputManager.cpp">
+      <Filter>Library\Input</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\Graphics\LightingManager.cpp">
-      <Filter>Sources\Graphics</Filter>
+    <ClCompile Include="Library\ImGui\ImGuiManager.cpp">
+      <Filter>Library\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\Graphics\TextureManager.cpp">
-      <Filter>Sources\Graphics</Filter>
+    <ClCompile Include="Library\Graphics\DebugLineRenderer.cpp">
+      <Filter>Library\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\GameObject\GameObject.cpp">
-      <Filter>Sources\GameObject</Filter>
+    <ClCompile Include="Library\Graphics\DebugRenderer.cpp">
+      <Filter>Library\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\Graphics\DebugRenderer.cpp">
-      <Filter>Sources\Graphics</Filter>
+    <ClCompile Include="Library\Graphics\FrameBuffer.cpp">
+      <Filter>Library\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\Graphics\ModelManager.cpp">
-      <Filter>Sources\Graphics</Filter>
+    <ClCompile Include="Library\Graphics\GeometricPrimitiveBatch.cpp">
+      <Filter>Library\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\Graphics\FrameBuffer.cpp">
-      <Filter>Sources\Graphics</Filter>
+    <ClCompile Include="Library\Graphics\Graphics.cpp">
+      <Filter>Library\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\Graphics\Particle.cpp">
-      <Filter>Sources\Graphics</Filter>
+    <ClCompile Include="Library\Graphics\InstancedMesh.cpp">
+      <Filter>Library\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\Graphics\InstancedMesh.cpp">
-      <Filter>Sources\Graphics</Filter>
+    <ClCompile Include="Library\Graphics\LightingManager.cpp">
+      <Filter>Library\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\Graphics\ShadowMap.cpp">
-      <Filter>Sources\Graphics</Filter>
+    <ClCompile Include="Library\Graphics\MeshRenderer.cpp">
+      <Filter>Library\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\Scene\SceneTitle.cpp">
-      <Filter>Sources\Scene</Filter>
+    <ClCompile Include="Library\Graphics\ModelManager.cpp">
+      <Filter>Library\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\Scene\SceneGame.cpp">
-      <Filter>Sources\Scene</Filter>
+    <ClCompile Include="Library\Graphics\Particle.cpp">
+      <Filter>Library\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\Scene\SceneLoading.cpp">
-      <Filter>Sources\Scene</Filter>
+    <ClCompile Include="Library\Graphics\Primitive.cpp">
+      <Filter>Library\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\Audio\Audio.cpp">
-      <Filter>Sources\Audio</Filter>
+    <ClCompile Include="Library\Graphics\PrimitiveBatch.cpp">
+      <Filter>Library\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\GameObject\BehaviorManager.cpp">
-      <Filter>Sources\GameObject</Filter>
+    <ClCompile Include="Library\Graphics\Shader.cpp">
+      <Filter>Library\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\GameObject\CameraBehavior.cpp">
-      <Filter>Sources\GameObject</Filter>
+    <ClCompile Include="Library\Graphics\ShadowMap.cpp">
+      <Filter>Library\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\Library\CameraManager.cpp">
-      <Filter>Sources\Library</Filter>
+    <ClCompile Include="Library\Graphics\SkyMap.cpp">
+      <Filter>Library\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Library\Graphics\SpriteRenderer.cpp">
+      <Filter>Library\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Library\Graphics\TextureManager.cpp">
+      <Filter>Library\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Library\GameObject\BehaviorManager.cpp">
+      <Filter>Library\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Library\GameObject\CameraBehavior.cpp">
+      <Filter>Library\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Library\GameObject\GameObject.cpp">
+      <Filter>Library\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Library\Audio\Audio.cpp">
+      <Filter>Library\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="Library\Algorithm\PerlinNoise.cpp">
+      <Filter>Library\Algorithm</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
