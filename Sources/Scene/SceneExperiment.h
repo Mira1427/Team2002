@@ -95,6 +95,8 @@ public:
 
 	GameObject* obj_;
 	GameObject* obj2_;
+	GameObject* playerObj_;
+	GameObject* enemyObj_;
 	GameObject* pointLight_;
 
 	std::unique_ptr<InstancedMesh> instancedMesh_;

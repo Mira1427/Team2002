@@ -102,6 +102,20 @@ void SceneExperiment::Initialize()
 
 
 	{
+		playerObj_ = GameObjectManager::Instance().Add(
+			std::make_shared<GameObject>()
+		);
+
+		obj2_->name_ = u8"";
+
+		obj2_->transform_->scaling_ *= 0.1f;
+
+		MeshRendererComponent* renderer = obj2_->AddComponent<MeshRendererComponent>();
+		renderer->model_ = ModelManager::Instance().GetModel("./Data/Model/Land.fbx");
+	}
+
+
+	{
 		pointLight_ = GameObjectManager::Instance().Add(
 			std::make_shared<GameObject>()
 		);
