@@ -451,7 +451,7 @@ void InstancedMesh::CreateCOMObject(ID3D11Device* device, const char* fileName)
 	// シェーダーリソースビューオブジェクトの生成
 	for (std::unordered_map<uint64_t, MeshRenderer::Material>::iterator iterator = materials_.begin(); iterator != materials_.end(); ++iterator)
 	{
-		for (size_t textureIndex = 0; textureIndex < 3; textureIndex++)
+		for (size_t textureIndex = 0; textureIndex < static_cast<size_t>(MaterialLabel::MAX); textureIndex++)
 		{
 			if (iterator->second.textureFileNames[textureIndex].size() > 0) {
 
@@ -509,7 +509,7 @@ void InstancedMesh::CreateCOMObject(ID3D11Device* device, const char* fileName)
 	// --- ピクセルシェーダーの作成 ---
 	Shader::CreatePSFromCSO(
 		device,
-		"./Data/Shader/InstancedMesh_PS.cso",
+		"./Data/Shader/PBR.cso",
 		pixelShader_.ReleaseAndGetAddressOf()
 	);
 

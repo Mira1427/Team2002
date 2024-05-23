@@ -273,6 +273,12 @@ void Application::UpdateSystemGui()
 				GameObjectManager::Instance().Add(std::make_shared<GameObject>());
 			}
 
+			if (ImGui::MenuItem(u8"プリミティブ"))
+			{
+				GameObject* obj = GameObjectManager::Instance().Add(std::make_shared<GameObject>());
+				obj->AddComponent<PrimitiveRendererComponent>();
+			}
+
 			if (ImGui::MenuItem(u8"スプライト"))
 			{
 				GameObject* obj = GameObjectManager::Instance().Add(std::make_shared<GameObject>());
@@ -346,6 +352,18 @@ void Application::UpdateSystemGui()
 			if (ImGui::MenuItem(u8"シャドウマップ"))
 			{
 				isOpenShadowMap = true;
+			}
+
+			ImGui::EndMenu();
+		}
+
+
+		if (ImGui::BeginMenu(u8"デバッグ"))
+		{
+			// --- 当たり判定を表示する ---
+			if (ImGui::MenuItem(u8"コリジョン"))
+			{
+				GameObjectManager::Instance().showCollision_ = !GameObjectManager::Instance().showCollision_;
 			}
 
 			ImGui::EndMenu();

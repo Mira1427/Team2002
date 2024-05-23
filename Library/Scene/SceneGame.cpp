@@ -13,9 +13,9 @@
 void SceneGame::Initialize()
 {
 	// --- カメラの設定 ---
-	CameraManager::Instance().currentCamera_->GetComponent<CameraComponent>()->target_.y += 60.0f;
-	CameraManager::Instance().currentCamera_->GetComponent<CameraComponent>()->target_.z -= 100.0f;
-	CameraManager::Instance().currentCamera_->transform_->rotation_.x = -40.0f;
+	CameraManager::Instance().currentCamera_->GetComponent<CameraComponent>()->target_.y += 125.0f;
+	CameraManager::Instance().currentCamera_->GetComponent<CameraComponent>()->target_.z -= 85.0f;
+	CameraManager::Instance().currentCamera_->transform_->rotation_.x = -60.0f;
 
 	// --- コントローラーの追加 ---
 	GameObject* controller = AddPlayerController(45.0f, 85.0f);
@@ -30,10 +30,12 @@ void SceneGame::Initialize()
 		std::make_shared<GameObject>()
 	);
 
+	obj->name_ = u8"地面";
+
 	obj->transform_->scaling_.y = 0.02f;
 
-	MeshRendererComponent* renderer = obj->AddComponent<MeshRendererComponent>();
-	renderer->model_ = ModelManager::Instance().LoadModel(RootsLib::DX11::GetDevice(), "./Data/Model/Stage.fbx", true);
+	InstancedMeshComponent* renderer = obj->AddComponent<InstancedMeshComponent>();
+	renderer->model_ = ModelManager::Instance().LoadInstancedMesh(RootsLib::DX11::GetDevice(), "./Data/Model/InstancedMesh/Stage.fbx", 5, true);
 }
 
 

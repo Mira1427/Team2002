@@ -242,6 +242,7 @@
     <ClInclude Include="Library\Library\Misc.h" />
     <ClInclude Include="Library\Math\Matrix.h" />
     <ClInclude Include="Library\Math\Vector.h" />
+    <ClInclude Include="Library\Physics\Collision.h" />
     <ClInclude Include="Library\Scene\SceneExperiment.h" />
     <ClInclude Include="Library\Scene\SceneGame.h" />
     <ClInclude Include="Library\Scene\SceneLoading.h" />
@@ -292,6 +293,7 @@
     <ClCompile Include="Library\Library\Main.cpp" />
     <ClCompile Include="Library\Math\Matrix.cpp" />
     <ClCompile Include="Library\Math\Vector.cpp" />
+    <ClCompile Include="Library\Physics\Collision.cpp" />
     <ClCompile Include="Library\Scene\SceneExperiment.cpp" />
     <ClCompile Include="Library\Scene\SceneGame.cpp" />
     <ClCompile Include="Library\Scene\SceneLoading.cpp" />

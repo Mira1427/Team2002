@@ -5,6 +5,8 @@
 #include "../Graphics/LightingManager.h"
 #include "../Graphics/ModelManager.h"
 
+#include "../Physics/Collision.h"
+
 #include "../Library/library.h"
 
 
@@ -692,45 +694,45 @@ void InstancedMeshComponent::UpdateDebugGui(float elapsedTime)
 			for (auto& mesh : model_->meshes_)
 				meshNames.emplace_back(mesh.name_.c_str());
 
-			if (ImGui::Combo(u8"メッシュ", &meshIndex, meshNames.data(), static_cast<int>(meshNames.size())))
+			ImGui::Combo(u8"メッシュ", &meshIndex, meshNames.data(), static_cast<int>(meshNames.size()));
 
-				if (ImGui::TreeNode(u8"マテリアル"))
+			if (ImGui::TreeNode(u8"マテリアル"))
+			{
+				ImGui::Text(u8"マテリアルの数 : %d", static_cast<int>(model_->materials_.size()));
+
+				static const char* materialTypes[static_cast<size_t>(MaterialLabel::MAX)] =
 				{
-					ImGui::Text(u8"マテリアルの数 : %d", static_cast<int>(model_->materials_.size()));
+					u8"カラー", u8"法線", u8"エミッシブ", u8"ラフネス", u8"メタリック", u8"アンビエントオクルージョン"
+				};
 
-					static const char* materialTypes[static_cast<size_t>(MaterialLabel::MAX)] =
+				// --- マテリアルの表示 ---
+				for (auto& material : model_->materials_)
+				{
+					for (size_t i = 0; i < static_cast<size_t>(MaterialLabel::MAX); i++)
 					{
-						u8"カラー", u8"法線", u8"エミッシブ", u8"ラフネス", u8"メタリック", u8"アンビエントオクルージョン"
-					};
+						ImGui::Separator();
+						ImGui::BulletText(materialTypes[i]);
+						ImGui::SameLine();
 
-					// --- マテリアルの表示 ---
-					for (auto& material : model_->materials_)
-					{
-						for (size_t i = 0; i < static_cast<size_t>(MaterialLabel::MAX); i++)
+						// --- マテリアルの変更 ---
+						std::string str = u8". . .##" + std::to_string(material.second.uniqueID) + materialTypes[i];
+						if (ImGui::Button(str.c_str(), ImVec2(30.0f, 20.0f)))
 						{
-							ImGui::Separator();
-							ImGui::BulletText(materialTypes[i]);
-							ImGui::SameLine();
-
-							// --- マテリアルの変更 ---
-							std::string str = u8". . .##" + std::to_string(material.second.uniqueID) + materialTypes[i];
-							if (ImGui::Button(str.c_str(), ImVec2(30.0f, 20.0f)))
-							{
-								std::wstring wstr;
-								Texture* texture = TextureManager::Instance().LoadTexture(RootsLib::DX11::GetDevice(), RootsLib::File::GetFileName().c_str(), &wstr);
-								material.second.shaderResourceViews[i] = texture->srv_;
-								material.second.textureFileNames[i] = RootsLib::String::ConvertWideChar(wstr.c_str()).c_str();
-							}
-							ImGui::Text(material.second.textureFileNames[i].c_str());
-
-							// --- マテリアルの表示 ---
-							ImGui::Image(material.second.shaderResourceViews[i].Get(), ImVec2(250.0f, 250.0f));
+							std::wstring wstr;
+							Texture* texture = TextureManager::Instance().LoadTexture(RootsLib::DX11::GetDevice(), RootsLib::File::GetFileName().c_str(), &wstr);
+							material.second.shaderResourceViews[i] = texture->srv_;
+							material.second.textureFileNames[i] = RootsLib::String::ConvertWideChar(wstr.c_str()).c_str();
 						}
+						ImGui::Text(material.second.textureFileNames[i].c_str());
+
+						// --- マテリアルの表示 ---
+						ImGui::Image(material.second.shaderResourceViews[i].Get(), ImVec2(250.0f, 250.0f));
 					}
-
-
-					ImGui::TreePop();
 				}
+
+
+				ImGui::TreePop();
+			}
 		}
 
 		else
@@ -799,7 +801,7 @@ void PrimitiveRendererComponent::UpdateDebugGui(float elapsedTime)
 // --- 2Dの矩形の判定領域の描画 ---
 void BoxCollider2D::Draw(ID3D11DeviceContext* dc)
 {
-	if (!isVisible_)
+	if (!isVisible_ && !GameObjectManager::Instance().showCollision_)
 		return;
 
 	Vector2 position = object_->transform_->position_.xy() + offset_;
@@ -837,7 +839,7 @@ void BoxCollider2D::UpdateDebugGui(float elapsedTime)
 // --- 2Dの円の判定領域の描画 ---
 void CircleCollider::Draw(ID3D11DeviceContext* dc)
 {
-	if (!isVisible_)
+	if (!isVisible_ && !GameObjectManager::Instance().showCollision_)
 		return;
 
 	Vector2 position = object_->transform_->position_.xy() + offset_;
@@ -873,7 +875,7 @@ void CircleCollider::UpdateDebugGui(float elapsedTime)
 // --- 立方体の判定領域の描画 ---
 void BoxCollider::Draw(ID3D11DeviceContext* dc)
 {
-	if (!isVisible_)
+	if (!isVisible_ && !GameObjectManager::Instance().showCollision_)
 		return;
 
 	Graphics::Instance().GetDebugRenderer()->DrawCube(
@@ -908,7 +910,7 @@ void BoxCollider::UpdateDebugGui(float elapsedTime)
 // --- 円柱の判定領域の描画 ---
 void CapsuleCollider::Draw(ID3D11DeviceContext* dc)
 {
-	if (!isVisible_)
+	if (!isVisible_ && !GameObjectManager::Instance().showCollision_)
 		return;
 
 	Graphics::Instance().GetDebugRenderer()->DrawCapsule(
@@ -942,7 +944,7 @@ void CapsuleCollider::UpdateDebugGui(float elapsedTime)
 // --- 球の判定領域の描画 ---
 void SphereCollider::Draw(ID3D11DeviceContext* dc)
 {
-	if (!isVisible_)
+	if (!isVisible_ && !GameObjectManager::Instance().showCollision_)
 		return;
 
 	Graphics::Instance().GetDebugRenderer()->DrawSphere(
@@ -1186,12 +1188,12 @@ void GameObjectManager::JudgeCollision(float elapsedTime)
 						BoxCollider2D* c1 = obj->GetComponent<BoxCollider2D>();
 						BoxCollider2D* c2 = obj2->GetComponent<BoxCollider2D>();
 
-						//if (Collision::intersectRectangles(
-						//	obj->transform_->position_.xy() + c1->offset_, c1->size_,
-						//	obj2->transform_->position_.xy() + c2->offset_, c2->size_))
-						//{
-						//	obj->behavior_->hit(obj.get(), obj2.get(), elapsedTime);
-						//}
+						if (Collision::IntersectRectangles(
+							obj->transform_->position_.xy() + c1->offset_, c1->size_,
+							obj2->transform_->position_.xy() + c2->offset_, c2->size_))
+						{
+							obj->behavior_->Hit(obj.get(), obj2.get(), elapsedTime);
+						}
 						break;
 					}
 
@@ -1204,12 +1206,12 @@ void GameObjectManager::JudgeCollision(float elapsedTime)
 						CircleCollider* c1 = obj->GetComponent<CircleCollider>();
 						CircleCollider* c2 = obj2->GetComponent<CircleCollider>();
 
-						//if (Collision::intersectCircles(
-						//	obj->transform_->position_.xy() + c1->offset_, c1->radius_,
-						//	obj2->transform_->position_.xy() + c2->offset_, c2->radius_))
-						//{
-						//	obj->behavior_->hit(obj.get(), obj2.get(), elapsedTime);
-						//}
+						if (Collision::IntersectCircles(
+							obj->transform_->position_.xy() + c1->offset_, c1->radius_,
+							obj2->transform_->position_.xy() + c2->offset_, c2->radius_))
+						{
+							obj->behavior_->Hit(obj.get(), obj2.get(), elapsedTime);
+						}
 						break;
 					}
 
@@ -1221,12 +1223,12 @@ void GameObjectManager::JudgeCollision(float elapsedTime)
 							BoxCollider* c1 = obj->GetComponent<BoxCollider>();
 							BoxCollider* c2 = obj2->GetComponent<BoxCollider>();
 
-							//if (Collision::intersectBoxes(
-							//	obj->transform_->position_ + c1->offset_, c1->size_,
-							//	obj2->transform_->position_ + c2->offset_, c2->size_))
-							//{
-							//	obj->behavior_->hit(obj.get(), obj2.get(), elapsedTime);
-							//}
+							if (Collision::IntersectBoxes(
+								obj->transform_->position_ + c1->offset_, c1->size_,
+								obj2->transform_->position_ + c2->offset_, c2->size_))
+							{
+								obj->behavior_->Hit(obj.get(), obj2.get(), elapsedTime);
+							}
 						}
 
 						// --- 球とAABBの衝突判定 ---
@@ -1235,12 +1237,12 @@ void GameObjectManager::JudgeCollision(float elapsedTime)
 							BoxCollider* box = obj->GetComponent<BoxCollider>();
 							SphereCollider* sphere = obj2->GetComponent<SphereCollider>();
 
-							//if (Collision::intersectSphereAndAABB(
-							//	obj2->transform_->position_ + sphere->offset_, sphere->radius_,
-							//	obj->transform_->position_ + box->offset_, box->size_))
-							//{
-							//	obj->behavior_->hit(obj.get(), obj2.get(), elapsedTime);
-							//}
+							if (Collision::IntersectSphereAndAABB(
+								obj2->transform_->position_ + sphere->offset_, sphere->radius_,
+								obj->transform_->position_ + box->offset_, box->size_))
+							{
+								obj->behavior_->Hit(obj.get(), obj2.get(), elapsedTime);
+							}
 						}
 						break;
 					}
@@ -1255,12 +1257,12 @@ void GameObjectManager::JudgeCollision(float elapsedTime)
 						CapsuleCollider* c1 = obj->GetComponent<CapsuleCollider>();
 						CapsuleCollider* c2 = obj2->GetComponent<CapsuleCollider>();
 
-						//if (Collision::intersectCapsules(
-						//	obj->transform_->position_ + c1->offset_, c1->radius_, c1->height_,
-						//	obj2->transform_->position_ + c2->offset_, c2->radius_, c2->height_))
-						//{
-						//	obj->behavior_->hit(obj.get(), obj2.get(), elapsedTime);
-						//}
+						if (Collision::IntersectCapsules(
+							obj->transform_->position_ + c1->offset_, c1->radius_, c1->height_,
+							obj2->transform_->position_ + c2->offset_, c2->radius_, c2->height_))
+						{
+							obj->behavior_->Hit(obj.get(), obj2.get(), elapsedTime);
+						}
 						break;
 					}
 
@@ -1273,12 +1275,12 @@ void GameObjectManager::JudgeCollision(float elapsedTime)
 							SphereCollider* c1 = obj->GetComponent<SphereCollider>();
 							SphereCollider* c2 = obj2->GetComponent<SphereCollider>();
 
-							//if (Collision::intersectSpheres(
-							//	obj->transform_->position_ + c1->offset_, c1->radius_,
-							//	obj2->transform_->position_ + c2->offset_, c2->radius_))
-							//{
-							//	obj->behavior_->hit(obj.get(), obj2.get(), elapsedTime);
-							//}
+							if (Collision::IntersectSpheres(
+								obj->transform_->position_ + c1->offset_, c1->radius_,
+								obj2->transform_->position_ + c2->offset_, c2->radius_))
+							{
+								obj->behavior_->Hit(obj.get(), obj2.get(), elapsedTime);
+							}
 						}
 
 						// --- 球とAABBの衝突判定 ---
@@ -1287,12 +1289,12 @@ void GameObjectManager::JudgeCollision(float elapsedTime)
 							BoxCollider* box = obj2->GetComponent<BoxCollider>();
 							SphereCollider* sphere = obj->GetComponent<SphereCollider>();
 
-							//if (Collision::intersectSphereAndAABB(
-							//	obj->transform_->position_ + sphere->offset_, sphere->radius_,
-							//	obj2->transform_->position_ + box->offset_, box->size_))
-							//{
-							//	obj->behavior_->hit(obj.get(), obj2.get(), elapsedTime);
-							//}
+							if (Collision::IntersectSphereAndAABB(
+								obj->transform_->position_ + sphere->offset_, sphere->radius_,
+								obj2->transform_->position_ + box->offset_, box->size_))
+							{
+								obj->behavior_->Hit(obj.get(), obj2.get(), elapsedTime);
+							}
 						}
 
 						break;

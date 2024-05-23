@@ -44,7 +44,7 @@ public:
 	{
 		return Vector2(-x, -y);
 	}
-	
+
 	// --- 加算 ---
 	Vector2 operator+(const Vector2& vec) const
 	{
@@ -273,7 +273,7 @@ public:
 
 	Vector3& operator*=(const Vector3& vec)
 	{
-		*this =  *this * vec;
+		*this = *this * vec;
 		return *this;
 	}
 
@@ -390,6 +390,16 @@ public:
 		return result;
 	}
 
+
+	void TransformCoord(
+		const Vector3& vec,
+		const Matrix& mat
+	);
+
+	void TransformNormal(
+		const Vector3& normal,
+		const Matrix& mat
+	);
 
 	static const Vector3 Zero_;		// ゼロベクトル
 	static const Vector3 Unit_;		// 単位ベクトル
@@ -551,7 +561,7 @@ public:
 	{
 		DirectX::XMStoreFloat4(&this->vec_, DirectX::XMVector4Normalize(DirectX::XMLoadFloat4(&this->vec_)));
 	}
-	
+
 
 	// --- 内積 ---
 	float Dot(const Vector4& vec) const
@@ -658,11 +668,11 @@ public:
 	void SetRotationFromVector(const Vector3& rotation)
 	{
 		Quaternion rot;
-		rot.SetRotationZ(rotation.z);
+		rot.SetRotationX(rotation.x);
 		*this *= rot;
 		rot.SetRotationY(rotation.y);
 		*this *= rot;
-		rot.SetRotationX(rotation.x);
+		rot.SetRotationZ(rotation.z);
 		*this *= rot;
 	}
 

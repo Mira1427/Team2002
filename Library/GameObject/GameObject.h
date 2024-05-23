@@ -615,4 +615,5 @@ public:
 
 	bool isSort_ = false;
 	bool castShadow_ = false;
+	bool showCollision_ = false;
 };

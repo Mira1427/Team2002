@@ -83,6 +83,9 @@
     <Filter Include="Sources\Behavior\Player">
       <UniqueIdentifier>{a1500aa3-7c03-4af4-b8f6-67496988b0ca}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Library\Physics">
+      <UniqueIdentifier>{e714475f-3790-4d90-b9f8-9b2ec6e86d71}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="3dgp.rc">
@@ -243,6 +246,9 @@
     <ClInclude Include="Library\GameObject\Component.h">
       <Filter>Library\GameObject</Filter>
     </ClInclude>
+    <ClInclude Include="Library\Physics\Collision.h">
+      <Filter>Library\Physics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="External\ImGui\imgui.cpp">
@@ -385,6 +391,9 @@
     </ClCompile>
     <ClCompile Include="Library\GameObject\Component.cpp">
       <Filter>Library\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Library\Physics\Collision.cpp">
+      <Filter>Library\Physics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
