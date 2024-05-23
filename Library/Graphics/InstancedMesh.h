@@ -57,20 +57,19 @@ public:
 	virtual ~InstancedMesh() = default;
 
 
-	// --- 描画の前処理 ---
-	void Begin(ID3D11DeviceContext* dc);
-
-
 	// --- 描画処理 ---
-	void Draw(
-		ID3D11DeviceContext* dc,
+	void AddDrawList(
 		const Matrix& world,
 		const Vector4& color
 	);
 
 
 	// --- 描画の後処理 ---
-	void End(ID3D11DeviceContext* dc);
+	void Draw(
+		ID3D11DeviceContext* dc,
+		ID3D11PixelShader** replacementPixelShader = nullptr,
+		bool eraserDrawList = true
+	);
 
 
 
@@ -156,7 +155,7 @@ public:
 
 
 	using Material = std::unordered_map<uint64_t, MeshRenderer::Material>;
-	
+
 	std::vector<Mesh> meshes_;	// メッシュ
 	Material materials_;		// マテリアル
 	NodeTree sceneView_;		// ノード

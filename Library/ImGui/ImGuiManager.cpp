@@ -60,6 +60,7 @@ void ImGuiManager::Draw()
 // --- å©ÇΩñ⁄ÇÃïœçX ---
 void ImGuiManager::SetStyle()
 {
+#ifdef USE_IMGUI
 	auto& style = ImGui::GetStyle();
 
 	style.Colors[ImGuiCol_Text] = ImVec4{ 1.00f, 1.00f, 1.00f, 1.00f };
@@ -106,4 +107,5 @@ void ImGuiManager::SetStyle()
 	style.Colors[ImGuiCol_PlotHistogramHovered] = ImVec4{ 1.00f, 1.00f, 1.00f, 1.00f };
 	style.Colors[ImGuiCol_TextSelectedBg] = ImVec4{ 0.50f, 0.50f, 0.50f, 0.60f };
 	style.Colors[ImGuiCol_DragDropTarget] = ImVec4{ 1.00f, 1.00f, 1.00f, 1.00f };
+#endif
 }

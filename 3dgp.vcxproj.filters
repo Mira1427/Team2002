@@ -74,6 +74,15 @@
     <Filter Include="Library\Audio">
       <UniqueIdentifier>{70e6bcae-d815-4b9a-839c-64600561d5da}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources">
+      <UniqueIdentifier>{6c750f60-4b19-435b-9f65-2d055c777eed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Behavior">
+      <UniqueIdentifier>{617ddd54-542b-439a-a3ab-4bf8091f28d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Behavior\Player">
+      <UniqueIdentifier>{a1500aa3-7c03-4af4-b8f6-67496988b0ca}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="3dgp.rc">
@@ -228,6 +237,12 @@
     <ClInclude Include="Library\Algorithm\PerlinNoise.h">
       <Filter>Library\Algorithm</Filter>
     </ClInclude>
+    <ClInclude Include="Sources\Behavior\Player\PlayerBehavior.h">
+      <Filter>Sources\Behavior\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Library\GameObject\Component.h">
+      <Filter>Library\GameObject</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="External\ImGui\imgui.cpp">
@@ -364,6 +379,12 @@
     </ClCompile>
     <ClCompile Include="Library\Algorithm\PerlinNoise.cpp">
       <Filter>Library\Algorithm</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Behavior\Player\PlayerBehavior.cpp">
+      <Filter>Sources\Behavior\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Library\GameObject\Component.cpp">
+      <Filter>Library\GameObject</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

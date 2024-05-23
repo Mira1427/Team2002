@@ -11,6 +11,7 @@
 
 #include "../Graphics/Graphics.h"
 #include "../Graphics/MeshRenderer.h"
+#include "../Graphics/InstancedMesh.h"
 #include "../Graphics/TextureManager.h"
 
 
@@ -53,7 +54,7 @@ public:
 
 	// --- デバッグGuiの更新 ---
 	void UpdateDebugGui(float elapsedTime) override;
-	
+
 	Matrix world_;
 	Vector3 position_;
 	float moveSpeed_ = 0.01f;
@@ -160,6 +161,7 @@ public:
 };
 
 
+// --- スケルタルメッシュのコンポーネント ---
 class MeshRendererComponent final : public Component
 {
 public:
@@ -234,6 +236,40 @@ public:
 	Vector3 translation_;
 	Vector3 scaling_;
 	Vector3 rotation_;
+};
+
+
+// --- インスタンスメッシュのコンポーネント ---
+class InstancedMeshComponent final : public Component
+{
+public:
+	InstancedMeshComponent() :
+		model_(nullptr),
+		modelName_(u8"モデル"),
+		color_(Vector4::White_),
+		meshIndex(),
+		blendState_(1/*Alpha*/),
+		rasterState_(1/*CullBack*/),
+		testDepth_(true),
+		writeDepth_(true),
+		isVisible_(true)
+	{}
+
+	// --- 描画処理 ---
+	void Draw(ID3D11DeviceContext* dc) override;
+
+	// --- デバッグGuiの更新 ---
+	void UpdateDebugGui(float elapsedTime) override;
+
+	InstancedMesh* model_;
+	std::string		modelName_;
+	Vector4			color_;
+	int				meshIndex;
+	int				blendState_;
+	int				rasterState_;
+	bool			testDepth_;
+	bool			writeDepth_;
+	bool			isVisible_;
 };
 
 
@@ -528,8 +564,8 @@ public:
 	bool		isChoose_;
 	ObjectType	type_;
 
-	Behavior*	behavior_ = nullptr;
-	Eraser*		eraser_	  = nullptr;
+	Behavior* behavior_ = nullptr;
+	Eraser* eraser_ = nullptr;
 
 	std::vector<std::shared_ptr<Component>> components_;
 	std::vector<ColliderComponent*> colliders_;

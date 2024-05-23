@@ -50,8 +50,8 @@ void DebugCameraBehavior::ApplyControl(GameObject* obj, float elapsedTime)
 	if (input.state(0) & input::RMB)
 	{
 		const float moveSpeed = 10.0f * elapsedTime;
-		const float moveX = static_cast<float>(input.getCursorDeltaX() * moveSpeed);
-		const float moveY = -static_cast<float>(input.getCursorDeltaY() * moveSpeed);
+		const float moveX = -static_cast<float>(input.getCursorDeltaX() * moveSpeed);
+		const float moveY = static_cast<float>(input.getCursorDeltaY() * moveSpeed);
 
 		obj->transform_->position_ -=  camera->rightVec_ * moveX;
 		obj->transform_->position_ += -camera->upVec_	 * moveY;

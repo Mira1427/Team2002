@@ -11,6 +11,7 @@
 #include "../Scene/SceneManager.h"
 #include "../Scene/SceneExperiment.h"
 #include "../Scene/SceneLoading.h"
+#include "../Scene/SceneGame.h"
 
 #include "../Audio/Audio.h"
 
@@ -71,7 +72,7 @@ bool Framework::Initialize()
 	RootsLib::Input::Initialize();
 
 	// --- 初期シーンの設定 ---
-	SceneManager::Instance().SetNextScene(std::make_shared<SceneLoading>(std::make_shared<SceneExperiment>()));
+	SceneManager::Instance().SetNextScene(std::make_shared<SceneLoading>(std::make_shared<SceneGame>()));
 
 
 	// --- シーン定数バッファの作成 ---
@@ -122,6 +123,8 @@ bool Framework::Initialize()
 		);
 
 		CameraManager::Instance().currentCamera_ = camera;
+
+		camera->name_ = u8"デバッグカメラ";
 
 		camera->transform_->rotation_.x = -20.0f;
 		camera->transform_->position_.z = -10.0f;

@@ -658,11 +658,11 @@ public:
 	void SetRotationFromVector(const Vector3& rotation)
 	{
 		Quaternion rot;
-		rot.SetRotationX(rotation.x);
+		rot.SetRotationZ(rotation.z);
 		*this *= rot;
 		rot.SetRotationY(rotation.y);
 		*this *= rot;
-		rot.SetRotationZ(rotation.z);
+		rot.SetRotationX(rotation.x);
 		*this *= rot;
 	}
 

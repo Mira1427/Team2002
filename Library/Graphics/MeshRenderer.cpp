@@ -565,8 +565,7 @@ void MeshRenderer::createCOMObject(ID3D11Device* device, const char* fbxFileName
 
 
 	// シェーダーリソースビューオブジェクトの生成
-	for (std::unordered_map<uint64_t, Material>::iterator iterator = materials.begin();
-		iterator != materials.end(); ++iterator)
+	for (std::unordered_map<uint64_t, Material>::iterator iterator = materials.begin(); iterator != materials.end(); ++iterator)
 	{
 		for (size_t textureIndex = 0; textureIndex < static_cast<size_t>(MaterialLabel::MAX); textureIndex++)
 		{

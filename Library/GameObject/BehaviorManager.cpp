@@ -4,10 +4,14 @@
 
 #include "CameraBehavior.h"
 
+#include "../../Sources/Behavior/Player/PlayerBehavior.h"
+
 
 BehaviorManager::BehaviorManager()
 {
 	behaviors_.insert(std::make_pair("DebugCamera", std::make_shared<DebugCameraBehavior>()));
+	behaviors_.insert(std::make_pair("BasePlayer", std::make_shared<BasePlayerBehavior>()));
+	behaviors_.insert(std::make_pair("PlayerController", std::make_shared<PlayerControllerBehavior>()));
 }
 
 

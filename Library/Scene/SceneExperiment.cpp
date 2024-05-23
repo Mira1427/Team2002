@@ -672,15 +672,15 @@ void SceneExperiment::Render(ID3D11DeviceContext* dc)
 	Shader::GetFrameBuffer(FrameBufferLabel::GAUSSIAN_BLUR02)->Deactive(dc);
 
 
-	//// --- これがないと怒られる ---
-	//dc->OMSetRenderTargets(1, &pNullRTV, nullptr);
-	//dc->VSSetShaderResources(0, 1, &nullSrv);
-	//dc->PSSetShaderResources(0, 1, &nullSrv);
-	//Graphics::Instance().SetRenderTarget();
+	// --- これがないと怒られる ---
+	dc->OMSetRenderTargets(1, &pNullRTV, nullptr);
+	dc->VSSetShaderResources(0, 1, &nullSrv);
+	dc->PSSetShaderResources(0, 1, &nullSrv);
+	Graphics::Instance().SetRenderTarget();
 
 
 	// --- 横ブラー ---
-	//Shader::GetFrameBuffer(FrameBufferLabel::HORIZONTAL_BLUR)->Active(dc);
+	Shader::GetFrameBuffer(FrameBufferLabel::HORIZONTAL_BLUR)->Active(dc);
 
 	Graphics::Instance().GetSpriteRenderer()->Draw(
 		dc,
@@ -700,7 +700,7 @@ void SceneExperiment::Render(ID3D11DeviceContext* dc)
 		Shader::GetVertexShader(VertexShader::HORIZONTAL_BLUR)
 	);
 
-	//Shader::GetFrameBuffer(FrameBufferLabel::HORIZONTAL_BLUR)->Deactive(dc);
+	Shader::GetFrameBuffer(FrameBufferLabel::HORIZONTAL_BLUR)->Deactive(dc);
 
 
 	// --- 縦ブラー ---

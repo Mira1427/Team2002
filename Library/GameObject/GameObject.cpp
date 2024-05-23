@@ -28,7 +28,7 @@ const Matrix Transform::CoordinateSystems_[4] =
 		0, 0, 1, 0,
 		0, 0, 0, 1
 	},
-	
+
 	// --- 右手系　Z軸アップ ---
 	{
 		-1, 0,  0, 0,
@@ -125,7 +125,7 @@ void SpriteRendererComponent::Draw(ID3D11DeviceContext* dc)
 		useBillboard_
 	);
 
-	
+
 	if (object_->isChoose_ && !useBillboard_ && !inWorld_)
 	{
 		Vector2 size = { texSize_.x * object_->transform_->scaling_.x, texSize_.y * object_->transform_->scaling_.y };
@@ -391,6 +391,8 @@ void MeshRendererComponent::UpdateDebugGui(float elapsedTime)
 			ImGui::Checkbox(u8"深度書き込み", &writeDepth_);
 
 
+			ImGui::ColorEdit4(u8"色", &color_.r);
+
 
 			for (auto& mesh : model_->meshes)
 				meshNames.emplace_back(mesh.name.c_str());
@@ -440,8 +442,6 @@ void MeshRendererComponent::UpdateDebugGui(float elapsedTime)
 
 				ImGui::TreePop();
 			}
-
-			ImGui::ColorEdit4(u8"色", &color_.r);
 		}
 
 		else
@@ -451,7 +451,6 @@ void MeshRendererComponent::UpdateDebugGui(float elapsedTime)
 
 		ImGui::TreePop();
 	}
-
 }
 
 
@@ -639,6 +638,112 @@ void AnimatorComponent::UpdateDebugGui(float elapsedTime)
 }
 
 
+
+// ===== インスタンスメッシュ ======================================================================================================================================================
+void InstancedMeshComponent::Draw(ID3D11DeviceContext* dc)
+{
+	if (!model_)
+		return;
+
+	if (!isVisible_)
+		return;
+
+	// --- 描画リストに追加 ---
+	model_->AddDrawList(object_->transform_->world_, color_);
+}
+
+void InstancedMeshComponent::UpdateDebugGui(float elapsedTime)
+{
+	ImGui::Spacing();
+	ImGui::Separator();
+	if (ImGui::TreeNode("InstancedMesh")) {
+		ImGui::SameLine();
+		ImGui::Text("          ");
+		ImGui::SameLine();
+		ImGui::Checkbox(u8"可視化", &isVisible_);
+		ImGui::Spacing();
+
+		ImGui::InputText(u8"読み込み", modelName_.data(), 1024);
+		ImGui::SameLine();
+		if (ImGui::Button(". . .", ImVec2(30.0f, 20.0f)))
+		{
+			model_ = ModelManager::Instance().GetInstancedMesh(modelName_.c_str(), 100);
+		}
+
+
+		if (model_)
+		{
+
+			std::vector<const char*> boneNames;
+			std::vector<const char*> meshNames;
+
+			static const char* blendStates[] = { u8"なし", u8"透明", u8"加算", u8"減算" };
+			ImGui::Combo(u8"ブレンド", &blendState_, blendStates, ARRAYSIZE(blendStates));
+
+			static const char* rasterStates[] = { u8"カリングなし", u8"背面カリング", u8"前面カリング", u8"ワイヤーフレーム", u8"ワイヤーフレーム カリングなし" };
+			ImGui::Combo(u8"ラスター", &rasterState_, rasterStates, ARRAYSIZE(rasterStates));
+
+			ImGui::Checkbox(u8"深度テスト", &testDepth_);
+			ImGui::Checkbox(u8"深度書き込み", &writeDepth_);
+
+			ImGui::ColorEdit4(u8"色", &color_.r);
+
+
+			for (auto& mesh : model_->meshes_)
+				meshNames.emplace_back(mesh.name_.c_str());
+
+			if (ImGui::Combo(u8"メッシュ", &meshIndex, meshNames.data(), static_cast<int>(meshNames.size())))
+
+				if (ImGui::TreeNode(u8"マテリアル"))
+				{
+					ImGui::Text(u8"マテリアルの数 : %d", static_cast<int>(model_->materials_.size()));
+
+					static const char* materialTypes[static_cast<size_t>(MaterialLabel::MAX)] =
+					{
+						u8"カラー", u8"法線", u8"エミッシブ", u8"ラフネス", u8"メタリック", u8"アンビエントオクルージョン"
+					};
+
+					// --- マテリアルの表示 ---
+					for (auto& material : model_->materials_)
+					{
+						for (size_t i = 0; i < static_cast<size_t>(MaterialLabel::MAX); i++)
+						{
+							ImGui::Separator();
+							ImGui::BulletText(materialTypes[i]);
+							ImGui::SameLine();
+
+							// --- マテリアルの変更 ---
+							std::string str = u8". . .##" + std::to_string(material.second.uniqueID) + materialTypes[i];
+							if (ImGui::Button(str.c_str(), ImVec2(30.0f, 20.0f)))
+							{
+								std::wstring wstr;
+								Texture* texture = TextureManager::Instance().LoadTexture(RootsLib::DX11::GetDevice(), RootsLib::File::GetFileName().c_str(), &wstr);
+								material.second.shaderResourceViews[i] = texture->srv_;
+								material.second.textureFileNames[i] = RootsLib::String::ConvertWideChar(wstr.c_str()).c_str();
+							}
+							ImGui::Text(material.second.textureFileNames[i].c_str());
+
+							// --- マテリアルの表示 ---
+							ImGui::Image(material.second.shaderResourceViews[i].Get(), ImVec2(250.0f, 250.0f));
+						}
+					}
+
+
+					ImGui::TreePop();
+				}
+		}
+
+		else
+		{
+			ImGui::Text(u8"モデルが読み込まれていません");
+		}
+
+		ImGui::TreePop();
+	}
+}
+
+
+
 // --- プリミティブの描画処理 ---
 void PrimitiveRendererComponent::Draw(ID3D11DeviceContext* dc)
 {
@@ -702,7 +807,7 @@ void BoxCollider2D::Draw(ID3D11DeviceContext* dc)
 	Graphics::Instance().GetDebugRenderer()->DrawRectangle(
 		position,
 		size_,
-		{0.0f, 0.0f},
+		{ 0.0f, 0.0f },
 		0.0f,
 		Vector4::White_
 	);
@@ -1273,10 +1378,10 @@ void GameObjectManager::ShowDebugList()
 
 		if (ImGui::Selectable(obj->name_.c_str(), &obj->isChoose_))
 		{
-				for (auto& it : objectList_)
-					it->isChoose_ = false;
+			for (auto& it : objectList_)
+				it->isChoose_ = false;
 
-				obj->isChoose_ = true;
+			obj->isChoose_ = true;
 		}
 	}
 

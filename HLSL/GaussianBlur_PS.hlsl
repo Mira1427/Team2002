@@ -22,7 +22,7 @@ float4 main(PSBlurInput pin) : SV_TARGET
     color += blur_.weights[1].w * sceneTexture.Sample(samplerStates[LINEAR], pin.tex7_.xy);
     
     // --- 基準テクセルからマイナス方向に8テクセル、重み付きでサンプリング ---
-    color  = blur_.weights[0].x * sceneTexture.Sample(samplerStates[LINEAR], pin.tex0_.zw);
+    color += blur_.weights[0].x * sceneTexture.Sample(samplerStates[LINEAR], pin.tex0_.zw);
     color += blur_.weights[0].y * sceneTexture.Sample(samplerStates[LINEAR], pin.tex1_.zw);
     color += blur_.weights[0].z * sceneTexture.Sample(samplerStates[LINEAR], pin.tex2_.zw);
     color += blur_.weights[0].w * sceneTexture.Sample(samplerStates[LINEAR], pin.tex3_.zw);

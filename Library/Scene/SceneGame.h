@@ -2,6 +2,10 @@
 
 #include "SceneManager.h"
 
+#include <string>
+
+
+class GameObject;
 
 // ===== ゲーム ======================================================================================================================================================
 class SceneGame final : public Scene
@@ -18,5 +22,14 @@ public:
 
 	// --- 描画処理 ---
 	void Render(ID3D11DeviceContext* dc) override;
+
+	// --- ブルームの適用 ---
+	void ApplyBloom(ID3D11DeviceContext* dc);
+
+	// --- プレイヤーの追加 ---
+	void AddPlayer(std::string name, GameObject* parent, float rotate, float range);
+
+	// --- プレイヤーのコントローラーの追加 ---
+	GameObject* AddPlayerController(float rotateSpeed, float range);
 };
 

@@ -53,18 +53,18 @@ InstancedMesh::InstancedMesh(ID3D11Device* device, const char* fileName, bool tr
 
 
 		std::function<void(fbxsdk::FbxNode*)> traverse = [&](fbxsdk::FbxNode* fbxNode)
-		{
-			NodeTree::Node& node = sceneView_.nodes.emplace_back();
-			node.attribute = fbxNode->GetNodeAttribute() ? fbxNode->GetNodeAttribute()->GetAttributeType() : fbxsdk::FbxNodeAttribute::EType::eUnknown;
-			node.name = fbxNode->GetName();
-			node.uniqueID = fbxNode->GetUniqueID();
-			node.parentIndex = sceneView_.indexOf(fbxNode->GetParent() ? fbxNode->GetParent()->GetUniqueID() : 0);
-
-			for (int childIndex = 0; childIndex < fbxNode->GetChildCount(); childIndex++)
 			{
-				traverse(fbxNode->GetChild(childIndex));
-			}
-		};
+				NodeTree::Node& node = sceneView_.nodes.emplace_back();
+				node.attribute = fbxNode->GetNodeAttribute() ? fbxNode->GetNodeAttribute()->GetAttributeType() : fbxsdk::FbxNodeAttribute::EType::eUnknown;
+				node.name = fbxNode->GetName();
+				node.uniqueID = fbxNode->GetUniqueID();
+				node.parentIndex = sceneView_.indexOf(fbxNode->GetParent() ? fbxNode->GetParent()->GetUniqueID() : 0);
+
+				for (int childIndex = 0; childIndex < fbxNode->GetChildCount(); childIndex++)
+				{
+					traverse(fbxNode->GetChild(childIndex));
+				}
+			};
 
 		traverse(fbxScene->GetRootNode());
 
@@ -83,16 +83,8 @@ InstancedMesh::InstancedMesh(ID3D11Device* device, const char* fileName, bool tr
 }
 
 
-// --- 描画の前処理 ---
-void InstancedMesh::Begin(ID3D11DeviceContext* dc)
-{
-	// --- インスタンスデータのクリア ---
-	instances_.clear();
-}
-
-
 // --- 描画処理 ---
-void InstancedMesh::Draw(ID3D11DeviceContext* dc, const Matrix& world, const Vector4& color)
+void InstancedMesh::AddDrawList(const Matrix& world, const Vector4& color)
 {
 	// --- インスタンスデータの追加 ---
 	instances_.emplace_back(world, color);
@@ -100,7 +92,11 @@ void InstancedMesh::Draw(ID3D11DeviceContext* dc, const Matrix& world, const Vec
 
 
 // --- 描画の後処理 ---
-void InstancedMesh::End(ID3D11DeviceContext* dc)
+void InstancedMesh::Draw(
+	ID3D11DeviceContext* dc,
+	ID3D11PixelShader** replacementPixelShader,
+	bool eraserDrawList
+)
 {
 	HRESULT hr = S_OK;
 
@@ -112,7 +108,7 @@ void InstancedMesh::End(ID3D11DeviceContext* dc)
 
 	// --- シェーダーのバインド ---
 	dc->VSSetShader(vertexShader_.Get(), nullptr, 0);
-	dc->PSSetShader(pixelShader_.Get(), nullptr, 0);
+	dc->PSSetShader(replacementPixelShader ? *replacementPixelShader : pixelShader_.Get(), nullptr, 0);
 
 	size_t instanceCount = instances_.size();
 
@@ -169,12 +165,16 @@ void InstancedMesh::End(ID3D11DeviceContext* dc)
 			dc->DrawIndexedInstanced(
 				subset.indexCount_,
 				static_cast<UINT>(instanceCount),
-				subset.startIndexLocation_, 
+				subset.startIndexLocation_,
 				0,
 				0
 			);
 		}
 	}
+
+	// --- インスタンスのクリア ---
+	if (eraserDrawList)
+		instances_.clear();
 }
 
 
@@ -467,9 +467,12 @@ void InstancedMesh::CreateCOMObject(ID3D11Device* device, const char* fileName)
 
 				switch (textureIndex)
 				{
-				case 0/*Diffuse*/: value = 0xFFFFFFFF; break;
-				case 1/*Normal*/: value = 0xFFFF7F7F; break;
-				case 2/*Emissive*/: value = 0xFF000000; break;
+				case static_cast<size_t>(MaterialLabel::DIFFUSE):			value = 0xFFFFFFFF; break;
+				case static_cast<size_t>(MaterialLabel::NORMAL):			value = 0xFFFF7F7F; break;
+				case static_cast<size_t>(MaterialLabel::EMISSIVE):			value = 0xFF000000; break;
+				case static_cast<size_t>(MaterialLabel::ROUGHNESS):			value = 0xFF000000; break;
+				case static_cast<size_t>(MaterialLabel::METARIC):			value = 0xFF000000; break;
+				case static_cast<size_t>(MaterialLabel::AMBIENT_OCCLUSION): value = 0xFFFFFFFF; break;
 				}
 
 				Shader::MakeDummyTexture(device, iterator->second.shaderResourceViews[textureIndex].GetAddressOf(), value, 16);

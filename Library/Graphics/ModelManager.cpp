@@ -39,6 +39,38 @@ MeshRenderer* ModelManager::LoadModel(ID3D11Device* device, const char* fileName
 }
 
 
+// --- インスタンスメッシュのロード ---
+InstancedMesh* ModelManager::LoadInstancedMesh(ID3D11Device* device, const char* fileName, size_t maxInstances, bool triangulate, std::string* path)
+{
+	// --- ファイルパスの検索 ---
+	auto it = instancedMeshes_.find(fileName);
+
+	// --- 見つかったら ---
+	if (it != instancedMeshes_.end())
+	{
+		auto& texture = it->second;
+
+		if (path)
+			*path = fileName;
+
+		return texture.get();
+	}
+
+	// --- 見つからなかったら ---
+	else
+	{
+		std::shared_ptr<InstancedMesh> model;
+		model = std::make_shared<InstancedMesh>(device, fileName, triangulate, maxInstances);	// モデルの作成
+		instancedMeshes_.insert(std::make_pair(fileName, model));	// リソースに追加
+
+		if (path)
+			*path = fileName;
+
+		return model.get();
+	}
+}
+
+
 // --- モデルの取得 ---
 MeshRenderer* ModelManager::GetModel(const char* fileName, std::string* path, bool triangulate, bool isRayCast)
 {
@@ -46,52 +78,116 @@ MeshRenderer* ModelManager::GetModel(const char* fileName, std::string* path, bo
 }
 
 
+// --- インスタンスメッシュの取得 ---
+InstancedMesh* ModelManager::GetInstancedMesh(const char* fileName, size_t maxInstances, std::string* path, bool triangulate)
+{
+	return LoadInstancedMesh(RootsLib::DX11::GetDevice(), fileName, triangulate, maxInstances, path);
+}
+
+
 // --- デバッグGuiの更新 ---
 void ModelManager::UpdateDebugGui()
 {
 #ifdef USE_IMGUI
-	for (auto& it : resources_)
+	// --- アニメーション付きのメッシュのデバッグ描画 ---
+	if (ImGui::TreeNode(u8"Skeletal Mesh"))
 	{
-		// --- ファイルパスの表示 ---
-		if (ImGui::TreeNode(it.first.c_str()))
+		for (auto& it : resources_)
 		{
-			// --- テクスチャの種類の配列 ---
-			static const char* materialTypes[static_cast<size_t>(MaterialLabel::MAX)] =
+			// --- ファイルパスの表示 ---
+			if (ImGui::TreeNode(it.first.c_str()))
 			{
-				u8"カラー", u8"法線", u8"エミッシブ", u8"ラフネス", u8"メタリック", u8"アンビエントオクルージョン"
-			};
-
-			// --- マテリアルの表示 ---
-			for (auto& material : it.second->materials)
-			{
-				ImGui::Separator();
-
-				// --- マテリアルの数だけ回す ---
-				for (size_t i = 0; i < static_cast<size_t>(MaterialLabel::MAX); i++)
+				// --- テクスチャの種類の配列 ---
+				static const char* materialTypes[static_cast<size_t>(MaterialLabel::MAX)] =
 				{
-					//ImGui::Separator();
-					ImGui::BulletText(materialTypes[i]);
-					ImGui::SameLine();
-					ImGui::Text(material.second.textureFileNames[i].c_str());
-					ImGui::SameLine();
+					u8"カラー", u8"法線", u8"エミッシブ", u8"ラフネス", u8"メタリック", u8"アンビエントオクルージョン"
+				};
 
-					// --- マテリアルの変更 ---
-					std::string str = u8". . .##" + std::to_string(material.second.uniqueID) + materialTypes[i];
-					if (ImGui::Button(str.c_str(), ImVec2(30.0f, 20.0f)))
+				// --- マテリアルの表示 ---
+				for (auto& material : it.second->materials)
+				{
+					ImGui::Separator();
+
+					// --- マテリアルの数だけ回す ---
+					for (size_t i = 0; i < static_cast<size_t>(MaterialLabel::MAX); i++)
 					{
-						std::wstring wstr;
-						Texture* texture = TextureManager::Instance().LoadTexture(RootsLib::DX11::GetDevice(), RootsLib::File::GetFileName().c_str(), &wstr);
-						material.second.shaderResourceViews[i] = texture->srv_;
-						material.second.textureFileNames[i] = RootsLib::String::ConvertWideChar(wstr.c_str()).c_str();
+						//ImGui::Separator();
+						ImGui::BulletText(materialTypes[i]);
+						ImGui::SameLine();
+						ImGui::Text(material.second.textureFileNames[i].c_str());
+						ImGui::SameLine();
+
+						// --- マテリアルの変更 ---
+						std::string str = u8". . .##" + std::to_string(material.second.uniqueID) + materialTypes[i];
+						if (ImGui::Button(str.c_str(), ImVec2(30.0f, 20.0f)))
+						{
+							std::wstring wstr;
+							Texture* texture = TextureManager::Instance().LoadTexture(RootsLib::DX11::GetDevice(), RootsLib::File::GetFileName().c_str(), &wstr);
+							material.second.shaderResourceViews[i] = texture->srv_;
+							material.second.textureFileNames[i] = RootsLib::String::ConvertWideChar(wstr.c_str()).c_str();
+						}
+
+						ImGui::Image(material.second.shaderResourceViews[i].Get(), ImVec2(250.0f, 250.0f));
 					}
-
-					ImGui::Image(material.second.shaderResourceViews[i].Get(), ImVec2(250.0f, 250.0f));
+					ImGui::Spacing();
 				}
-				ImGui::Spacing();
-			}
 
-			ImGui::TreePop();
+				ImGui::TreePop();
+			}
 		}
+
+		ImGui::TreePop();
+	}
+
+
+	// --- インスタンスメッシュのデバッグ描画 ---
+	if (ImGui::TreeNode(u8"Instanced Mesh"))
+	{
+		for (auto& it : instancedMeshes_)
+		{
+			// --- ファイルパスの表示 ---
+			if (ImGui::TreeNode(it.first.c_str()))
+			{
+				// --- テクスチャの種類の配列 ---
+				static const char* materialTypes[static_cast<size_t>(MaterialLabel::MAX)] =
+				{
+					u8"カラー", u8"法線", u8"エミッシブ", u8"ラフネス", u8"メタリック", u8"アンビエントオクルージョン"
+				};
+
+				// --- マテリアルの表示 ---
+				for (auto& material : it.second->materials_)
+				{
+					ImGui::Separator();
+
+					// --- マテリアルの数だけ回す ---
+					for (size_t i = 0; i < static_cast<size_t>(MaterialLabel::MAX); i++)
+					{
+						//ImGui::Separator();
+						ImGui::BulletText(materialTypes[i]);
+						ImGui::SameLine();
+						ImGui::Text(material.second.textureFileNames[i].c_str());
+						ImGui::SameLine();
+
+						// --- マテリアルの変更 ---
+						std::string str = u8". . .##" + std::to_string(material.second.uniqueID) + materialTypes[i];
+						if (ImGui::Button(str.c_str(), ImVec2(30.0f, 20.0f)))
+						{
+							std::wstring wstr;
+							Texture* texture = TextureManager::Instance().LoadTexture(RootsLib::DX11::GetDevice(), RootsLib::File::GetFileName().c_str(), &wstr);
+							material.second.shaderResourceViews[i] = texture->srv_;
+							material.second.textureFileNames[i] = RootsLib::String::ConvertWideChar(wstr.c_str()).c_str();
+						}
+
+						ImGui::Image(material.second.shaderResourceViews[i].Get(), ImVec2(250.0f, 250.0f));
+					}
+					ImGui::Spacing();
+				}
+
+				ImGui::TreePop();
+			}
+		}
+
+		ImGui::TreePop();
 	}
 #endif
 }
