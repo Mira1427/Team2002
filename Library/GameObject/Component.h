@@ -23,7 +23,8 @@ class PlayerControllerComponent final : public Component
 public:
 	PlayerControllerComponent() :
 		range_(),
-		rotateSpeed_()
+		rotateSpeed_(),
+		actionGauge_()
 	{}
 
 	void Draw(ID3D11DeviceContext* dc) override {};
@@ -31,5 +32,6 @@ public:
 
 	float range_;
 	float rotateSpeed_;
+	float actionGauge_;
 };
 

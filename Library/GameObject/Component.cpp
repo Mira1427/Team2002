@@ -28,6 +28,7 @@ void PlayerControllerComponent::UpdateDebugGui(float elapsedTime)
 
 		ImGui::DragFloat(u8"距離", &range_, 0.1f);
 		ImGui::DragFloat(u8"回転速度", &rotateSpeed_, 5.0f);
+		ImGui::DragFloat(u8"アクションのゲージ", &actionGauge_, 0.1f);
 
 		ImGui::TreePop();
 	}

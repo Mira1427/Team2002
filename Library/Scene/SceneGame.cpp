@@ -34,19 +34,6 @@ void SceneGame::Initialize()
 
 	MeshRendererComponent* renderer = obj->AddComponent<MeshRendererComponent>();
 	renderer->model_ = ModelManager::Instance().LoadModel(RootsLib::DX11::GetDevice(), "./Data/Model/Stage.fbx", true);
-
-	for (int i = 0; i < 10; i++)
-	{
-		auto* obj = GameObjectManager::Instance().Add(
-			std::make_shared<GameObject>(),
-			Vector3(i * 5.0f, 0.0f, 0.0f)
-		);
-
-		obj->name_ = u8"インスタンスメッシュ" + std::to_string(i);
-
-		auto* renderer = obj->AddComponent<InstancedMeshComponent>();
-		renderer->model_ = ModelManager::Instance().LoadInstancedMesh(RootsLib::DX11::GetDevice(), "./Data/Model/InstancedMesh/stage.fbx", 100, true);
-	}
 }
 
 

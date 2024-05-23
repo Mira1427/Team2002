@@ -15,6 +15,8 @@
 
 #include "Camera.h"
 
+#include "../GameObject/GameObject.h"
+
 #include "../Scene/SceneExperiment.h"
 #include "../Scene/SceneModelEditor.h"
 #include "../Scene/SceneTitle.h"
@@ -257,6 +259,36 @@ void Application::UpdateSystemGui()
 			if (ImGui::MenuItem(u8"ゲーム"))
 			{
 				SceneManager::Instance().SetNextScene(std::make_shared<SceneGame>());
+			}
+
+			ImGui::EndMenu();
+		}
+
+
+		// --- ゲームオブジェクトの追加 ---
+		if (ImGui::BeginMenu(u8"追加"))
+		{
+			if (ImGui::MenuItem(u8"空のオブジェクト"))
+			{
+				GameObjectManager::Instance().Add(std::make_shared<GameObject>());
+			}
+
+			if (ImGui::MenuItem(u8"スプライト"))
+			{
+				GameObject* obj = GameObjectManager::Instance().Add(std::make_shared<GameObject>());
+				obj->AddComponent<SpriteRendererComponent>();
+			}
+
+			if (ImGui::MenuItem(u8"スケルタルメッシュ"))
+			{
+				GameObject* obj = GameObjectManager::Instance().Add(std::make_shared<GameObject>());
+				obj->AddComponent<MeshRendererComponent>();
+			}
+
+			if (ImGui::MenuItem(u8"インスタンスメッシュ"))
+			{
+				GameObject* obj = GameObjectManager::Instance().Add(std::make_shared<GameObject>());
+				obj->AddComponent<InstancedMeshComponent>();
 			}
 
 			ImGui::EndMenu();

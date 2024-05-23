@@ -64,10 +64,16 @@ void PlayerControllerBehavior::Execute(GameObject* obj, float elapsedTime)
 		float rotateSpeed = player->rotateSpeed_ * elapsedTime;
 
 		if (input.state(0) & input::LEFT)
+		{
 			obj->transform_->rotation_.y += rotateSpeed;
+			player->actionGauge_ -= elapsedTime;
+		}
 
 		if (input.state(0) & input::RIGHT)
+		{
 			obj->transform_->rotation_.y += -rotateSpeed;
+			player->actionGauge_ += elapsedTime;
+		}
 
 		if (obj->transform_->rotation_.y > 360.0f) obj->transform_->rotation_.y -= 360.0f;
 		if (obj->transform_->rotation_.y < 0.0f) obj->transform_->rotation_.y += 360.0f;
