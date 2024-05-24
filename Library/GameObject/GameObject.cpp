@@ -1085,6 +1085,26 @@ void CameraComponent::UpdateDebugGui(float elapsedTime)
 }
 
 
+// --- 剛体コンポーネント ---
+void RigidBodyComponent::UpdateDebugGui(float elapsedTime)
+{
+	ImGui::Spacing();
+	ImGui::Separator();
+	if (ImGui::TreeNode("RigidBody"))
+	{
+		ImGui::Spacing();
+
+		ImGui::DragFloat3(u8"速度", &velocity_.x);
+		ImGui::DragFloat3(u8"加速度", &accel_.x);
+		ImGui::DragFloat3(u8"重力", &gravity_.x);
+		ImGui::DragFloat3(u8"衝撃", &force_.x);
+		ImGui::DragFloat3(u8"摩擦", &friction_.x);
+
+		ImGui::TreePop();
+	}
+}
+
+
 // ===== ゲームオブジェクトクラス =============================================================================================================================
 
 // --- コンストラクタ ---
@@ -1334,8 +1354,8 @@ void GameObjectManager::UpdateDebugGui(float elapsedTime)
 	// --- 位置とサイズを固定 ---
 	//ImGui::SetNextWindowPos(ImVec2(1550, 10), ImGuiSetCond_Always);
 	//ImGui::SetNextWindowSize(ImVec2(350, 1020), ImGuiSetCond_Always);
-	ImGui::SetNextWindowPos(ImVec2(890, 10), ImGuiSetCond_Always);
-	ImGui::SetNextWindowSize(ImVec2(390, 710), ImGuiSetCond_Always);
+	ImGui::SetNextWindowPos(ImVec2(890, 22.5), ImGuiSetCond_Always);
+	ImGui::SetNextWindowSize(ImVec2(390, 700), ImGuiSetCond_Always);
 
 	ImGui::Begin("Inspector");
 
@@ -1368,8 +1388,8 @@ void GameObjectManager::ShowDebugList()
 	// --- 位置とサイズを固定 ---
 	//ImGui::SetNextWindowPos(ImVec2(1340, 10), ImGuiSetCond_Always);
 	//ImGui::SetNextWindowSize(ImVec2(200, 1020), ImGuiSetCond_Always);
-	ImGui::SetNextWindowPos(ImVec2(690, 10), ImGuiSetCond_Always);
-	ImGui::SetNextWindowSize(ImVec2(200, 710), ImGuiSetCond_Always);
+	ImGui::SetNextWindowPos(ImVec2(690, 22.5), ImGuiSetCond_Always);
+	ImGui::SetNextWindowSize(ImVec2(200, 700), ImGuiSetCond_Always);
 
 	ImGui::Begin("Hierarchy");
 

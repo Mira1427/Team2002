@@ -205,31 +205,31 @@ namespace RootsLib
 		// --- 初期化 ---
 		void Input::Initialize()
 		{
-			InputManager::instance().initialize();
+			InputManager::Instance().initialize();
 		}
 
 		// --- 更新処理 ---
 		void Input::Update()
 		{
-			InputManager::instance().update();
+			InputManager::Instance().update();
 		}
 
 		// --- キーを押している間 ---
 		uint64_t State(size_t padNum)
 		{
-			return InputManager::instance().state(padNum);
+			return InputManager::Instance().state(padNum);
 		}
 
 		// --- キーを押した瞬間 ---
 		uint64_t Down(size_t padNum)
 		{
-			return InputManager::instance().down(padNum);
+			return InputManager::Instance().down(padNum);
 		}
 
 		// --- キーを離した瞬間 ---
 		uint64_t Up(size_t padNum)
 		{
-			return InputManager::instance().up(padNum);
+			return InputManager::Instance().up(padNum);
 		}
 	}
 

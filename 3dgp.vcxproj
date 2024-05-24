@@ -119,14 +119,14 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions);USE_IMGUI</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>.\External\cereal-master\include;C:\Program Files\Autodesk\FBX\FBX SDK\2020.3.4\include;.\External\DirectXTK-main\Inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\External\cereal-master\include;.\External\FBX SDK\2020.3.4\include;.\External\DirectXTK-main\Inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>.\External\DirectXTK-main\Bin\Desktop_2022\x64\Debug;C:\Program Files\Autodesk\FBX\FBX SDK\2020.3.4\lib\vs2019\x64\debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>.\External\DirectXTK-main\Bin\Desktop_2022\x64\Debug;.\External\FBX SDK\2020.3.4\lib\vs2019\x64\debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>d3d11.lib;dxgi.lib;DirectXTK.lib;zlib-md.lib;libxml2-md.lib;libfbxsdk-md.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <FxCompile>
@@ -175,7 +175,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>.\External\DirectXTK-main\Inc;C:\Program Files\Autodesk\FBX\FBX SDK\2020.3.4\include;.\External\cereal-master\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\External\DirectXTK-main\Inc;.\External\FBX SDK\2020.3.4\include;.\External\cereal-master\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -185,7 +185,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>.\External\DirectXTK-main\Bin\Desktop_2022\x64\Release;C:\Program Files\Autodesk\FBX\FBX SDK\2020.3.4\lib\vs2019\x64\release;.\External\Effekseer\x64\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>.\External\DirectXTK-main\Bin\Desktop_2022\x64\Release;.\External\FBX SDK\2020.3.4\lib\vs2019\x64\release;.\External\Effekseer\x64\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>d3d11.lib;dxgi.lib;DirectXTK.lib;%(AdditionalDependencies);zlib-mt.lib;libxml2-mt.lib;libfbxsdk-mt.lib;Effekseer.lib;EffekseerRendererDX11.lib</AdditionalDependencies>
     </Link>
     <FxCompile>
@@ -250,6 +250,8 @@
     <ClInclude Include="Library\Scene\SceneModelEditor.h" />
     <ClInclude Include="Library\Scene\SceneTitle.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="Sources\Behavior\Enemy\EnemySpawnerBehavior.h" />
+    <ClInclude Include="Sources\Behavior\Player\BulletBehavior.h" />
     <ClInclude Include="Sources\Behavior\Player\PlayerBehavior.h" />
   </ItemGroup>
   <ItemGroup>
@@ -300,6 +302,8 @@
     <ClCompile Include="Library\Scene\SceneManager.cpp" />
     <ClCompile Include="Library\Scene\SceneModelEditor.cpp" />
     <ClCompile Include="Library\Scene\SceneTitle.cpp" />
+    <ClCompile Include="Sources\Behavior\Enemy\EnemySpawnerBehavior.cpp" />
+    <ClCompile Include="Sources\Behavior\Player\BulletBehavior.cpp" />
     <ClCompile Include="Sources\Behavior\Player\PlayerBehavior.cpp" />
   </ItemGroup>
   <ItemGroup>

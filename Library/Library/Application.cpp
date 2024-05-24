@@ -93,7 +93,7 @@ HWND Application::InitializeWindow(
 // --- ウィンドウプロシージャ ---
 LRESULT CALLBACK Application::WindowProcedure(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
-	auto& input = InputManager::instance();
+	auto& input = InputManager::Instance();
 
 	input.m_.wheelDelta_ = 0;
 	input.m_.wheel_ = 0;
@@ -166,7 +166,7 @@ LRESULT CALLBACK Application::WindowProcedure(HWND hwnd, UINT msg, WPARAM wParam
 
 	case WM_MOUSEWHEEL:
 	{
-		auto& input = InputManager::instance();
+		auto& input = InputManager::Instance();
 		auto& app = Application::Instance();
 
 		// 画面外なら動作しない
@@ -208,7 +208,7 @@ LRESULT CALLBACK Application::WindowProcedure(HWND hwnd, UINT msg, WPARAM wParam
 	case WM_LBUTTONUP:
 	case WM_RBUTTONDOWN:
 	case WM_RBUTTONUP:
-		InputManager::instance().mouse_->ProcessMessage(msg, wParam, lParam);
+		InputManager::Instance().mouse_->ProcessMessage(msg, wParam, lParam);
 		break;
 
 	default:

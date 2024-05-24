@@ -12,6 +12,8 @@
 
 void SceneGame::Initialize()
 {
+	ModelManager::Instance().LoadInstancedMesh(RootsLib::DX11::GetDevice(), "./Data/Model/InstancedMesh/Bullet.fbx", 1000, true);
+
 	// --- カメラの設定 ---
 	CameraManager::Instance().currentCamera_->GetComponent<CameraComponent>()->target_.y += 125.0f;
 	CameraManager::Instance().currentCamera_->GetComponent<CameraComponent>()->target_.z -= 85.0f;
@@ -21,21 +23,55 @@ void SceneGame::Initialize()
 	GameObject* controller = AddPlayerController(45.0f, 85.0f);
 
 	// --- キャラの追加 ---
-	AddPlayer(u8"キャラ１", controller, 0.0f, 20.0f);
-	AddPlayer(u8"キャラ２", controller, 180.0f, 20.0f);
-
+	GameObject* player1 = AddPlayer(u8"キャラ１", controller, 0.0f, 20.0f, 0);
+	GameObject* player2 = AddPlayer(u8"キャラ２", controller, 180.0f, 20.0f, 1);
 
 	// --- ステージの追加 ---
-	GameObject* obj = GameObjectManager::Instance().Add(
-		std::make_shared<GameObject>()
-	);
+	AddStage();
+	
+	// --- 弾薬ゲージの追加 ---
+	AddBulletGauge(player1, 0);
+	AddBulletGauge(player2, 1);
 
-	obj->name_ = u8"地面";
+	{
+		GameObject* obj = GameObjectManager::Instance().Add(
+			std::make_shared<GameObject>(),
+			Vector3(),
+			BehaviorManager::Instance().GetBehavior("EnemySpawner")
+		);
 
-	obj->transform_->scaling_.y = 0.02f;
+		obj->name_ = u8"スポナー";
+		obj->type_ = ObjectType::SPAWNER;
 
-	InstancedMeshComponent* renderer = obj->AddComponent<InstancedMeshComponent>();
-	renderer->model_ = ModelManager::Instance().LoadInstancedMesh(RootsLib::DX11::GetDevice(), "./Data/Model/InstancedMesh/Stage.fbx", 5, true);
+		SphereCollider* collider = obj->AddCollider<SphereCollider>();
+		collider->radius_ = 10.0f;
+	}
+
+	//{
+	//	GameObject* obj = GameObjectManager::Instance().Add(
+	//		std::make_shared<GameObject>()
+	//	);
+
+	//	obj->name_ = u8"ビル";
+
+	//	InstancedMeshComponent* renderer = obj->AddComponent<InstancedMeshComponent>();
+	//	renderer->model_ = ModelManager::Instance().LoadInstancedMesh(RootsLib::DX11::GetDevice(), "./Data/Model/biru.fbx", 100, true);
+	//}
+
+	//{
+	//	GameObject* obj = GameObjectManager::Instance().Add(
+	//		std::make_shared<GameObject>()
+	//	);
+
+	//	obj->name_ = u8"アニメーション";
+
+	//	MeshRendererComponent* renderer = obj->AddComponent<MeshRendererComponent>();
+	//	renderer->model_ = ModelManager::Instance().LoadModel(RootsLib::DX11::GetDevice(), "./Data/Model/SkeletalMesh/test.fbx", true);
+
+	//	AnimatorComponent* animator = obj->AddComponent<AnimatorComponent>();
+	//	animator->isPlay_ = true;
+	//	animator->isLoop_ = true;
+	//}
 }
 
 
@@ -46,11 +82,11 @@ void SceneGame::Finalize()
 
 void SceneGame::Update(float elapsedTime)
 {
-	GameObjectManager::Instance().Update(elapsedTime);
-	GameObjectManager::Instance().ShowDebugList();
-	GameObjectManager::Instance().UpdateDebugGui(elapsedTime);
-	GameObjectManager::Instance().JudgeCollision(elapsedTime);
-	GameObjectManager::Instance().Remove();
+	GameObjectManager::Instance().Update(elapsedTime);			// オブジェクトの更新
+	GameObjectManager::Instance().ShowDebugList();				// デバッグリストの表示
+	GameObjectManager::Instance().UpdateDebugGui(elapsedTime);	// デバッグGuiの表示
+	GameObjectManager::Instance().JudgeCollision(elapsedTime);	// 衝突判定の処理
+	GameObjectManager::Instance().Remove();						// 消去処理
 }
 
 
@@ -134,6 +170,8 @@ void SceneGame::Render(ID3D11DeviceContext* dc)
 
 	Shader::GetShadowMap()->Deactivate(dc);
 
+
+	// --- シャドウマップのバインド ---
 	dc->PSSetShaderResources(8, 1, Shader::GetShadowMap()->shaderResourceView_.GetAddressOf());
 
 
@@ -147,10 +185,12 @@ void SceneGame::Render(ID3D11DeviceContext* dc)
 
 
 
+	// --- シーンの描画 ---
 	Shader::GetFrameBuffer(FrameBufferLabel::SCENE)->Clear(dc);
 	Shader::GetFrameBuffer(FrameBufferLabel::SCENE)->Active(dc);
 
 
+	// --- スカイマップの描画 ---
 	Graphics::Instance().GetSkyMapRenderer()->Draw(dc);
 
 	RootsLib::Depth::SetState(DepthState::TEST_ON, DepthState::WRITE_ON);
@@ -169,8 +209,7 @@ void SceneGame::Render(ID3D11DeviceContext* dc)
 	}
 
 	RootsLib::Depth::SetState(DepthState::TEST_ON, DepthState::WRITE_ON);
-	RootsLib::Raster::SetState(static_cast<RasterState>(1));
-
+	RootsLib::Raster::SetState(RasterState::CULL_BACK);
 
 	// --- デバッグの描画 ---
 	Graphics::Instance().GetDebugRenderer()->Draw(dc);
@@ -179,6 +218,7 @@ void SceneGame::Render(ID3D11DeviceContext* dc)
 	Shader::GetFrameBuffer(FrameBufferLabel::SCENE)->Deactive(dc);
 
 
+	// --- ブルームの適用 ---
 	ApplyBloom(dc);
 }
 
@@ -186,8 +226,6 @@ void SceneGame::Render(ID3D11DeviceContext* dc)
 // --- ブルームの適用 ---
 void SceneGame::ApplyBloom(ID3D11DeviceContext* dc)
 {
-
-
 	// --- 輝度抽出 ---
 	Shader::GetFrameBuffer(FrameBufferLabel::LUMINANCE_EXTRACTION)->Clear(dc);
 	Shader::GetFrameBuffer(FrameBufferLabel::LUMINANCE_EXTRACTION)->Active(dc);
@@ -494,7 +532,7 @@ void SceneGame::ApplyBloom(ID3D11DeviceContext* dc)
 
 
 // --- プレイヤーの追加 ---
-void SceneGame::AddPlayer(std::string name, GameObject* parent, float rotate, float range)
+GameObject* SceneGame::AddPlayer(std::string name, GameObject* parent, float rotate, float range, int playerNum)
 {
 	GameObject* obj = GameObjectManager::Instance().Add(
 		std::make_shared<GameObject>(),
@@ -519,6 +557,9 @@ void SceneGame::AddPlayer(std::string name, GameObject* parent, float rotate, fl
 
 	PlayerComponent* player = obj->AddComponent<PlayerComponent>();
 	player->angleOffset_ = rotate;
+	player->playerNum_ = playerNum;
+
+	return obj;
 }
 
 
@@ -533,9 +574,46 @@ GameObject* SceneGame::AddPlayerController(float rotateSpeed, float range)
 
 	obj->name_ = u8"プレイヤーのコントローラー";
 
-	PlayerControllerComponent* player = obj->AddComponent<PlayerControllerComponent>();
-	player->rotateSpeed_ = rotateSpeed;
-	player->range_ = range;
+	PlayerControllerComponent* controller = obj->AddComponent<PlayerControllerComponent>();
+	controller->rotateSpeed_ = rotateSpeed;
+	controller->range_ = range;
+	controller->maxBulletValue_ = 350.0f;
+	controller->bulletCost_ = 10.0f;
 
 	return obj;
+}
+
+
+// --- ステージの追加 ---
+void SceneGame::AddStage()
+{
+	GameObject* obj = GameObjectManager::Instance().Add(
+		std::make_shared<GameObject>()
+	);
+
+	obj->name_ = u8"地面";
+
+	obj->transform_->scaling_.y = 0.02f;
+
+	InstancedMeshComponent* renderer = obj->AddComponent<InstancedMeshComponent>();
+	renderer->model_ = ModelManager::Instance().LoadInstancedMesh(RootsLib::DX11::GetDevice(), "./Data/Model/InstancedMesh/Stage.fbx", 5, true);
+}
+
+
+// --- 弾薬ゲージの追加 ---
+void SceneGame::AddBulletGauge(GameObject* parent, int i)
+{
+	GameObject* obj = GameObjectManager::Instance().Add(
+		std::make_shared<GameObject>(),
+		Vector3(900.0f, 60.0f * i + 60.0f * (i + 1), 0.0f),
+		BehaviorManager::Instance().GetBehavior("BulletGauge")
+	);
+
+	obj->name_ = u8"弾薬ゲージ" + std::to_string(i);
+	obj->parent_ = parent;
+
+	PrimitiveRendererComponent* renderer = obj->AddComponent<PrimitiveRendererComponent>();
+	renderer->size_.y = 60.0f;
+	renderer->writeDepth_ = true;
+	renderer->testDepth_ = true;
 }

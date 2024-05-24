@@ -40,7 +40,7 @@ void DebugCameraBehavior::Execute(GameObject* obj, float elapsedTime)
 void DebugCameraBehavior::ApplyControl(GameObject* obj, float elapsedTime)
 {
 	CameraComponent* camera = obj->GetComponent<CameraComponent>();
-	InputManager& input = InputManager::instance();
+	InputManager& input = InputManager::Instance();
 
 	{
 		obj->transform_->position_ += camera->frontVec_ * static_cast<float>(input.m_.wheel_);

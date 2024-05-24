@@ -86,6 +86,9 @@
     <Filter Include="Library\Physics">
       <UniqueIdentifier>{e714475f-3790-4d90-b9f8-9b2ec6e86d71}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\Behavior\Enemy">
+      <UniqueIdentifier>{bade1f00-eebe-4667-b114-4259449f99bb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="3dgp.rc">
@@ -249,6 +252,12 @@
     <ClInclude Include="Library\Physics\Collision.h">
       <Filter>Library\Physics</Filter>
     </ClInclude>
+    <ClInclude Include="Sources\Behavior\Player\BulletBehavior.h">
+      <Filter>Sources\Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Behavior\Enemy\EnemySpawnerBehavior.h">
+      <Filter>Sources\Behavior</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="External\ImGui\imgui.cpp">
@@ -394,6 +403,12 @@
     </ClCompile>
     <ClCompile Include="Library\Physics\Collision.cpp">
       <Filter>Library\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Behavior\Player\BulletBehavior.cpp">
+      <Filter>Sources\Behavior</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Behavior\Enemy\EnemySpawnerBehavior.cpp">
+      <Filter>Sources\Behavior</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

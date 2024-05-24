@@ -43,7 +43,7 @@ void Camera::Move(float elapsedTime)
 {
 	if (GetAsyncKeyState(VK_RBUTTON))
 	{
-		auto& input = InputManager::instance();
+		auto& input = InputManager::Instance();
 		
 		const float moveSpeed = 10.0f * elapsedTime;
 		position_	+= rightVec_ * static_cast<float>(input.getCursorDeltaX()) * moveSpeed;
@@ -67,7 +67,7 @@ void Camera::Rotate(float elapsedTime)
 {
 	if (GetAsyncKeyState(VK_MENU) && GetAsyncKeyState(VK_LBUTTON))
 	{
-		auto& input = InputManager::instance();
+		auto& input = InputManager::Instance();
 
 		static Vector3 angle{ 150, 0.0f, 0.0f };
 

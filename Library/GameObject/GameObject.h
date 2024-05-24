@@ -486,6 +486,30 @@ public:
 };
 
 
+// --- 剛体コンポーネント ---
+class RigidBodyComponent final : public Component
+{
+public:
+	RigidBodyComponent() :
+		velocity_(),
+		accel_(),
+		gravity_(),
+		force_(),
+		friction_()
+	{}
+
+	void Draw(ID3D11DeviceContext* dc) override {};
+
+	void UpdateDebugGui(float elapsedTime) override;
+
+	Vector3 velocity_;
+	Vector3 accel_;
+	Vector3 gravity_;
+	Vector3 force_;
+	Vector3 friction_;
+};
+
+
 // ===== 行動クラス =======================================================================================================================================
 class Behavior
 {
@@ -513,6 +537,8 @@ public:
 enum class ObjectType
 {
 	NONE,
+	BULLET,
+	SPAWNER,
 };
 
 class GameObject

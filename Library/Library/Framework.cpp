@@ -227,7 +227,7 @@ void Framework::Update(float elapsedTime)
 		}
 	}
 
-	InputManager::instance().m_.wheel_ = 0;
+	InputManager::Instance().m_.wheel_ = 0;
 }
 
 

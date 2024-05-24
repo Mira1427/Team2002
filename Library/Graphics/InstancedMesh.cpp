@@ -510,6 +510,7 @@ void InstancedMesh::CreateCOMObject(ID3D11Device* device, const char* fileName)
 	Shader::CreatePSFromCSO(
 		device,
 		"./Data/Shader/PBR.cso",
+		//"./Data/Shader/InstancedMesh_PS.cso",
 		pixelShader_.ReleaseAndGetAddressOf()
 	);
 

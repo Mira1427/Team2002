@@ -204,7 +204,7 @@ public:
 	std::map<std::string, uint64_t> inputBindings_;
 
 public:
-	static InputManager& instance() { 
+	static InputManager& Instance() { 
 
 		static InputManager instance_;
 		return instance_;
@@ -237,26 +237,26 @@ public:
 	//	キーボード
 	KeyState k_;
 
-	DirectX::Keyboard::State getKeyState() { return k_.state_; }
-	DirectX::Keyboard::State isKeyDown() { return keyboardStateTracker_.pressed; }
-	DirectX::Keyboard::State isKeyUp() { return keyboardStateTracker_.released; }
+	DirectX::Keyboard::State getKeyState() const { return k_.state_; }
+	DirectX::Keyboard::State isKeyDown() const { return keyboardStateTracker_.pressed; }
+	DirectX::Keyboard::State isKeyUp() const { return keyboardStateTracker_.released; }
 
 
 	//	マウス
 	MouseState m_;
 
-	DirectX::Mouse::State getMouseState() { return m_.state_; }
+	DirectX::Mouse::State getMouseState() const { return m_.state_; }
 
 
 	//	コントローラー
 	PadState p_[4];
 
 	DirectX::GamePad::State getPadState(int padNum) { return gamePad_->GetState(padNum); }
-	bool isConnected(int padNum) { return gamePad_->GetState(padNum).connected; }
+	bool isConnected(int padNum) const { return gamePad_->GetState(padNum).connected; }
 
 	//	カーソルの座標
-	int getCursorPosX() { return m_.state_.x; }
-	int getCursorPosY() { return m_.state_.y; }
+	int getCursorPosX() const { return m_.state_.x; }
+	int getCursorPosY() const { return m_.state_.y; }
 	DirectX::XMFLOAT2 getCursorPos() { 
 		return DirectX::XMFLOAT2(
 			static_cast<float>(m_.state_.x),
@@ -265,6 +265,6 @@ public:
 	}
 
 	// --- カーソルの変化量 ---
-	int getCursorDeltaX() { return m_.deltaX_; }
-	int getCursorDeltaY() { return m_.deltaY_; }
+	int getCursorDeltaX() const { return m_.deltaX_; }
+	int getCursorDeltaY() const { return m_.deltaY_; }
 };

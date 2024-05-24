@@ -171,7 +171,7 @@ void SceneExperiment::Update(float elapsedTime)
 	GameObject* camera = CameraManager::Instance().currentCamera_;
 	CameraComponent* cameraComp = camera->GetComponent<CameraComponent>();
 
-	InputManager& input = InputManager::instance();
+	InputManager& input = InputManager::Instance();
 
 	Vector3 right = cameraComp->rightVec_;
 	Vector3 front = cameraComp->frontVec_;

@@ -67,7 +67,7 @@ void KeyAssignFile::load(std::ifstream& file) {
 		if (assign.bit_ == 0) break;
 
 		//	リストに追加
-		InputManager::instance().k_.assign_.emplace_back(assign);
+		InputManager::Instance().k_.assign_.emplace_back(assign);
 
 		//	終了フラグかどうかの確認
 		if (assign.bit_ < 0) break;
@@ -84,7 +84,7 @@ void KeyAssignFile::load(std::ifstream& file) {
 		if (assign.bit_ == 0) break;
 
 		//	リストに追加
-		InputManager::instance().p_[0].padAssign_.emplace_back(assign);
+		InputManager::Instance().p_[0].padAssign_.emplace_back(assign);
 
 		//	終了フラグかどうかの確認
 		if (assign.bit_ < 0) break;
@@ -101,7 +101,7 @@ void KeyAssignFile::load(std::ifstream& file) {
 		if (assign.bit_ == 0) break;
 
 		//	リストに追加
-		InputManager::instance().m_.assign_.emplace_back(assign);
+		InputManager::Instance().m_.assign_.emplace_back(assign);
 
 		//	終了フラグかどうかの確認
 		if (assign.bit_ < 0) break;
@@ -113,19 +113,19 @@ void KeyAssignFile::load(std::ifstream& file) {
 void KeyAssignFile::save(std::ofstream& file) {
 
 	//	キー割り当てを保存
-	for (auto& it : InputManager::instance().k_.assign_) {
+	for (auto& it : InputManager::Instance().k_.assign_) {
 
 		file << it.key_ << " " << it.bit_ << " " << it.code_ << '\n';
 	}
 
 	//	ゲームパッドの割り当てを保存
-	for (auto& it : InputManager::instance().p_[0].padAssign_) {
+	for (auto& it : InputManager::Instance().p_[0].padAssign_) {
 
 		file << it.key_ << " " << it.bit_ << " " << it.code_ << '\n';
 	}
 
 	//	マウスの割り当てを保存
-	for (auto& it : InputManager::instance().m_.assign_) {
+	for (auto& it : InputManager::Instance().m_.assign_) {
 
 		file << it.key_ << " " << it.bit_ << " " << it.code_ << '\n';
 	}
