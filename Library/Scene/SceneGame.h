@@ -38,5 +38,8 @@ public:
 
 	// --- 弾薬ゲージの追加 ---
 	void AddBulletGauge(GameObject* parent, int i);
+
+	// --- スポナーの追加 ---
+	void AddEnemySpawner();
 };
 

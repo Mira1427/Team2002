@@ -1354,8 +1354,8 @@ void GameObjectManager::UpdateDebugGui(float elapsedTime)
 	// --- 位置とサイズを固定 ---
 	//ImGui::SetNextWindowPos(ImVec2(1550, 10), ImGuiSetCond_Always);
 	//ImGui::SetNextWindowSize(ImVec2(350, 1020), ImGuiSetCond_Always);
-	ImGui::SetNextWindowPos(ImVec2(890, 22.5), ImGuiSetCond_Always);
-	ImGui::SetNextWindowSize(ImVec2(390, 700), ImGuiSetCond_Always);
+	ImGui::SetNextWindowPos(ImVec2(890, 22.5), ImGuiSetCond_Once);
+	ImGui::SetNextWindowSize(ImVec2(390, 700), ImGuiSetCond_Once);
 
 	ImGui::Begin("Inspector");
 
@@ -1368,7 +1368,8 @@ void GameObjectManager::UpdateDebugGui(float elapsedTime)
 			ImGui::Text(obj->name_.c_str());
 
 			ImGui::Spacing();
-			ImGui::InputInt(u8"状態", &obj->state_);
+			ImGui::InputInt(u8"ステート", &obj->state_);
+			ImGui::DragFloat(u8"タイマー", &obj->timer_);
 
 			for (auto& component : obj->components_)
 			{
@@ -1388,8 +1389,8 @@ void GameObjectManager::ShowDebugList()
 	// --- 位置とサイズを固定 ---
 	//ImGui::SetNextWindowPos(ImVec2(1340, 10), ImGuiSetCond_Always);
 	//ImGui::SetNextWindowSize(ImVec2(200, 1020), ImGuiSetCond_Always);
-	ImGui::SetNextWindowPos(ImVec2(690, 22.5), ImGuiSetCond_Always);
-	ImGui::SetNextWindowSize(ImVec2(200, 700), ImGuiSetCond_Always);
+	ImGui::SetNextWindowPos(ImVec2(690, 22.5), ImGuiSetCond_Once);
+	ImGui::SetNextWindowSize(ImVec2(200, 700), ImGuiSetCond_Once);
 
 	ImGui::Begin("Hierarchy");
 

@@ -1,7 +1,8 @@
 #pragma once
 
 #include "../../Library/GameObject/GameObject.h"
-#include "../../Library/GameObject/Component.h"
+
+#include "../../Component/Component.h"
 
 
 class BasePlayerBehavior : public Behavior
@@ -11,7 +12,9 @@ public:
 	void Hit(GameObject* src, GameObject* dst, float elapsedTime) override {};
 
 private:
-	void AddBullet(const GameObject* parent);
+	void Rotate(GameObject* obj, PlayerComponent* player, PlayerControllerComponent* controller, float angleOffset);	// ‰ñ“]ˆ—
+	void Shot(GameObject* obj, PlayerComponent* player, PlayerControllerComponent* controller);	// ËŒ‚ˆ—
+	void AddBullet(const GameObject* parent, const float scaling);	// ’eŠÛ‚Ì’Ç‰Á
 };
 
 

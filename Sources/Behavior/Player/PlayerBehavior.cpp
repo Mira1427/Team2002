@@ -4,13 +4,14 @@
 
 #include "../../Library/Input/InputManager.h"
 
-#include "../../Library/GameObject/Component.h"
 #include "../../Library/GameObject/BehaviorManager.h"
 
 #include "../../Library/Graphics/ModelManager.h"
 
+#include "../../Component/Component.h"
 
-// --- プレイヤーの基本の行動処理 ---
+
+// ===== プレイヤーの基本の行動処理 ======================================================================================================================================================
 void BasePlayerBehavior::Execute(GameObject* obj, float elapsedTime)
 {
 	switch (obj->state_)
@@ -23,50 +24,17 @@ void BasePlayerBehavior::Execute(GameObject* obj, float elapsedTime)
 	case 1:
 
 	{
-		InputManager& input = InputManager::Instance();
-
 		AnimatorComponent* animator = obj->GetComponent<AnimatorComponent>();								// アニメーションコンポーネントの取得
 		PlayerControllerComponent* controller = obj->parent_->GetComponent<PlayerControllerComponent>();	// 親のコントローラーコンポーネントの取得
 		PlayerComponent* player = obj->GetComponent<PlayerComponent>();										// プレイヤーコンポーネントの取得
 
 
 		// --- 回転処理 ---
-		float offset = 90.0f;
-		float theta = DirectX::XMConvertToRadians(player->angleOffset_ + obj->parent_->transform_->rotation_.y + offset);
-		obj->transform_->position_.x = cosf(-theta) * controller->range_;
-		obj->transform_->position_.z = sinf(-theta) * controller->range_;
+		Rotate(obj, player, controller, 90.0f);
 
-		obj->transform_->rotation_.y = obj->parent_->transform_->rotation_.y + player->angleOffset_;
-
-
-		// --- 射撃フラグ ---
-		bool shootable[2] =
-		{
-			static_cast<bool>(input.down(0) & input::LMB),
-			static_cast<bool>(input.down(0) & input::RMB),
-		};
-
-		size_t playerIndex = player->playerNum_;
-
-		switch (input.state(0) & (input::LEFT | input::RIGHT))
-		{
-		case input::LEFT: break;
-		case input::RIGHT: break;
-
-		default:
 
 		// --- 射撃処理 ---
-		if (shootable[playerIndex] && controller->bullet_[playerIndex] >= controller->bulletCost_)
-		{
-			// --- 弾丸の追加 ---
-			AddBullet(obj);
-
-			// --- 弾薬の減算 ---
-			controller->bullet_[playerIndex] -= controller->bulletCost_;
-			controller->bullet_[playerIndex] = (std::max)(controller->bullet_[playerIndex], 0.0f);
-		}
-
-		}
+		Shot(obj, player, controller);
 
 
 		// --- アニメーションの更新 ---
@@ -78,8 +46,57 @@ void BasePlayerBehavior::Execute(GameObject* obj, float elapsedTime)
 }
 
 
+// --- 回転の処理 ---
+void BasePlayerBehavior::Rotate(GameObject* obj, PlayerComponent* player, PlayerControllerComponent* controller, float angleOffset)
+{
+	float theta = DirectX::XMConvertToRadians(player->angleOffset_ + obj->parent_->transform_->rotation_.y + angleOffset);
+	obj->transform_->position_.x = cosf(-theta) * controller->range_;
+	obj->transform_->position_.z = sinf(-theta) * controller->range_;
+
+	obj->transform_->rotation_.y = obj->parent_->transform_->rotation_.y + player->angleOffset_;
+}
+
+
+// --- 射撃処理 ---
+void BasePlayerBehavior::Shot(GameObject* obj, PlayerComponent* player, PlayerControllerComponent* controller)
+{	
+	InputManager& input = InputManager::Instance();
+
+	// --- 射撃フラグ ---
+	bool shootable[2] =
+	{
+		static_cast<bool>(input.down(0) & input::LMB),
+		static_cast<bool>(input.down(0) & input::RMB),
+	};
+
+	size_t playerIndex = player->playerNum_;
+
+	// --- 左右のキーを押してなかったら ---
+	switch (input.state(0) & (input::LEFT | input::RIGHT))
+	{
+	case input::LEFT:
+	case input::RIGHT: break;
+
+	default:
+
+		// --- 射撃処理 ---
+		if (shootable[playerIndex] && controller->bullet_[playerIndex] >= controller->bulletCost_)
+		{
+			// --- 弾丸の追加 ---
+			AddBullet(obj, 0.02f);
+
+			// --- 弾薬の減算 ---
+			controller->bullet_[playerIndex] -= controller->bulletCost_;
+			controller->bullet_[playerIndex] = (std::max)(controller->bullet_[playerIndex], 0.0f);
+		}
+
+	}
+
+}
+
+
 // --- 弾丸の追加 ---
-void BasePlayerBehavior::AddBullet(const GameObject* parent)
+void BasePlayerBehavior::AddBullet(const GameObject* parent, const float scaling)
 {
 	GameObject* bullet = GameObjectManager::Instance().Add(
 		std::make_shared<GameObject>(),
@@ -87,7 +104,9 @@ void BasePlayerBehavior::AddBullet(const GameObject* parent)
 		BehaviorManager::Instance().GetBehavior("Bullet")
 	);
 
-	bullet->transform_->scaling_ *= 0.01f;
+	bullet->name_ = u8"弾";
+
+	bullet->transform_->scaling_ *= scaling;
 
 	RigidBodyComponent* rigidBody = bullet->AddComponent<RigidBodyComponent>();
 	rigidBody->velocity_ = Vector3::Zero_ - bullet->transform_->position_;
@@ -101,7 +120,8 @@ void BasePlayerBehavior::AddBullet(const GameObject* parent)
 }
 
 
-// --- プレイヤーの操作処理 ---
+
+// ===== プレイヤーの操作処理 ======================================================================================================================================================
 void PlayerControllerBehavior::Execute(GameObject* obj, float elapsedTime)
 {
 	switch (obj->state_)

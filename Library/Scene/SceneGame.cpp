@@ -1,17 +1,28 @@
 #include "SceneGame.h"
 
 #include "../GameObject/GameObject.h"
-#include "../GameObject/Component.h"
 #include "../GameObject/BehaviorManager.h"
 
+#include "../Graphics/Graphics.h"
 #include "../Graphics/Shader.h"
 #include "../Graphics/ModelManager.h"
 
 #include "../Library/CameraManager.h"
 #include "../Library/Library.h"
 
+#include "../../Sources/Component/Component.h"
+
+#include "../../Sources/EventManager.h"
+
 void SceneGame::Initialize()
 {
+	LightingManager* lightingManager = Graphics::Instance().GetLightingManager();
+	lightingManager->directionLight_.viewSize_ = 210.0f;
+	lightingManager->directionLight_.viewNearZ_ = -90.0f;
+	lightingManager->directionLight_.viewFarZ_ = 185.0f;
+
+
+	// --- 弾丸のモデルの読み込み ---
 	ModelManager::Instance().LoadInstancedMesh(RootsLib::DX11::GetDevice(), "./Data/Model/InstancedMesh/Bullet.fbx", 1000, true);
 
 	// --- カメラの設定 ---
@@ -28,51 +39,30 @@ void SceneGame::Initialize()
 
 	// --- ステージの追加 ---
 	AddStage();
-	
+
 	// --- 弾薬ゲージの追加 ---
 	AddBulletGauge(player1, 0);
 	AddBulletGauge(player2, 1);
 
+	// --- スポナーの追加 ---
+	AddEnemySpawner();
 
+
+	// --- 街の4等分された判定用 ---
+	for (size_t i = 0; i < 4; i++)
 	{
 		GameObject* obj = GameObjectManager::Instance().Add(
-			std::make_shared<GameObject>(),
-			Vector3(),
-			BehaviorManager::Instance().GetBehavior("EnemySpawner")
+			std::make_shared<GameObject>()
 		);
 
-		obj->name_ = u8"スポナー";
-		obj->type_ = ObjectType::SPAWNER;
+		EventManager::Instance().stages_[i] = obj;
 
-		SphereCollider* collider = obj->AddCollider<SphereCollider>();
-		collider->radius_ = 10.0f;
+		obj->name_ = u8"街" + std::to_string(i);
+
+		// --- ステージコンポーネントの追加 ---
+		StageComponent* stage = obj->AddComponent<StageComponent>();
+		stage->life_ = 5.0f;
 	}
-
-	//{
-	//	GameObject* obj = GameObjectManager::Instance().Add(
-	//		std::make_shared<GameObject>()
-	//	);
-
-	//	obj->name_ = u8"ビル";
-
-	//	InstancedMeshComponent* renderer = obj->AddComponent<InstancedMeshComponent>();
-	//	renderer->model_ = ModelManager::Instance().LoadInstancedMesh(RootsLib::DX11::GetDevice(), "./Data/Model/biru.fbx", 100, true);
-	//}
-
-	//{
-	//	GameObject* obj = GameObjectManager::Instance().Add(
-	//		std::make_shared<GameObject>()
-	//	);
-
-	//	obj->name_ = u8"アニメーション";
-
-	//	MeshRendererComponent* renderer = obj->AddComponent<MeshRendererComponent>();
-	//	renderer->model_ = ModelManager::Instance().LoadModel(RootsLib::DX11::GetDevice(), "./Data/Model/SkeletalMesh/test.fbx", true);
-
-	//	AnimatorComponent* animator = obj->AddComponent<AnimatorComponent>();
-	//	animator->isPlay_ = true;
-	//	animator->isLoop_ = true;
-	//}
 }
 
 
@@ -576,10 +566,11 @@ GameObject* SceneGame::AddPlayerController(float rotateSpeed, float range)
 	obj->name_ = u8"プレイヤーのコントローラー";
 
 	PlayerControllerComponent* controller = obj->AddComponent<PlayerControllerComponent>();
-	controller->rotateSpeed_ = rotateSpeed;
-	controller->range_ = range;
-	controller->maxBulletValue_ = 350.0f;
-	controller->bulletCost_ = 10.0f;
+	controller->rotateSpeed_ = rotateSpeed;	// 回転速度
+	controller->range_ = range;				// 中心からの距離
+	controller->maxBulletValue_ = 350.0f;	// 弾薬の最大数
+	controller->addBulletValue_ = 10.0f;	// 弾薬の増加量
+	controller->bulletCost_ = 10.0f;		// 弾薬のコスト
 
 	return obj;
 }
@@ -597,7 +588,7 @@ void SceneGame::AddStage()
 	obj->transform_->scaling_.y = 0.02f;
 
 	InstancedMeshComponent* renderer = obj->AddComponent<InstancedMeshComponent>();
-	renderer->model_ = ModelManager::Instance().LoadInstancedMesh(RootsLib::DX11::GetDevice(), "./Data/Model/InstancedMesh/Stage.fbx", 5, true);
+	renderer->model_ = ModelManager::Instance().LoadInstancedMesh(RootsLib::DX11::GetDevice(), "./Data/Model/InstancedMesh/Stage/Stage.fbx", 5, true);
 }
 
 
@@ -617,4 +608,24 @@ void SceneGame::AddBulletGauge(GameObject* parent, int i)
 	renderer->size_.y = 60.0f;
 	renderer->writeDepth_ = true;
 	renderer->testDepth_ = true;
+}
+
+
+// --- スポナーの追加 ---
+void SceneGame::AddEnemySpawner()
+{
+	GameObject* obj = GameObjectManager::Instance().Add(
+		std::make_shared<GameObject>(),
+		Vector3(),
+		BehaviorManager::Instance().GetBehavior("EnemySpawner")
+	);
+
+	obj->name_ = u8"スポナー";
+	obj->type_ = ObjectType::SPAWNER;
+
+	SphereCollider* collider = obj->AddCollider<SphereCollider>();
+	collider->radius_ = 1.0f;
+
+	EnemySpawnerComponent* spawner = obj->AddComponent<EnemySpawnerComponent>();
+	spawner->spawnSpeed_ = 7.0f;
 }

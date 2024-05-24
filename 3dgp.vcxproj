@@ -211,7 +211,6 @@
     <ClInclude Include="Library\Audio\Audio.h" />
     <ClInclude Include="Library\GameObject\BehaviorManager.h" />
     <ClInclude Include="Library\GameObject\CameraBehavior.h" />
-    <ClInclude Include="Library\GameObject\Component.h" />
     <ClInclude Include="Library\GameObject\GameObject.h" />
     <ClInclude Include="Library\Graphics\DebugLineRenderer.h" />
     <ClInclude Include="Library\Graphics\DebugRenderer.h" />
@@ -250,9 +249,12 @@
     <ClInclude Include="Library\Scene\SceneModelEditor.h" />
     <ClInclude Include="Library\Scene\SceneTitle.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="Sources\Behavior\Enemy\EnemyBehavior.h" />
     <ClInclude Include="Sources\Behavior\Enemy\EnemySpawnerBehavior.h" />
     <ClInclude Include="Sources\Behavior\Player\BulletBehavior.h" />
     <ClInclude Include="Sources\Behavior\Player\PlayerBehavior.h" />
+    <ClInclude Include="Sources\Behavior\Stage\StageBehavior.h" />
+    <ClInclude Include="Sources\Component\Component.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="External\ImGui\imgui.cpp" />
@@ -265,7 +267,6 @@
     <ClCompile Include="Library\Audio\Audio.cpp" />
     <ClCompile Include="Library\GameObject\BehaviorManager.cpp" />
     <ClCompile Include="Library\GameObject\CameraBehavior.cpp" />
-    <ClCompile Include="Library\GameObject\Component.cpp" />
     <ClCompile Include="Library\GameObject\GameObject.cpp" />
     <ClCompile Include="Library\Graphics\DebugLineRenderer.cpp" />
     <ClCompile Include="Library\Graphics\DebugRenderer.cpp" />
@@ -302,9 +303,12 @@
     <ClCompile Include="Library\Scene\SceneManager.cpp" />
     <ClCompile Include="Library\Scene\SceneModelEditor.cpp" />
     <ClCompile Include="Library\Scene\SceneTitle.cpp" />
+    <ClCompile Include="Sources\Behavior\Enemy\EnemyBehavior.cpp" />
     <ClCompile Include="Sources\Behavior\Enemy\EnemySpawnerBehavior.cpp" />
     <ClCompile Include="Sources\Behavior\Player\BulletBehavior.cpp" />
     <ClCompile Include="Sources\Behavior\Player\PlayerBehavior.cpp" />
+    <ClCompile Include="Sources\Behavior\Stage\StageBehavior.cpp" />
+    <ClCompile Include="Sources\Component\Component.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="HLSL\Common.hlsli" />

@@ -14,9 +14,9 @@ LightingManager::LightingManager()
 
 	directionLight_.viewFocus_		= Vector3::Zero_;
 	directionLight_.viewDistance_	= 10.0f;
-	directionLight_.viewSize_		= 12.0f;
-	directionLight_.viewNearZ_		= 2.0f;
-	directionLight_.viewFarZ_		= 18.0f;
+	directionLight_.viewSize_		= 210.0f;
+	directionLight_.viewNearZ_		= -90.0f;
+	directionLight_.viewFarZ_		= 185.0f;
 }
 
 

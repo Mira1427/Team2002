@@ -89,6 +89,12 @@
     <Filter Include="Sources\Behavior\Enemy">
       <UniqueIdentifier>{bade1f00-eebe-4667-b114-4259449f99bb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\Behavior\Stage">
+      <UniqueIdentifier>{58e4aa1a-0111-4b3f-b357-8b1aeafc5d95}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Component">
+      <UniqueIdentifier>{0f160692-4ac2-4e16-b21e-f26028e6f63f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="3dgp.rc">
@@ -124,9 +130,6 @@
       <Filter>External\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="Library\Scene\SceneExperiment.h">
-      <Filter>Library\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="Library\Scene\SceneGame.h">
       <Filter>Library\Scene</Filter>
     </ClInclude>
     <ClInclude Include="Library\Scene\SceneLoading.h">
@@ -243,20 +246,29 @@
     <ClInclude Include="Library\Algorithm\PerlinNoise.h">
       <Filter>Library\Algorithm</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\Behavior\Player\PlayerBehavior.h">
-      <Filter>Sources\Behavior\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="Library\GameObject\Component.h">
-      <Filter>Library\GameObject</Filter>
-    </ClInclude>
     <ClInclude Include="Library\Physics\Collision.h">
       <Filter>Library\Physics</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\Behavior\Player\BulletBehavior.h">
-      <Filter>Sources\Behavior</Filter>
+    <ClInclude Include="Sources\Behavior\Enemy\EnemyBehavior.h">
+      <Filter>Sources\Behavior\Enemy</Filter>
     </ClInclude>
     <ClInclude Include="Sources\Behavior\Enemy\EnemySpawnerBehavior.h">
-      <Filter>Sources\Behavior</Filter>
+      <Filter>Sources\Behavior\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Behavior\Player\BulletBehavior.h">
+      <Filter>Sources\Behavior\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Behavior\Player\PlayerBehavior.h">
+      <Filter>Sources\Behavior\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Behavior\Stage\StageBehavior.h">
+      <Filter>Sources\Behavior\Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Component\Component.h">
+      <Filter>Sources\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Library\Scene\SceneGame.h">
+      <Filter>Library\Scene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -279,9 +291,6 @@
       <Filter>External\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="Library\Scene\SceneExperiment.cpp">
-      <Filter>Library\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="Library\Scene\SceneGame.cpp">
       <Filter>Library\Scene</Filter>
     </ClCompile>
     <ClCompile Include="Library\Scene\SceneLoading.cpp">
@@ -395,20 +404,29 @@
     <ClCompile Include="Library\Algorithm\PerlinNoise.cpp">
       <Filter>Library\Algorithm</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\Behavior\Player\PlayerBehavior.cpp">
-      <Filter>Sources\Behavior\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="Library\GameObject\Component.cpp">
-      <Filter>Library\GameObject</Filter>
-    </ClCompile>
     <ClCompile Include="Library\Physics\Collision.cpp">
       <Filter>Library\Physics</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\Behavior\Player\BulletBehavior.cpp">
-      <Filter>Sources\Behavior</Filter>
+    <ClCompile Include="Sources\Behavior\Enemy\EnemyBehavior.cpp">
+      <Filter>Sources\Behavior\Enemy</Filter>
     </ClCompile>
     <ClCompile Include="Sources\Behavior\Enemy\EnemySpawnerBehavior.cpp">
-      <Filter>Sources\Behavior</Filter>
+      <Filter>Sources\Behavior\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Behavior\Player\BulletBehavior.cpp">
+      <Filter>Sources\Behavior\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Behavior\Player\PlayerBehavior.cpp">
+      <Filter>Sources\Behavior\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Behavior\Stage\StageBehavior.cpp">
+      <Filter>Sources\Behavior\Stage</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Component\Component.cpp">
+      <Filter>Sources\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Library\Scene\SceneGame.cpp">
+      <Filter>Library\Scene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

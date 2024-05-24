@@ -31,4 +31,17 @@ void BaseBulletBehavior::Hit(GameObject* src, GameObject* dst, float elapsedTime
 		// --- ’e‚ðíœ ---
 		src->Destroy();
 	}
+
+	// --- “G‚É“–‚½‚Á‚½‚ç ---
+	else if (dst->type_ == ObjectType::ENEMY)
+	{
+		src->Destroy();	// ’e‚ðíœ
+
+		EnemyComponent* enemy = dst->GetComponent<EnemyComponent>();
+		enemy->life_ -= 1.0f;
+
+		// --- Ž€–Sˆ— ---
+		if (enemy->life_ <= 0.0f)
+			dst->Destroy();
+	}
 }

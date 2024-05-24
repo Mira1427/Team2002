@@ -21,7 +21,7 @@ VSOutput main(VSInput vin)
 	float mx = (object_.size_.x * object_.scale_.x) / object_.size_.x * object_.center_.x;
 	float my = (object_.size_.y * object_.scale_.y) / object_.size_.y * object_.center_.y;
 
-	float2 position = vin.position_ * object_.size_ * object_.scale_;
+	float2 position = vin.position_.xy * object_.size_ * object_.scale_;
 
 	position.x -= mx;
 	position.y -= my;

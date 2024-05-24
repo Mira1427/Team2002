@@ -24,7 +24,7 @@ float4 main(VSOutput pin) : SV_TARGET
     blur /= 4.0;
     blur.a = 1.0;
     
-    scene.xyz += blur.xyz * 3;
+    scene.xyz += blur.xyz * 1.25;
     
     
 #if 1

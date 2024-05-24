@@ -1,7 +1,8 @@
 #pragma once
 
 #include "../../Library/GameObject/GameObject.h"
-#include "../../Library/GameObject/Component.h"
+
+#include "../../Component/Component.h"
 
 
 // --- ’eŠÛ‚Ìˆ— ---
