@@ -211,6 +211,7 @@
     <ClInclude Include="Library\Audio\Audio.h" />
     <ClInclude Include="Library\GameObject\BehaviorManager.h" />
     <ClInclude Include="Library\GameObject\CameraBehavior.h" />
+    <ClInclude Include="Library\GameObject\EraserManager.h" />
     <ClInclude Include="Library\GameObject\GameObject.h" />
     <ClInclude Include="Library\Graphics\DebugLineRenderer.h" />
     <ClInclude Include="Library\Graphics\DebugRenderer.h" />
@@ -255,6 +256,7 @@
     <ClInclude Include="Sources\Behavior\Player\PlayerBehavior.h" />
     <ClInclude Include="Sources\Behavior\Stage\StageBehavior.h" />
     <ClInclude Include="Sources\Component\Component.h" />
+    <ClInclude Include="Sources\Eraser\SceneEraser.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="External\ImGui\imgui.cpp" />
@@ -267,6 +269,7 @@
     <ClCompile Include="Library\Audio\Audio.cpp" />
     <ClCompile Include="Library\GameObject\BehaviorManager.cpp" />
     <ClCompile Include="Library\GameObject\CameraBehavior.cpp" />
+    <ClCompile Include="Library\GameObject\EraserManager.cpp" />
     <ClCompile Include="Library\GameObject\GameObject.cpp" />
     <ClCompile Include="Library\Graphics\DebugLineRenderer.cpp" />
     <ClCompile Include="Library\Graphics\DebugRenderer.cpp" />
@@ -309,6 +312,7 @@
     <ClCompile Include="Sources\Behavior\Player\PlayerBehavior.cpp" />
     <ClCompile Include="Sources\Behavior\Stage\StageBehavior.cpp" />
     <ClCompile Include="Sources\Component\Component.cpp" />
+    <ClCompile Include="Sources\Eraser\SceneEraser.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="HLSL\Common.hlsli" />

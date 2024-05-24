@@ -1,10 +1,14 @@
 #include "EnemySpawnerBehavior.h"
 
 #include "../../Library/GameObject/BehaviorManager.h"
+#include "../../Library/GameObject/EraserManager.h"
+
+#include "../../Library/Scene/SceneGame.h"
+
+#include "../../Library/Graphics/ModelManager.h"
 
 #include "../../Sources/Component/Component.h"
 
-#include "../../Library/Graphics/ModelManager.h"
 
 
 // --- “G‚ÌƒXƒ|ƒi[‚Ìˆ— ---
@@ -54,6 +58,7 @@ void EnemySpawnerBehavior::AddEnemy(GameObject* obj)
 
 	enemy->name_ = u8"“G";
 	enemy->type_ = ObjectType::ENEMY;
+	enemy->eraser_ = EraserManager::Instance().GetEraser("Scene");
 
 	enemy->transform_->scaling_ *= 0.009f;
 

@@ -95,6 +95,9 @@
     <Filter Include="Sources\Component">
       <UniqueIdentifier>{0f160692-4ac2-4e16-b21e-f26028e6f63f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\Eraser">
+      <UniqueIdentifier>{885a3f88-9d07-43aa-8140-5af5297f3c8d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="3dgp.rc">
@@ -270,6 +273,12 @@
     <ClInclude Include="Library\Scene\SceneGame.h">
       <Filter>Library\Scene</Filter>
     </ClInclude>
+    <ClInclude Include="Library\GameObject\EraserManager.h">
+      <Filter>Library\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Eraser\SceneEraser.h">
+      <Filter>Sources\Eraser</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="External\ImGui\imgui.cpp">
@@ -427,6 +436,12 @@
     </ClCompile>
     <ClCompile Include="Library\Scene\SceneGame.cpp">
       <Filter>Library\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Library\GameObject\EraserManager.cpp">
+      <Filter>Library\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Eraser\SceneEraser.cpp">
+      <Filter>Sources\Eraser</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

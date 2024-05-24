@@ -5,6 +5,7 @@
 #include "../../Library/Input/InputManager.h"
 
 #include "../../Library/GameObject/BehaviorManager.h"
+#include "../../Library/GameObject/EraserManager.h"
 
 #include "../../Library/Graphics/ModelManager.h"
 
@@ -105,6 +106,7 @@ void BasePlayerBehavior::AddBullet(const GameObject* parent, const float scaling
 	);
 
 	bullet->name_ = u8"’e";
+	bullet->eraser_ = EraserManager::Instance().GetEraser("Scene");
 
 	bullet->transform_->scaling_ *= scaling;
 

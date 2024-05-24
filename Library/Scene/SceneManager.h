@@ -42,6 +42,9 @@ public:
 	// --- 現在のシーンの取得 ---
 	Scene* GetCurrentScene() { return currentScene_.get(); }
 
+	// --- 次のシーンの取得 ---
+	Scene* GetNextScene() { return nextScene_.get(); }
+
 	// --- 次のシーンの設定 ---
 	void SetNextScene(std::shared_ptr<Scene> scene) { nextScene_ = scene; }
 

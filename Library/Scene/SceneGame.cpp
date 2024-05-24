@@ -2,6 +2,7 @@
 
 #include "../GameObject/GameObject.h"
 #include "../GameObject/BehaviorManager.h"
+#include "../GameObject/EraserManager.h"
 
 #include "../Graphics/Graphics.h"
 #include "../Graphics/Shader.h"
@@ -26,8 +27,8 @@ void SceneGame::Initialize()
 	ModelManager::Instance().LoadInstancedMesh(RootsLib::DX11::GetDevice(), "./Data/Model/InstancedMesh/Bullet.fbx", 1000, true);
 
 	// --- カメラの設定 ---
-	CameraManager::Instance().currentCamera_->GetComponent<CameraComponent>()->target_.y += 125.0f;
-	CameraManager::Instance().currentCamera_->GetComponent<CameraComponent>()->target_.z -= 85.0f;
+	CameraManager::Instance().currentCamera_->GetComponent<CameraComponent>()->target_.y = 125.0f;
+	CameraManager::Instance().currentCamera_->GetComponent<CameraComponent>()->target_.z = -85.0f;
 	CameraManager::Instance().currentCamera_->transform_->rotation_.x = -60.0f;
 
 	// --- コントローラーの追加 ---
@@ -58,6 +59,7 @@ void SceneGame::Initialize()
 		EventManager::Instance().stages_[i] = obj;
 
 		obj->name_ = u8"街" + std::to_string(i);
+		obj->eraser_ = EraserManager::Instance().GetEraser("Scene");
 
 		// --- ステージコンポーネントの追加 ---
 		StageComponent* stage = obj->AddComponent<StageComponent>();
@@ -533,6 +535,7 @@ GameObject* SceneGame::AddPlayer(std::string name, GameObject* parent, float rot
 
 	obj->name_ = name;
 	obj->parent_ = parent;
+	obj->eraser_ = EraserManager::Instance().GetEraser("Scene");
 
 	obj->transform_->scaling_ *= 0.008f;
 
@@ -564,6 +567,7 @@ GameObject* SceneGame::AddPlayerController(float rotateSpeed, float range)
 	);
 
 	obj->name_ = u8"プレイヤーのコントローラー";
+	obj->eraser_ = EraserManager::Instance().GetEraser("Scene");
 
 	PlayerControllerComponent* controller = obj->AddComponent<PlayerControllerComponent>();
 	controller->rotateSpeed_ = rotateSpeed;	// 回転速度
@@ -584,6 +588,7 @@ void SceneGame::AddStage()
 	);
 
 	obj->name_ = u8"地面";
+	obj->eraser_ = EraserManager::Instance().GetEraser("Scene");
 
 	obj->transform_->scaling_.y = 0.02f;
 
@@ -603,6 +608,7 @@ void SceneGame::AddBulletGauge(GameObject* parent, int i)
 
 	obj->name_ = u8"弾薬ゲージ" + std::to_string(i);
 	obj->parent_ = parent;
+	obj->eraser_ = EraserManager::Instance().GetEraser("Scene");
 
 	PrimitiveRendererComponent* renderer = obj->AddComponent<PrimitiveRendererComponent>();
 	renderer->size_.y = 60.0f;
@@ -622,6 +628,7 @@ void SceneGame::AddEnemySpawner()
 
 	obj->name_ = u8"スポナー";
 	obj->type_ = ObjectType::SPAWNER;
+	obj->eraser_ = EraserManager::Instance().GetEraser("Scene");
 
 	SphereCollider* collider = obj->AddCollider<SphereCollider>();
 	collider->radius_ = 1.0f;
