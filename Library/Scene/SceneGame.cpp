@@ -33,6 +33,7 @@ void SceneGame::Initialize()
 	AddBulletGauge(player1, 0);
 	AddBulletGauge(player2, 1);
 
+
 	{
 		GameObject* obj = GameObjectManager::Instance().Add(
 			std::make_shared<GameObject>(),
