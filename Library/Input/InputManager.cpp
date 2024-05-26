@@ -8,13 +8,15 @@
 
 //	キーボードの割り当て
 std::list<InputAssign> keyAssign = {
-	{"Left",	input::LEFT,	DirectX::Keyboard::A},
-	{"Right",	input::RIGHT,	DirectX::Keyboard::D},
-	{"Up",		input::UP,		DirectX::Keyboard::W},
-	{"Down",	input::DOWN,	DirectX::Keyboard::S},
-	{"Delete",	input::DELETE_, DirectX::Keyboard::Delete},
-	{"Enter",	input::ENTER,	DirectX::Keyboard::Enter},
-	{"Escape",	input::ESCAPE,	DirectX::Keyboard::Escape},
+	{"Left",	Input::LEFT,	DirectX::Keyboard::A},
+	{"Right",	Input::RIGHT,	DirectX::Keyboard::D},
+	{"Up",		Input::UP,		DirectX::Keyboard::W},
+	{"Down",	Input::DOWN,	DirectX::Keyboard::S},
+	{"Delete",	Input::DELETE_, DirectX::Keyboard::Delete},
+	{"Enter",	Input::ENTER,	DirectX::Keyboard::Enter},
+	{"Escape",	Input::ESCAPE,	DirectX::Keyboard::Escape},
+	{"Space",	Input::CONFIRM, DirectX::Keyboard::Space},
+	{"P",		Input::PAUSE,	DirectX::Keyboard::P},
 	{"---keyAssignEnd---", -1, -1}
 };
 
@@ -27,9 +29,9 @@ std::list<InputAssign> padAssign = {
 
 //	マウスの割り当て
 std::list<InputAssign> mouseAssign = {
-	{"LMB",		input::LMB,		VK_LBUTTON},
-	{"RMB",		input::RMB,		VK_RBUTTON},
-	{"MMB",		input::MMB,		VK_MBUTTON},
+	{"LMB",		Input::LMB,		VK_LBUTTON},
+	{"RMB",		Input::RMB,		VK_RBUTTON},
+	{"MMB",		Input::MMB,		VK_MBUTTON},
 	{"---MouseAssignEnd---", -1, -1}
 };
 
@@ -197,14 +199,14 @@ void InputManager::update()
 	LStickY = p_[0].state_.thumbSticks.leftY;
 
 	//	キーボードの入力処理
-	switch (bit_[0].state_ & (input::LEFT | input::RIGHT)) {
-	case input::LEFT:	LStickX = -1.0f;	break;
-	case input::RIGHT:	LStickX = 1.0f;		break;
+	switch (bit_[0].state_ & (Input::LEFT | Input::RIGHT)) {
+	case Input::LEFT:	LStickX = -1.0f;	break;
+	case Input::RIGHT:	LStickX = 1.0f;		break;
 	}
 
-	switch (bit_[0].state_ & (input::UP | input::DOWN)) {
-	case input::UP:		LStickY = 1.0f;		break;
-	case input::DOWN:	LStickY = -1.0f;	break;
+	switch (bit_[0].state_ & (Input::UP | Input::DOWN)) {
+	case Input::UP:		LStickY = 1.0f;		break;
+	case Input::DOWN:	LStickY = -1.0f;	break;
 	}
 
 	p_[0].stick_.leftX_ = LStickX;
@@ -245,7 +247,7 @@ void InputManager::update()
 					struct InputData { bool data[10]; } inputData{};
 
 					//	スティック
-					if (assign.code_ >= input::GamePad::LSTICK_UP) {
+					if (assign.code_ >= Input::GamePad::LSTICK_UP) {
 
 						//	押されていたらビットを立てる
 						if (p_[i].stick_.isTilted(assign.code_))
@@ -253,7 +255,7 @@ void InputManager::update()
 					}
 
 					//	トリガー
-					else if (assign.code_ >= input::GamePad::L2) {
+					else if (assign.code_ >= Input::GamePad::L2) {
 
 						//	押されていたらビットを立てる
 						if (p_[i].trigger_.isTriggered(assign.code_))
@@ -261,13 +263,13 @@ void InputManager::update()
 					}
 
 					//	ボタン
-					else if (assign.code_ >= input::GamePad::A) {
+					else if (assign.code_ >= Input::GamePad::A) {
 
 						//	ボタンの構造体のデータをコピー
 						std::memcpy(&inputData, &p_[i].state_.buttons, sizeof(DirectX::GamePad::Buttons));
 
 						//	押されていたらビットを立てる
-						if (inputData.data[assign.code_ - input::GamePad::A])
+						if (inputData.data[assign.code_ - Input::GamePad::A])
 							bit_[i].state_ |= inputBindings_[assign.key_];
 					}
 

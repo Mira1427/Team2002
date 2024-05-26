@@ -4,9 +4,14 @@
 
 #include "../../Library/Library/Library.h"
 
+#include "../../EventManager.h"
+
 
 void AttackGaugeBehavior::Execute(GameObject* obj, float elapsedTime)
 {
+	if (EventManager::Instance().paused_)
+		return;
+
 	switch (obj->state_)
 	{
 	case 0:
@@ -32,6 +37,9 @@ void AttackGaugeBehavior::Execute(GameObject* obj, float elapsedTime)
 
 void RangeGaugeBehavior::Execute(GameObject* obj, float elapsedTime)
 {
+	if (EventManager::Instance().paused_)
+		return;
+
 	switch (obj->state_)
 	{
 	case 0:

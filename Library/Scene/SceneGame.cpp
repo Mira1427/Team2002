@@ -8,6 +8,8 @@
 #include "../Graphics/Shader.h"
 #include "../Graphics/ModelManager.h"
 
+#include "../Input/InputManager.h"
+
 #include "../Library/CameraManager.h"
 #include "../Library/Library.h"
 
@@ -21,6 +23,9 @@ void SceneGame::Initialize()
 	lightingManager->directionLight_.viewSize_ = 210.0f;
 	lightingManager->directionLight_.viewNearZ_ = -90.0f;
 	lightingManager->directionLight_.viewFarZ_ = 185.0f;
+
+
+	EventManager::Instance().Initialize();
 
 
 	// --- 弾丸のモデルの読み込み ---
@@ -48,75 +53,20 @@ void SceneGame::Initialize()
 	// --- スポナーの追加 ---
 	AddEnemySpawner();
 
-
 	// --- 街の4等分された判定用 ---
-	for (size_t i = 0; i < 4; i++)
-	{
-		GameObject* obj = GameObjectManager::Instance().Add(
-			std::make_shared<GameObject>()
-		);
-
-		EventManager::Instance().stages_[i] = obj;
-
-		obj->name_ = u8"街" + std::to_string(i);
-		obj->eraser_ = EraserManager::Instance().GetEraser("Scene");
-
-		// --- ステージコンポーネントの追加 ---
-		StageComponent* stage = obj->AddComponent<StageComponent>();
-		stage->life_ = 5.0f;
-	}
+	AddTownLife(5.0f);
 
 
 	// --- 攻撃ゲージのコントローラー ---
-	GameObject* attackGaugeController = GameObjectManager::Instance().Add(
-		std::make_shared<GameObject>()
-	);
-	{
-
-		attackGaugeController->name_ = u8"攻撃ゲージのコントローラー";
-		attackGaugeController->eraser_ = EraserManager::Instance().GetEraser("Scene");
-		attackGaugeController->parent_ = controller;
-	}
+	GameObject* attackGaugeController = AddAttackGaugeController(controller, { 1060.0f, 560.0f, 0.0f });
 
 
 	// --- 攻撃ゲージ ---
-	{
-		GameObject* obj = GameObjectManager::Instance().Add(
-			std::make_shared<GameObject>(),
-			Vector3(),
-			BehaviorManager::Instance().GetBehavior("AttackGauge")
-		);
-
-		obj->name_ = u8"攻撃ゲージ";
-		obj->eraser_ = EraserManager::Instance().GetEraser("Scene");
-		obj->parent_ = attackGaugeController;
-
-		PrimitiveRendererComponent* renderer = obj->AddComponent<PrimitiveRendererComponent>();
-		renderer->size_.y = 50.0f;
-		renderer->testDepth_ = true;
-		renderer->writeDepth_ = true;
-		renderer->color_ = { 1.0f, 0.0f, 0.0f, 1.0f };
-	}
+	AddAttackGauge(attackGaugeController, 50.0f);
 
 
-	// --- 攻撃ゲージ ---
-	{
-		GameObject* obj = GameObjectManager::Instance().Add(
-			std::make_shared<GameObject>(),
-			Vector3(),
-			BehaviorManager::Instance().GetBehavior("RangeGauge")
-		);
-
-		obj->name_ = u8"範囲ゲージ";
-		obj->eraser_ = EraserManager::Instance().GetEraser("Scene");
-		obj->parent_ = attackGaugeController;
-
-		PrimitiveRendererComponent* renderer = obj->AddComponent<PrimitiveRendererComponent>();
-		renderer->size_.y = 50.0f;
-		renderer->testDepth_ = true;
-		renderer->writeDepth_ = true;
-		renderer->color_ = { 0.0f, 0.0f, 1.0f, 1.0f };
-	}
+	// --- 範囲ゲージ ---
+	AddRangeGauge(attackGaugeController, 50.0f);
 }
 
 
@@ -127,6 +77,11 @@ void SceneGame::Finalize()
 
 void SceneGame::Update(float elapsedTime)
 {
+	EventManager::Instance().Update(elapsedTime);
+
+	if (InputManager::Instance().down(0) & Input::PAUSE)
+		EventManager::Instance().paused_ = !EventManager::Instance().paused_;
+
 	GameObjectManager::Instance().Update(elapsedTime);			// オブジェクトの更新
 	GameObjectManager::Instance().ShowDebugList();				// デバッグリストの表示
 	GameObjectManager::Instance().UpdateDebugGui(elapsedTime);	// デバッグGuiの表示
@@ -630,7 +585,12 @@ GameObject* SceneGame::AddPlayerController(float rotateSpeed, float range)
 	controller->addBulletValue_ = 10.0f;	// 弾薬の増加量
 	controller->bulletCost_ = 10.0f;		// 弾薬のコスト
 
-	controller->addAttackGaugeValue_ = 0.25f;	// 攻撃ゲージの増加量
+	controller->addAttackGaugeValue_ = 0.5f;	// 攻撃ゲージの増加量
+
+	controller->maxAttackAmount_ = 5.0f;	// 最大攻撃力
+	controller->minAttackAmount_ = 1.0f;	// 最小攻撃力
+	controller->maxRangeAmount_ = 10.0f;	// 最大範囲
+	controller->minRangeAmount_ = 1.0f;		// 最小範囲
 
 	return obj;
 }
@@ -691,4 +651,82 @@ void SceneGame::AddEnemySpawner()
 
 	EnemySpawnerComponent* spawner = obj->AddComponent<EnemySpawnerComponent>();
 	spawner->spawnSpeed_ = 7.0f;
+}
+
+
+void SceneGame::AddTownLife(const float life)
+{
+	for (size_t i = 0; i < 4; i++)
+	{
+		GameObject* obj = GameObjectManager::Instance().Add(
+			std::make_shared<GameObject>()
+		);
+
+		EventManager::Instance().stages_[i] = obj;
+
+		obj->name_ = u8"街" + std::to_string(i);
+		obj->eraser_ = EraserManager::Instance().GetEraser("Scene");
+
+		// --- ステージコンポーネントの追加 ---
+		StageComponent* stage = obj->AddComponent<StageComponent>();
+		stage->life_ = life;
+	}
+}
+
+
+// --- 攻撃ゲージのコントローラー追加 ---
+GameObject* SceneGame::AddAttackGaugeController(GameObject* parent, const Vector3& position)
+{
+	GameObject* attackGaugeController = GameObjectManager::Instance().Add(
+		std::make_shared<GameObject>(),
+		position
+	);
+
+	attackGaugeController->name_ = u8"攻撃ゲージのコントローラー";
+	attackGaugeController->eraser_ = EraserManager::Instance().GetEraser("Scene");
+	attackGaugeController->parent_ = parent;
+
+	return attackGaugeController;
+}
+
+
+// --- 攻撃のゲージ ---
+void SceneGame::AddAttackGauge(GameObject* parent, float height)
+{
+	GameObject* obj = GameObjectManager::Instance().Add(
+		std::make_shared<GameObject>(),
+		Vector3(),
+		BehaviorManager::Instance().GetBehavior("AttackGauge")
+	);
+
+	obj->name_ = u8"攻撃ゲージ";
+	obj->eraser_ = EraserManager::Instance().GetEraser("Scene");
+	obj->parent_ = parent;
+
+	PrimitiveRendererComponent* renderer = obj->AddComponent<PrimitiveRendererComponent>();
+	renderer->size_.y = 50.0f;
+	renderer->testDepth_ = true;
+	renderer->writeDepth_ = true;
+	renderer->color_ = { 1.0f, 0.0f, 0.0f, 1.0f };
+}
+
+
+// --- 範囲ゲージの追加 ---
+void SceneGame::AddRangeGauge(GameObject* parent, float height)
+{
+	GameObject* obj = GameObjectManager::Instance().Add(
+		std::make_shared<GameObject>(),
+		Vector3(),
+		BehaviorManager::Instance().GetBehavior("RangeGauge")
+	);
+
+	obj->name_ = u8"範囲ゲージ";
+	obj->eraser_ = EraserManager::Instance().GetEraser("Scene");
+	obj->parent_ = parent;
+
+	PrimitiveRendererComponent* renderer = obj->AddComponent<PrimitiveRendererComponent>();
+	renderer->size_.y = 50.0f;
+	renderer->testDepth_ = true;
+	renderer->writeDepth_ = true;
+	renderer->color_ = { 0.0f, 0.0f, 1.0f, 1.0f };
 }

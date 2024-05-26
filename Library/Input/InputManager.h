@@ -14,7 +14,7 @@
 
 class InputManager;
 
-namespace input {
+namespace Input {
 
 	//	ビット用のキーラベル
 	inline static constexpr uint64_t LEFT	 = 1;
@@ -27,6 +27,8 @@ namespace input {
 	inline static constexpr uint64_t DELETE_ = 128;
 	inline static constexpr uint64_t ENTER	 = 256;
 	inline static constexpr uint64_t ESCAPE  = 512;
+	inline static constexpr uint64_t CONFIRM = 1024;
+	inline static constexpr uint64_t PAUSE   = 2048;
 
 
 	class GamePad {
@@ -132,16 +134,16 @@ struct Stick {
 		switch (code) {
 
 			//	左スティック
-		case input::GamePad::LSTICK_UP:		return isLStickUp();	break;
-		case input::GamePad::LSTICK_DOWN:	return isLStickDown();	break;
-		case input::GamePad::LSTICK_RIGHT:	return isLStickRight(); break;
-		case input::GamePad::LSTICK_LEFT:	return isLStickLeft();	break;
+		case Input::GamePad::LSTICK_UP:		return isLStickUp();	break;
+		case Input::GamePad::LSTICK_DOWN:	return isLStickDown();	break;
+		case Input::GamePad::LSTICK_RIGHT:	return isLStickRight(); break;
+		case Input::GamePad::LSTICK_LEFT:	return isLStickLeft();	break;
 
 			//	右スティック
-		case input::GamePad::RSTICK_UP:		return isRStickUp();	break;
-		case input::GamePad::RSTICK_DOWN:	return isRStickDown();	break;
-		case input::GamePad::RSTICK_RIGHT:	return isRStickRight(); break;
-		case input::GamePad::RSTICK_LEFT:	return isRStickLeft();	break;
+		case Input::GamePad::RSTICK_UP:		return isRStickUp();	break;
+		case Input::GamePad::RSTICK_DOWN:	return isRStickDown();	break;
+		case Input::GamePad::RSTICK_RIGHT:	return isRStickRight(); break;
+		case Input::GamePad::RSTICK_LEFT:	return isRStickLeft();	break;
 		}
 
 		return false;
@@ -164,10 +166,10 @@ struct Trigger {
 
 		switch (code) {
 
-		case input::GamePad::L2: 
+		case Input::GamePad::L2:
 			return isL2Pressed(); break;
 
-		case input::GamePad::R2: 
+		case Input::GamePad::R2:
 			return isR2Pressed(); break;
 		}
 

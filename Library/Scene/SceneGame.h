@@ -7,6 +7,8 @@
 
 class GameObject;
 
+class Vector3;
+
 // ===== ゲーム ======================================================================================================================================================
 class SceneGame final : public Scene
 {
@@ -41,5 +43,17 @@ public:
 
 	// --- スポナーの追加 ---
 	void AddEnemySpawner();
+
+	// --- 街のライフ追加 ---
+	void AddTownLife(const float life);
+
+	// --- 攻撃ゲージのコントローラー追加 ---
+	GameObject* AddAttackGaugeController(GameObject* parent, const Vector3& position);
+
+	// --- 攻撃ゲージの追加 ---
+	void AddAttackGauge(GameObject* parent, float height);
+
+	// --- 範囲ゲージの追加 ---
+	void AddRangeGauge(GameObject* parent, float height);
 };
 

@@ -9,12 +9,19 @@
 
 #include "../../Library/Graphics/ModelManager.h"
 
+#include "../../Library/Library/Library.h"
+
 #include "../../Component/Component.h"
+
+#include "../../EventManager.h"
 
 
 // ===== ƒvƒŒƒCƒ„[‚ÌŠî–{‚Ìs“®ˆ— ======================================================================================================================================================
 void BasePlayerBehavior::Execute(GameObject* obj, float elapsedTime)
 {
+	if (EventManager::Instance().paused_)
+		return;
+
 	switch (obj->state_)
 	{
 	case 0:
@@ -66,25 +73,29 @@ void BasePlayerBehavior::Shot(GameObject* obj, PlayerComponent* player, PlayerCo
 	// --- ŽËŒ‚ƒtƒ‰ƒO ---
 	bool shootable[2] =
 	{
-		static_cast<bool>(input.down(0) & input::LMB),
-		static_cast<bool>(input.down(0) & input::RMB),
+		static_cast<bool>(input.down(0) & Input::LMB),
+		static_cast<bool>(input.down(0) & Input::RMB),
 	};
 
 	size_t playerIndex = player->playerNum_;
 
 	// --- ¶‰E‚ÌƒL[‚ð‰Ÿ‚µ‚Ä‚È‚©‚Á‚½‚ç ---
-	switch (input.state(0) & (input::LEFT | input::RIGHT))
+	switch (input.state(0) & (Input::LEFT | Input::RIGHT))
 	{
-	case input::LEFT:
-	case input::RIGHT: break;
+	case Input::LEFT:
+	case Input::RIGHT: break;
 
 	default:
 
 		// --- ŽËŒ‚ˆ— ---
 		if (shootable[playerIndex] && controller->bullet_[playerIndex] >= controller->bulletCost_)
 		{
+			float g = controller->attackGauge_;
+			float a = RootsLib::Math::Lerp(controller->minAttackAmount_, controller->maxAttackAmount_, (g > 0.0f) ?  g : 0.0f);
+			float r = RootsLib::Math::Lerp(controller->minRangeAmount_, controller->maxRangeAmount_, (g < 0.0f) ? -g : 0.0f);
+
 			// --- ’eŠÛ‚Ì’Ç‰Á ---
-			AddBullet(obj, 0.02f);
+			AddBullet(obj, 0.02f, a, r);
 
 			// --- ’e–ò‚ÌŒ¸ŽZ ---
 			controller->bullet_[playerIndex] -= controller->bulletCost_;
@@ -97,7 +108,7 @@ void BasePlayerBehavior::Shot(GameObject* obj, PlayerComponent* player, PlayerCo
 
 
 // --- ’eŠÛ‚Ì’Ç‰Á ---
-void BasePlayerBehavior::AddBullet(const GameObject* parent, const float scaling)
+void BasePlayerBehavior::AddBullet(const GameObject* parent, const float scaling, const float attackAmount, const float radius)
 {
 	GameObject* bullet = GameObjectManager::Instance().Add(
 		std::make_shared<GameObject>(),
@@ -116,8 +127,11 @@ void BasePlayerBehavior::AddBullet(const GameObject* parent, const float scaling
 	InstancedMeshComponent* renderer = bullet->AddComponent<InstancedMeshComponent>();
 	renderer->model_ = ModelManager::Instance().GetInstancedMesh("./Data/Model/InstancedMesh/Bullet.fbx", 1000, nullptr, true);
 
+	BulletComponent* bulletComp = bullet->AddComponent<BulletComponent>();
+	bulletComp->attack_ = attackAmount;
+
 	SphereCollider* collider = bullet->AddCollider<SphereCollider>();
-	collider->radius_ = 1.0f;
+	collider->radius_ = radius;
 
 }
 
@@ -126,6 +140,9 @@ void BasePlayerBehavior::AddBullet(const GameObject* parent, const float scaling
 // ===== ƒvƒŒƒCƒ„[‚Ì‘€ìˆ— ======================================================================================================================================================
 void PlayerControllerBehavior::Execute(GameObject* obj, float elapsedTime)
 {
+	if (EventManager::Instance().paused_)
+		return;
+
 	switch (obj->state_)
 	{
 	case 0:
@@ -158,9 +175,9 @@ void PlayerControllerBehavior::Rotate(GameObject* obj, PlayerControllerComponent
 	float rotateSpeed = controller->rotateSpeed_ * elapsedTime;
 
 	// --- ‰ñ“]ˆ— ---
-	switch (input.state(0) & (input::LEFT | input::RIGHT))
+	switch (input.state(0) & (Input::LEFT | Input::RIGHT))
 	{
-	case input::LEFT:
+	case Input::LEFT:
 		obj->transform_->rotation_.y += rotateSpeed;								// ‰ñ“]
 		controller->bullet_[0] += controller->addBulletValue_ * elapsedTime;		// ’e–ò‚Ì‘‰Á
 		controller->bullet_[1] += controller->addBulletValue_ * elapsedTime;		//
@@ -168,7 +185,7 @@ void PlayerControllerBehavior::Rotate(GameObject* obj, PlayerControllerComponent
 		controller->attackGauge_ = (std::max)(controller->attackGauge_, -1.0f);		// UŒ‚ƒQ[ƒW‚Ì§ŒÀ
 		break;
 
-	case input::RIGHT:
+	case Input::RIGHT:
 		obj->transform_->rotation_.y += -rotateSpeed;								// ‰ñ“]
 		controller->bullet_[0] += controller->addBulletValue_ * elapsedTime;		// ’e–ò‚Ì‘‰Á
 		controller->bullet_[1] += controller->addBulletValue_ * elapsedTime;		//
@@ -188,6 +205,9 @@ void PlayerControllerBehavior::Rotate(GameObject* obj, PlayerControllerComponent
 // --- ƒvƒŒƒCƒ„[‚Ì’e–òƒQ[ƒW‚Ìˆ— ---
 void PlayerBulletGaugeBehavior::Execute(GameObject* obj, float elapsedTime)
 {
+	if (EventManager::Instance().paused_)
+		return;
+
 	switch (obj->state_)
 	{
 	case 0:

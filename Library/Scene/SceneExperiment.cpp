@@ -179,16 +179,16 @@ void SceneExperiment::Update(float elapsedTime)
 	front.y = 0.0f;
 
 
-	if (input.state(0) & input::LEFT)
+	if (input.state(0) & Input::LEFT)
 		playerObj_->transform_->position_ -= right * 3.0f * elapsedTime;
 
-	if (input.state(0) & input::RIGHT)
+	if (input.state(0) & Input::RIGHT)
 		playerObj_->transform_->position_ += right * 3.0f * elapsedTime;
 
-	if (input.state(0) & input::UP)
+	if (input.state(0) & Input::UP)
 		playerObj_->transform_->position_ += front * 3.0f * elapsedTime;
 
-	if (input.state(0) & input::DOWN)
+	if (input.state(0) & Input::DOWN)
 		playerObj_->transform_->position_ -= front * 3.0f * elapsedTime;
 
 	Vector3 vec = playerObj_->transform_->position_ - enemyObj_->transform_->position_;

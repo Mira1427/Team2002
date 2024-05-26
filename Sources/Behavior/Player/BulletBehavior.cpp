@@ -1,9 +1,14 @@
 #include "BulletBehavior.h"
 
+#include "../../EventManager.h"
+
 
 // --- ’eŠÛ‚Ìˆ— ---
 void BaseBulletBehavior::Execute(GameObject* obj, float elapsedTime)
 {
+	if (EventManager::Instance().paused_)
+		return;
+
 	switch (obj->state_)
 	{
 	case 0:
@@ -37,8 +42,9 @@ void BaseBulletBehavior::Hit(GameObject* src, GameObject* dst, float elapsedTime
 	{
 		src->Destroy();	// ’e‚ðíœ
 
-		EnemyComponent* enemy = dst->GetComponent<EnemyComponent>();
-		enemy->life_ -= 1.0f;
+		BulletComponent* bullet = src->GetComponent<BulletComponent>();
+		EnemyComponent* enemy   = dst->GetComponent<EnemyComponent>();
+		enemy->life_ -= bullet->attack_;
 
 		// --- Ž€–Sˆ— ---
 		if (enemy->life_ <= 0.0f)

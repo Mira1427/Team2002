@@ -282,6 +282,16 @@
     <ClInclude Include="Sources\Component\Component.h">
       <Filter>Sources\Component</Filter>
     </ClInclude>
+    <ClInclude Include="Sources\EventManager.h">
+      <Filter>Sources</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\ParameterManager.h">
+      <Filter>Sources</Filter>
+    </ClInclude>
+    <ClInclude Include="Library\Scene\SceneOver.h">
+      <Filter>Library\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Library\Scene\SceneClear.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="External\ImGui\imgui.cpp">
@@ -449,6 +459,16 @@
     <ClCompile Include="Sources\Component\Component.cpp">
       <Filter>Sources\Component</Filter>
     </ClCompile>
+    <ClCompile Include="Sources\EventManager.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\ParameterManager.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Library\Scene\SceneOver.cpp">
+      <Filter>Library\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Library\Scene\SceneClear.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="HLSL\Primitive.hlsli">

@@ -11,6 +11,7 @@
 #include "../Scene/SceneManager.h"
 #include "../Scene/SceneExperiment.h"
 #include "../Scene/SceneLoading.h"
+#include "../Scene/SceneTitle.h"
 #include "../Scene/SceneGame.h"
 
 #include "../Audio/Audio.h"
@@ -72,7 +73,8 @@ bool Framework::Initialize()
 	RootsLib::Input::Initialize();
 
 	// --- 初期シーンの設定 ---
-	SceneManager::Instance().SetNextScene(std::make_shared<SceneLoading>(std::make_shared<SceneGame>()));
+	SceneManager::Instance().SetNextScene(std::make_shared<SceneTitle>());
+	//SceneManager::Instance().SetNextScene(std::make_shared<SceneLoading>(std::make_shared<SceneGame>()));
 
 
 	// --- シーン定数バッファの作成 ---

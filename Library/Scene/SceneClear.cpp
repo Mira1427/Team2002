@@ -1,4 +1,4 @@
-#include "SceneTitle.h"
+#include "SceneClear.h"
 
 #include "../GameObject/GameObject.h"
 
@@ -9,28 +9,20 @@
 
 #include "../Library/Library.h"
 
-#include "SceneLoading.h"
-#include "SceneGame.h"
-
 #include "../../Sources/EventManager.h"
 
 
-void SceneTitle::Initialize()
+void SceneClear::Initialize()
 {
 }
 
-void SceneTitle::Finalize()
+void SceneClear::Finalize()
 {
 }
 
-void SceneTitle::Update(float elapsedTime)
+void SceneClear::Update(float elapsedTime)
 {
-
 	EventManager::Instance().Update(elapsedTime);
-
-	if(InputManager::Instance().down(0) & Input::CONFIRM)
-		EventManager::Instance().TranslateMessage(EventMessage::TO_GAME_SCENE);
-
 
 	GameObjectManager::Instance().Update(elapsedTime);			// オブジェクトの更新
 	GameObjectManager::Instance().ShowDebugList();				// デバッグリストの表示
@@ -39,16 +31,13 @@ void SceneTitle::Update(float elapsedTime)
 	GameObjectManager::Instance().Remove();						// 消去処理
 }
 
-void SceneTitle::Render(ID3D11DeviceContext* dc)
+void SceneClear::Render(ID3D11DeviceContext* dc)
 {
 	// --- スカイマップの描画 ---
 	Graphics::Instance().GetSkyMapRenderer()->Draw(dc);
 
 	RootsLib::Depth::SetState(DepthState::TEST_ON, DepthState::WRITE_ON);
 	RootsLib::Raster::SetState(RasterState::CULL_BACK);
-
-	// --- デバッグライン描画 ---
-	//Graphics::Instance().GetDebugLineRenderer()->Draw(dc);
 
 	// --- オブジェクトの描画 ---
 	GameObjectManager::Instance().castShadow_ = false;
@@ -58,4 +47,5 @@ void SceneTitle::Render(ID3D11DeviceContext* dc)
 	{
 		mesh.second->Draw(RootsLib::DX11::GetDeviceContext());
 	}
+
 }

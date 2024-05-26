@@ -109,6 +109,9 @@ void SpriteRendererComponent::Draw(ID3D11DeviceContext* dc)
 	if (!isVisible_)
 		return;
 
+	if (GameObjectManager::Instance().castShadow_)
+		return;
+
 	RootsLib::Blender::SetState(static_cast<BlendState>(blendState_));
 	RootsLib::Raster::SetState(static_cast<RasterState>(rasterState_));
 	RootsLib::Depth::SetState(static_cast<DepthState>(testDepth_), static_cast<DepthState>(writeDepth_));
@@ -752,6 +755,9 @@ void PrimitiveRendererComponent::Draw(ID3D11DeviceContext* dc)
 	if (!isVisible_)
 		return;
 
+	if (GameObjectManager::Instance().castShadow_)
+		return;
+
 	RootsLib::Blender::SetState(static_cast<BlendState>(blendState_));
 	RootsLib::Raster::SetState(static_cast<RasterState>(rasterState_));
 	RootsLib::Depth::SetState(static_cast<DepthState>(testDepth_), static_cast<DepthState>(writeDepth_));
@@ -1351,6 +1357,7 @@ void GameObjectManager::Remove()
 // --- デバッグGuiの更新 ---
 void GameObjectManager::UpdateDebugGui(float elapsedTime)
 {
+#ifdef USE_IMGUI
 	// --- 位置とサイズを固定 ---
 	//ImGui::SetNextWindowPos(ImVec2(1550, 10), ImGuiSetCond_Always);
 	//ImGui::SetNextWindowSize(ImVec2(350, 1020), ImGuiSetCond_Always);
@@ -1380,12 +1387,14 @@ void GameObjectManager::UpdateDebugGui(float elapsedTime)
 	}
 
 	ImGui::End();
+#endif
 }
 
 
 // --- オブジェクトリストの表示 ---
 void GameObjectManager::ShowDebugList()
 {
+#ifdef USE_IMGUI
 	// --- 位置とサイズを固定 ---
 	//ImGui::SetNextWindowPos(ImVec2(1340, 10), ImGuiSetCond_Always);
 	//ImGui::SetNextWindowSize(ImVec2(200, 1020), ImGuiSetCond_Always);
@@ -1409,7 +1418,7 @@ void GameObjectManager::ShowDebugList()
 	}
 
 	ImGui::End();
-
+#endif
 }
 
 

@@ -37,6 +37,11 @@ void PlayerControllerComponent::UpdateDebugGui(float elapsedTime)
 		ImGui::DragFloat(u8"’e–ò‚Ì‘‰Á—Ê", &addBulletValue_, 0.1f);
 		ImGui::DragFloat(u8"’e–ò‚ÌÅ‘å’l", &maxBulletValue_, 0.1f);
 		ImGui::DragFloat(u8"’e–ò‚ÌƒRƒXƒg", &bulletCost_, 0.1f);
+		ImGui::Separator();
+		ImGui::DragFloat(u8"Å‘åUŒ‚—Í", &maxAttackAmount_);
+		ImGui::DragFloat(u8"Å¬UŒ‚—Í", &minAttackAmount_);
+		ImGui::DragFloat(u8"Å‘å”ÍˆÍ", &maxRangeAmount_);
+		ImGui::DragFloat(u8"Å¬”ÍˆÍ", &minRangeAmount_);
 
 		ImGui::TreePop();
 	}
@@ -79,6 +84,21 @@ void StageComponent::UpdateDebugGui(float elapsedTime)
 		ImGui::Spacing();
 
 		ImGui::DragFloat(u8"ƒ‰ƒCƒt", &life_, 0.1f);
+
+		ImGui::TreePop();
+	}
+}
+
+
+
+void BulletComponent::UpdateDebugGui(float elapsedTime)
+{
+	ImGui::Spacing();
+	ImGui::Separator();
+	if (ImGui::TreeNode(u8"Bullet")) {
+		ImGui::Spacing();
+
+		ImGui::DragFloat(u8"UŒ‚—Í", &attack_, 0.1f);
 
 		ImGui::TreePop();
 	}

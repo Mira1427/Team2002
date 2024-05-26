@@ -1,5 +1,8 @@
 #include "EnemyBehavior.h"
 
+#include "../../Library/Scene/SceneManager.h"
+#include "../../Library/Scene/SceneOver.h"
+
 #include "../../Sources/Component/Component.h"
 
 #include "../../Sources/EventManager.h"
@@ -8,6 +11,9 @@
 // --- 敵の基本処理 ---
 void BaseEnemyBehavior::Execute(GameObject* obj, float elapsedTime)
 {
+	if (EventManager::Instance().paused_)
+		return;
+
 	switch (obj->state_)
 	{
 	case 0:
@@ -41,6 +47,9 @@ void BaseEnemyBehavior::Execute(GameObject* obj, float elapsedTime)
 			size_t index = static_cast<size_t>(atan / 90.0f);	// インデックスの計算
 			StageComponent* stage = EventManager::Instance().stages_[index]->GetComponent<StageComponent>();
 			stage->life_ -= 1.0f;
+
+			if (stage->life_ < 0.0f)
+				EventManager::Instance().TranslateMessage(EventMessage::TO_OVER_SCENE);
 
 			stage->life_ = (std::max)(stage->life_, 0.0f);
 		}

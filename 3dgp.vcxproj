@@ -243,11 +243,13 @@
     <ClInclude Include="Library\Math\Matrix.h" />
     <ClInclude Include="Library\Math\Vector.h" />
     <ClInclude Include="Library\Physics\Collision.h" />
+    <ClInclude Include="Library\Scene\SceneClear.h" />
     <ClInclude Include="Library\Scene\SceneExperiment.h" />
     <ClInclude Include="Library\Scene\SceneGame.h" />
     <ClInclude Include="Library\Scene\SceneLoading.h" />
     <ClInclude Include="Library\Scene\SceneManager.h" />
     <ClInclude Include="Library\Scene\SceneModelEditor.h" />
+    <ClInclude Include="Library\Scene\SceneOver.h" />
     <ClInclude Include="Library\Scene\SceneTitle.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Sources\Behavior\Enemy\EnemyBehavior.h" />
@@ -258,6 +260,8 @@
     <ClInclude Include="Sources\Behavior\Stage\StageBehavior.h" />
     <ClInclude Include="Sources\Component\Component.h" />
     <ClInclude Include="Sources\Eraser\SceneEraser.h" />
+    <ClInclude Include="Sources\EventManager.h" />
+    <ClInclude Include="Sources\ParameterManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="External\ImGui\imgui.cpp" />
@@ -301,11 +305,13 @@
     <ClCompile Include="Library\Math\Matrix.cpp" />
     <ClCompile Include="Library\Math\Vector.cpp" />
     <ClCompile Include="Library\Physics\Collision.cpp" />
+    <ClCompile Include="Library\Scene\SceneClear.cpp" />
     <ClCompile Include="Library\Scene\SceneExperiment.cpp" />
     <ClCompile Include="Library\Scene\SceneGame.cpp" />
     <ClCompile Include="Library\Scene\SceneLoading.cpp" />
     <ClCompile Include="Library\Scene\SceneManager.cpp" />
     <ClCompile Include="Library\Scene\SceneModelEditor.cpp" />
+    <ClCompile Include="Library\Scene\SceneOver.cpp" />
     <ClCompile Include="Library\Scene\SceneTitle.cpp" />
     <ClCompile Include="Sources\Behavior\Enemy\EnemyBehavior.cpp" />
     <ClCompile Include="Sources\Behavior\Enemy\EnemySpawnerBehavior.cpp" />
@@ -315,6 +321,8 @@
     <ClCompile Include="Sources\Behavior\Stage\StageBehavior.cpp" />
     <ClCompile Include="Sources\Component\Component.cpp" />
     <ClCompile Include="Sources\Eraser\SceneEraser.cpp" />
+    <ClCompile Include="Sources\EventManager.cpp" />
+    <ClCompile Include="Sources\ParameterManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="HLSL\Common.hlsli" />

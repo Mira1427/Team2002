@@ -7,13 +7,18 @@
 
 #include "../../Library/Graphics/ModelManager.h"
 
-#include "../../Sources/Component/Component.h"
+#include "../../Component/Component.h"
+
+#include "../../EventManager.h"
 
 
 
 // --- 敵のスポナーの処理 ---
 void EnemySpawnerBehavior::Execute(GameObject* obj, float elapsedTime)
 {
+	if (EventManager::Instance().paused_)
+		return;
+
 	switch (obj->state_)
 	{
 	case 0:

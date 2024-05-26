@@ -47,7 +47,7 @@ void DebugCameraBehavior::ApplyControl(GameObject* obj, float elapsedTime)
 		camera->target_ += camera->frontVec_ * static_cast<float>(input.m_.wheel_);
 	}
 
-	if (input.state(0) & input::RMB)
+	if (input.state(0) & Input::RMB)
 	{
 		const float moveSpeed = 10.0f * elapsedTime;
 		const float moveX = -static_cast<float>(input.getCursorDeltaX() * moveSpeed);
@@ -59,7 +59,7 @@ void DebugCameraBehavior::ApplyControl(GameObject* obj, float elapsedTime)
 		camera->target_ += -camera->upVec_	  * moveY;
 	}
 
-	if (GetAsyncKeyState(VK_MENU) && input.state(0) & input::LMB)
+	if (GetAsyncKeyState(VK_MENU) && input.state(0) & Input::LMB)
 	{
 		const float rotateSpeed = 20.0f * elapsedTime;
 		const float rotateX = -input.getCursorDeltaY() * rotateSpeed;
