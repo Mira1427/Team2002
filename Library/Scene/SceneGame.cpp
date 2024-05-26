@@ -65,6 +65,58 @@ void SceneGame::Initialize()
 		StageComponent* stage = obj->AddComponent<StageComponent>();
 		stage->life_ = 5.0f;
 	}
+
+
+	// --- UŒ‚ƒQ[ƒW‚ÌƒRƒ“ƒgƒ[ƒ‰[ ---
+	GameObject* attackGaugeController = GameObjectManager::Instance().Add(
+		std::make_shared<GameObject>()
+	);
+	{
+
+		attackGaugeController->name_ = u8"UŒ‚ƒQ[ƒW‚ÌƒRƒ“ƒgƒ[ƒ‰[";
+		attackGaugeController->eraser_ = EraserManager::Instance().GetEraser("Scene");
+		attackGaugeController->parent_ = controller;
+	}
+
+
+	// --- UŒ‚ƒQ[ƒW ---
+	{
+		GameObject* obj = GameObjectManager::Instance().Add(
+			std::make_shared<GameObject>(),
+			Vector3(),
+			BehaviorManager::Instance().GetBehavior("AttackGauge")
+		);
+
+		obj->name_ = u8"UŒ‚ƒQ[ƒW";
+		obj->eraser_ = EraserManager::Instance().GetEraser("Scene");
+		obj->parent_ = attackGaugeController;
+
+		PrimitiveRendererComponent* renderer = obj->AddComponent<PrimitiveRendererComponent>();
+		renderer->size_.y = 50.0f;
+		renderer->testDepth_ = true;
+		renderer->writeDepth_ = true;
+		renderer->color_ = { 1.0f, 0.0f, 0.0f, 1.0f };
+	}
+
+
+	// --- UŒ‚ƒQ[ƒW ---
+	{
+		GameObject* obj = GameObjectManager::Instance().Add(
+			std::make_shared<GameObject>(),
+			Vector3(),
+			BehaviorManager::Instance().GetBehavior("RangeGauge")
+		);
+
+		obj->name_ = u8"”ÍˆÍƒQ[ƒW";
+		obj->eraser_ = EraserManager::Instance().GetEraser("Scene");
+		obj->parent_ = attackGaugeController;
+
+		PrimitiveRendererComponent* renderer = obj->AddComponent<PrimitiveRendererComponent>();
+		renderer->size_.y = 50.0f;
+		renderer->testDepth_ = true;
+		renderer->writeDepth_ = true;
+		renderer->color_ = { 0.0f, 0.0f, 1.0f, 1.0f };
+	}
 }
 
 
@@ -570,11 +622,15 @@ GameObject* SceneGame::AddPlayerController(float rotateSpeed, float range)
 	obj->eraser_ = EraserManager::Instance().GetEraser("Scene");
 
 	PlayerControllerComponent* controller = obj->AddComponent<PlayerControllerComponent>();
+
 	controller->rotateSpeed_ = rotateSpeed;	// ‰ñ“]‘¬“x
 	controller->range_ = range;				// ’†S‚©‚ç‚Ì‹——£
+
 	controller->maxBulletValue_ = 350.0f;	// ’e–ò‚ÌÅ‘å”
 	controller->addBulletValue_ = 10.0f;	// ’e–ò‚Ì‘‰Á—Ê
 	controller->bulletCost_ = 10.0f;		// ’e–ò‚ÌƒRƒXƒg
+
+	controller->addAttackGaugeValue_ = 0.25f;	// UŒ‚ƒQ[ƒW‚Ì‘‰Á—Ê
 
 	return obj;
 }

@@ -28,7 +28,10 @@ void PlayerControllerComponent::UpdateDebugGui(float elapsedTime)
 
 		ImGui::DragFloat(u8"距離", &range_, 0.1f);
 		ImGui::DragFloat(u8"回転速度", &rotateSpeed_, 5.0f);
-		ImGui::DragFloat(u8"アクションのゲージ", &actionGauge_, 0.1f);
+		ImGui::Separator();
+		ImGui::DragFloat(u8"攻撃ゲージ", &attackGauge_, 0.1f);
+		ImGui::DragFloat(u8"攻撃ゲージの増加量", &addAttackGaugeValue_, 0.01f);
+		ImGui::Separator();
 		ImGui::DragFloat(u8"弾薬のゲージ 左", &bullet_[0], 0.1f);
 		ImGui::DragFloat(u8"弾薬のゲージ 右", &bullet_[1], 0.1f);
 		ImGui::DragFloat(u8"弾薬の増加量", &addBulletValue_, 0.1f);

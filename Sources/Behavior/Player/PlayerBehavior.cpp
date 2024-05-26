@@ -162,16 +162,18 @@ void PlayerControllerBehavior::Rotate(GameObject* obj, PlayerControllerComponent
 	{
 	case input::LEFT:
 		obj->transform_->rotation_.y += rotateSpeed;								// ‰ñ“]
-		controller->actionGauge_ -= elapsedTime;									// ƒAƒNƒVƒ‡ƒ“ƒQ[ƒW‚ÌŒ¸­
 		controller->bullet_[0] += controller->addBulletValue_ * elapsedTime;		// ’e–ò‚Ì‘‰Á
-		controller->bullet_[1] += controller->addBulletValue_ * elapsedTime;		// ’e–ò‚Ì‘‰Á
+		controller->bullet_[1] += controller->addBulletValue_ * elapsedTime;		//
+		controller->attackGauge_ -= controller->addAttackGaugeValue_ * elapsedTime;	// UŒ‚ƒQ[ƒW‚ÌŒ¸­
+		controller->attackGauge_ = (std::max)(controller->attackGauge_, -1.0f);		// UŒ‚ƒQ[ƒW‚Ì§ŒÀ
 		break;
 
 	case input::RIGHT:
 		obj->transform_->rotation_.y += -rotateSpeed;								// ‰ñ“]
-		controller->actionGauge_ += elapsedTime;									// ƒAƒNƒVƒ‡ƒ“ƒQ[ƒW‚Ì‘‰Á
 		controller->bullet_[0] += controller->addBulletValue_ * elapsedTime;		// ’e–ò‚Ì‘‰Á
-		controller->bullet_[1] += controller->addBulletValue_ * elapsedTime;		// ’e–ò‚Ì‘‰Á
+		controller->bullet_[1] += controller->addBulletValue_ * elapsedTime;		//
+		controller->attackGauge_ += controller->addAttackGaugeValue_ * elapsedTime;	// UŒ‚ƒQ[ƒW‚Ì‘‰Á
+		controller->attackGauge_ = (std::min)(controller->attackGauge_, 1.0f);		// UŒ‚ƒQ[ƒW‚Ì§ŒÀ
 		break;
 	}
 

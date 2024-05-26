@@ -27,9 +27,10 @@ public:
 	PlayerControllerComponent() :
 		range_(),
 		rotateSpeed_(),
-		actionGauge_(),
+		attackGauge_(),
+		addAttackGaugeValue_(),
 		bullet_(),
-		addBulletValue_(1.0f),
+		addBulletValue_(),
 		maxBulletValue_(),
 		bulletCost_()
 	{}
@@ -37,13 +38,14 @@ public:
 	void Draw(ID3D11DeviceContext* dc) override {};
 	void UpdateDebugGui(float elapsedTime) override;
 
-	float range_;			// キャラの距離
-	float rotateSpeed_;		// 回転速度
-	float actionGauge_;		// アクションゲージ
-	float bullet_[2];		// 弾薬
-	float addBulletValue_;	// 弾薬の増加量
-	float maxBulletValue_;	// 弾薬の最大値
-	float bulletCost_;		// 弾薬のコスト
+	float range_;				// キャラの距離
+	float rotateSpeed_;			// 回転速度
+	float attackGauge_;			// 攻撃ゲージ
+	float addAttackGaugeValue_;	// 攻撃ゲージの増加量
+	float bullet_[2];			// 弾薬
+	float addBulletValue_;		// 弾薬の増加量
+	float maxBulletValue_;		// 弾薬の最大値
+	float bulletCost_;			// 弾薬のコスト
 };
 
 
