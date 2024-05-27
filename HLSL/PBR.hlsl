@@ -111,8 +111,6 @@ float4 main(VSOutput pin) : SV_TARGET
         diffPoint += diff;
         specPoint += spec;
     }
-    
-    // --- ポイントライトの色を加算 ---
 
    
     // --- 環境光による底上げ ---

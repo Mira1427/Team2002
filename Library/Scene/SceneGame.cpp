@@ -25,6 +25,21 @@ void SceneGame::Initialize()
 	lightingManager->directionLight_.viewFarZ_ = 185.0f;
 
 
+	{
+		GameObject* obj = GameObjectManager::Instance().Add(
+			std::make_shared<GameObject>(),
+			Vector3(),
+			BehaviorManager::Instance().GetBehavior("GameCamera")
+		);
+
+		obj->name_ = u8"ゲームカメラ";
+
+		obj->AddComponent<CameraComponent>();
+
+		CameraManager::Instance().currentCamera_ = obj;
+	}
+
+
 	EventManager::Instance().Initialize();
 
 
@@ -32,9 +47,9 @@ void SceneGame::Initialize()
 	ModelManager::Instance().LoadInstancedMesh(RootsLib::DX11::GetDevice(), "./Data/Model/InstancedMesh/Bullet.fbx", 1000, true);
 
 	// --- カメラの設定 ---
-	CameraManager::Instance().currentCamera_->GetComponent<CameraComponent>()->target_.y = 125.0f;
-	CameraManager::Instance().currentCamera_->GetComponent<CameraComponent>()->target_.z = -85.0f;
-	CameraManager::Instance().currentCamera_->transform_->rotation_.x = -60.0f;
+	//CameraManager::Instance().currentCamera_->GetComponent<CameraComponent>()->target_.y = 125.0f;
+	//CameraManager::Instance().currentCamera_->GetComponent<CameraComponent>()->target_.z = -85.0f;
+	//CameraManager::Instance().currentCamera_->transform_->rotation_.x = -60.0f;
 
 	// --- コントローラーの追加 ---
 	GameObject* controller = AddPlayerController(45.0f, 85.0f);

@@ -291,7 +291,10 @@
     <ClInclude Include="Library\Scene\SceneOver.h">
       <Filter>Library\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="Library\Scene\SceneClear.h" />
+    <ClInclude Include="Library\Scene\SceneClear.h">
+      <Filter>Library\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Behavior\GameCamera.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="External\ImGui\imgui.cpp">
@@ -468,7 +471,10 @@
     <ClCompile Include="Library\Scene\SceneOver.cpp">
       <Filter>Library\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="Library\Scene\SceneClear.cpp" />
+    <ClCompile Include="Library\Scene\SceneClear.cpp">
+      <Filter>Library\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Behavior\GameCamera.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="HLSL\Primitive.hlsli">

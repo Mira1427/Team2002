@@ -11,10 +11,13 @@
 #include "../../Sources/Behavior/Enemy/EnemyBehavior.h"
 #include "../../Sources/Behavior/Enemy/EnemySpawnerBehavior.h"
 
+#include "../../Sources/Behavior/GameCamera.h"
+
 
 BehaviorManager::BehaviorManager()
 {
 	behaviors_.insert(std::make_pair("DebugCamera",			std::make_shared<DebugCameraBehavior>()));
+	behaviors_.insert(std::make_pair("GameCamera",			std::make_shared<GameCameraBehavior>()));
 
 	behaviors_.insert(std::make_pair("BasePlayer",			std::make_shared<BasePlayerBehavior>()));
 	behaviors_.insert(std::make_pair("PlayerController",	std::make_shared<PlayerControllerBehavior>()));

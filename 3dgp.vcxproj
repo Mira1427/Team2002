@@ -254,6 +254,7 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="Sources\Behavior\Enemy\EnemyBehavior.h" />
     <ClInclude Include="Sources\Behavior\Enemy\EnemySpawnerBehavior.h" />
+    <ClInclude Include="Sources\Behavior\GameCamera.h" />
     <ClInclude Include="Sources\Behavior\Player\AttackGaugeBehavior.h" />
     <ClInclude Include="Sources\Behavior\Player\BulletBehavior.h" />
     <ClInclude Include="Sources\Behavior\Player\PlayerBehavior.h" />
@@ -315,6 +316,7 @@
     <ClCompile Include="Library\Scene\SceneTitle.cpp" />
     <ClCompile Include="Sources\Behavior\Enemy\EnemyBehavior.cpp" />
     <ClCompile Include="Sources\Behavior\Enemy\EnemySpawnerBehavior.cpp" />
+    <ClCompile Include="Sources\Behavior\GameCamera.cpp" />
     <ClCompile Include="Sources\Behavior\Player\AttackGaugeBehavior.cpp" />
     <ClCompile Include="Sources\Behavior\Player\BulletBehavior.cpp" />
     <ClCompile Include="Sources\Behavior\Player\PlayerBehavior.cpp" />
