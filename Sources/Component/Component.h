@@ -34,6 +34,7 @@ public:
 		maxBulletValue_(),
 		bulletCost_(),
 		attackAmount_(),
+		rangeAmount_(),
 		maxAttackAmount_(),
 		minAttackAmount_(),
 		maxRangeAmount_(),
@@ -78,6 +79,13 @@ public:
 };
 
 
+enum class EnemyType
+{
+	WHITE,
+	BLACK,
+	GRAY
+};
+
 // --- 敵のコンポーネント ---
 class EnemyComponent final : public Component
 {
@@ -90,6 +98,7 @@ public:
 	void UpdateDebugGui(float elapsedTime) override;
 
 	float life_;
+	EnemyType type_;
 };
 
 

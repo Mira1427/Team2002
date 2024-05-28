@@ -28,8 +28,8 @@ public:
 	Particle(Particle&&) noexcept = delete;
 	Particle& operator=(Particle&&) noexcept = delete;
 
-	void Initialize(ID3D11DeviceContext* dc, float deltaTime);
-	void Update(ID3D11DeviceContext* dc, float deltaTime);
+	void Initialize(ID3D11DeviceContext* dc, float deltaTime, const Vector3& position);
+	void Update(ID3D11DeviceContext* dc, float deltaTime, const Vector3& position);
 	void Draw(ID3D11DeviceContext* dc);
 
 	const size_t maxParticleCount_;

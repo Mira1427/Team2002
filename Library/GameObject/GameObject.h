@@ -13,6 +13,7 @@
 #include "../Graphics/MeshRenderer.h"
 #include "../Graphics/InstancedMesh.h"
 #include "../Graphics/TextureManager.h"
+#include "../Graphics/Particle.h"
 
 
 
@@ -507,6 +508,30 @@ public:
 	Vector3 gravity_;
 	Vector3 force_;
 	Vector3 friction_;
+};
+
+
+// --- パーティクルコンポーネント ---
+class ParticleComponent final : public Component
+{
+public:
+	ParticleComponent() :
+		particle_(nullptr),
+		timeScale_(1.0f),
+		isPlay_(true),
+		isVisible_(true)
+	{}
+
+
+	void Initialize(ID3D11DeviceContext* dc) const;
+	void Update(ID3D11DeviceContext* dc, float elapsedTime) const;
+	void Draw(ID3D11DeviceContext* dc) override;
+	void UpdateDebugGui(float elapsedTime) override;
+
+	std::unique_ptr<Particle> particle_;
+	float timeScale_;
+	bool isPlay_;
+	bool isVisible_;
 };
 
 

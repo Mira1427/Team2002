@@ -175,5 +175,8 @@ namespace RootsLib
 	namespace Math
 	{
 		float Lerp(const float start, const float end, const float t);
+
+		float Clampf(const float value, const float min, const float max);
+		int	  Clamp(const int value, const int min, const int max);
 	}
 }

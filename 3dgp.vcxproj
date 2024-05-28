@@ -213,6 +213,7 @@
     <ClInclude Include="Library\GameObject\CameraBehavior.h" />
     <ClInclude Include="Library\GameObject\EraserManager.h" />
     <ClInclude Include="Library\GameObject\GameObject.h" />
+    <ClInclude Include="Library\GameObject\ParticleBehavior.h" />
     <ClInclude Include="Library\Graphics\DebugLineRenderer.h" />
     <ClInclude Include="Library\Graphics\DebugRenderer.h" />
     <ClInclude Include="Library\Graphics\FrameBuffer.h" />
@@ -277,6 +278,7 @@
     <ClCompile Include="Library\GameObject\CameraBehavior.cpp" />
     <ClCompile Include="Library\GameObject\EraserManager.cpp" />
     <ClCompile Include="Library\GameObject\GameObject.cpp" />
+    <ClCompile Include="Library\GameObject\ParticleBehavior.cpp" />
     <ClCompile Include="Library\Graphics\DebugLineRenderer.cpp" />
     <ClCompile Include="Library\Graphics\DebugRenderer.cpp" />
     <ClCompile Include="Library\Graphics\FrameBuffer.cpp" />

@@ -7,6 +7,7 @@
 
 #include "../Physics/Collision.h"
 
+#include "../Library/CameraManager.h"
 #include "../Library/library.h"
 
 
@@ -1077,8 +1078,8 @@ void CameraComponent::UpdateDebugGui(float elapsedTime)
 		ImGui::Checkbox(u8"可視化", &isVisible_);
 		ImGui::Spacing();
 
-		//if (ImGui::Button(u8"適用", ImVec2(60, 30)))
-		//	SceneManager::instance().scene->camera_ = this->object_;
+		if (ImGui::Button(u8"適用", ImVec2(60, 30)))
+			CameraManager::Instance().currentCamera_ = this->object_;
 
 		ImGui::DragFloat3(u8"目標", &target_.x, 0.1f);
 		ImGui::DragFloat(u8"距離", &range_, 0.1f);
@@ -1105,6 +1106,72 @@ void RigidBodyComponent::UpdateDebugGui(float elapsedTime)
 		ImGui::DragFloat3(u8"重力", &gravity_.x);
 		ImGui::DragFloat3(u8"衝撃", &force_.x);
 		ImGui::DragFloat3(u8"摩擦", &friction_.x);
+
+		ImGui::TreePop();
+	}
+}
+
+
+
+void ParticleComponent::Initialize(ID3D11DeviceContext* dc) const
+{
+	particle_->Initialize(dc, 0.0f, object_->transform_->position_);
+}
+
+void ParticleComponent::Update(ID3D11DeviceContext* dc, float elapsedTime) const
+{
+	if (isPlay_)
+		particle_->Update(dc, elapsedTime * timeScale_, object_->transform_->position_);
+}
+
+
+void ParticleComponent::Draw(ID3D11DeviceContext* dc)
+{
+	if (!isVisible_)
+		return;
+
+	if (GameObjectManager::Instance().castShadow_)
+		return;
+
+	RootsLib::Blender::SetState(BlendState::NONE);
+	RootsLib::Raster::SetState(RasterState::CULL_BACK);
+	RootsLib::Depth::SetState(DepthState::TEST_ON, DepthState::WRITE_ON);
+
+	particle_->Draw(dc);
+
+}
+
+void ParticleComponent::UpdateDebugGui(float elapsedTime)
+{
+	ImGui::Spacing();
+	ImGui::Separator();
+	if (ImGui::TreeNode("Particle"))
+	{
+		ImGui::SameLine();
+		ImGui::Text("          ");
+		ImGui::SameLine();
+		ImGui::Checkbox(u8"可視化", &isVisible_);
+		ImGui::Spacing();
+
+		ImGui::BulletText(u8"時間 : %f", particle_->particleData_.time_);
+
+		if (ImGui::Button(u8"再生", ImVec2(35.0f, 20.0f)))
+			isPlay_ = true;
+
+		ImGui::SameLine();
+
+		if (ImGui::Button(u8"停止", ImVec2(35.0f, 20.0f)))
+			isPlay_ = false;
+
+		ImGui::SameLine();
+
+		if (ImGui::Button(u8"初期化", ImVec2(52.5f, 20.0f)))
+		{
+			particle_->Initialize(RootsLib::DX11::GetDeviceContext(), 0, object_->transform_->position_);
+			particle_->particleData_.time_ = 0.0f;
+		}
+
+		ImGui::DragFloat(u8"タイムスケール", &timeScale_, 0.01f);
 
 		ImGui::TreePop();
 	}

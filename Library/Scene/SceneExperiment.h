@@ -100,7 +100,5 @@ public:
 	GameObject* pointLight_;
 
 	std::unique_ptr<InstancedMesh> instancedMesh_;
-
-	std::unique_ptr<Particle> particle_;
 };
 

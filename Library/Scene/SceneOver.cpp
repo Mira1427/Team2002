@@ -13,6 +13,7 @@
 
 void SceneOver::Initialize()
 {
+	EventManager::Instance().button_.state_ = ButtonState::OVER;
 }
 
 void SceneOver::Finalize()
@@ -22,9 +23,7 @@ void SceneOver::Finalize()
 void SceneOver::Update(float elapsedTime)
 {
 	EventManager::Instance().Update(elapsedTime);
-
-	if (InputManager::Instance().down(0) & Input::CONFIRM)
-		EventManager::Instance().TranslateMessage(EventMessage::TO_TITLE_SCENE);
+	EventManager::Instance().UpdateButton();
 
 	GameObjectManager::Instance().Update(elapsedTime);			// オブジェクトの更新
 	GameObjectManager::Instance().ShowDebugList();				// デバッグリストの表示

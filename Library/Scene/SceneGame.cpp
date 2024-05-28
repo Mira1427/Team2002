@@ -25,6 +25,7 @@ void SceneGame::Initialize()
 	lightingManager->directionLight_.viewFarZ_ = 185.0f;
 
 
+	// --- カメラの設定 ---
 	{
 		GameObject* obj = GameObjectManager::Instance().Add(
 			std::make_shared<GameObject>(),
@@ -41,15 +42,11 @@ void SceneGame::Initialize()
 
 
 	EventManager::Instance().Initialize();
+	EventManager::Instance().button_.state_ = ButtonState::GAME;
 
 
 	// --- 弾丸のモデルの読み込み ---
 	ModelManager::Instance().LoadInstancedMesh(RootsLib::DX11::GetDevice(), "./Data/Model/InstancedMesh/Bullet.fbx", 1000, true);
-
-	// --- カメラの設定 ---
-	//CameraManager::Instance().currentCamera_->GetComponent<CameraComponent>()->target_.y = 125.0f;
-	//CameraManager::Instance().currentCamera_->GetComponent<CameraComponent>()->target_.z = -85.0f;
-	//CameraManager::Instance().currentCamera_->transform_->rotation_.x = -60.0f;
 
 	// --- コントローラーの追加 ---
 	GameObject* controller = AddPlayerController(45.0f, 85.0f);
@@ -93,9 +90,7 @@ void SceneGame::Finalize()
 void SceneGame::Update(float elapsedTime)
 {
 	EventManager::Instance().Update(elapsedTime);
-
-	if (InputManager::Instance().down(0) & Input::PAUSE)
-		EventManager::Instance().paused_ = !EventManager::Instance().paused_;
+	EventManager::Instance().UpdateButton();
 
 	GameObjectManager::Instance().Update(elapsedTime);			// オブジェクトの更新
 	GameObjectManager::Instance().ShowDebugList();				// デバッグリストの表示

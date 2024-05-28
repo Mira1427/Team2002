@@ -142,9 +142,6 @@ void SceneExperiment::Initialize()
 
 	instancedMesh_ = std::make_unique<InstancedMesh>(RootsLib::DX11::GetDevice(), "./Data/Model/LandScape.fbx", true, 1000);
 	instancedMesh_->materials_.begin()->second.shaderResourceViews[0] = TextureManager::Instance().GetTexture(L"./Data/Texture/Cold Sunset Equirect.png")->srv_;;
-
-	particle_ = std::make_unique<Particle>(RootsLib::DX11::GetDevice(), 1000);
-	particle_->Initialize(RootsLib::DX11::GetDeviceContext(), 0.0f);
 }
 
 
@@ -159,14 +156,6 @@ void SceneExperiment::Update(float elapsedTime)
 {
 	//obj2_->GetComponent<AnimatorComponent>()->Update(elapsedTime);
 	pointLight_->GetComponent<PointLightComponent>()->Update();
-
-
-	if (ImGui::Button(u8"‰Šú‰»", ImVec2(200.0f, 50.0f)))
-	{
-		particle_->Initialize(RootsLib::DX11::GetDeviceContext(), 0.0f);
-	}
-
-	particle_->Update(RootsLib::DX11::GetDeviceContext(), elapsedTime);
 
 	GameObject* camera = CameraManager::Instance().currentCamera_;
 	CameraComponent* cameraComp = camera->GetComponent<CameraComponent>();
@@ -443,8 +432,6 @@ void SceneExperiment::Render(ID3D11DeviceContext* dc)
 	//instancedMesh_->End(dc);
 
 	//RootsLib::Blender::SetState(BlendState::ADD);
-
-	particle_->Draw(RootsLib::DX11::GetDeviceContext());
 
 	//RootsLib::Blender::SetState(BlendState::NONE);
 

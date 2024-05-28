@@ -22,6 +22,8 @@
 #include "../Scene/SceneTitle.h"
 #include "../Scene/SceneGame.h"
 
+#include "../../Sources/EventManager.h"
+
 
 extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
@@ -230,6 +232,7 @@ void Application::UpdateSystemGui()
 
 	static bool isOpenCamera  = false;	// カメラのフラグ
 	static bool isOpenLight   = false;	// ライトのフラグ
+	static bool isOpenEvent	  = false;	// イベントのフラグ
 
 	static bool isOpenTexture = false;	// テクスチャのフラグ
 	static bool isOpenModel = false;	// モデルのフラグ
@@ -313,6 +316,11 @@ void Application::UpdateSystemGui()
 				isOpenLight = true;
 			}
 
+			if (ImGui::MenuItem(u8"イベント"))
+			{
+				isOpenEvent = true;
+			}
+
 			ImGui::EndMenu();
 		}
 
@@ -394,6 +402,17 @@ void Application::UpdateSystemGui()
 		ImGui::Begin(u8"ライト", &isOpenLight);
 
 		Graphics::Instance().GetLightingManager()->UpdateDebugGui();
+
+		ImGui::End();
+	}
+
+
+	// --- イベントのGui ---
+	if(isOpenEvent)
+	{
+		ImGui::Begin(u8"イベント", &isOpenEvent);
+
+		EventManager::Instance().UpdateDebugGui();
 
 		ImGui::End();
 	}

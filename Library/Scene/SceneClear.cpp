@@ -23,6 +23,7 @@ void SceneClear::Finalize()
 void SceneClear::Update(float elapsedTime)
 {
 	EventManager::Instance().Update(elapsedTime);
+	EventManager::Instance().UpdateButton();
 
 	GameObjectManager::Instance().Update(elapsedTime);			// オブジェクトの更新
 	GameObjectManager::Instance().ShowDebugList();				// デバッグリストの表示

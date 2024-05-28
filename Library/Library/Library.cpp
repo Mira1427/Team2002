@@ -316,5 +316,15 @@ namespace RootsLib
 		{
 			return start + (end - start) * t;
 		}
+
+		float Clampf(const float value, const float min, const float max)
+		{
+			return (std::max)((std::min)(value, max), min);
+		}
+
+		int Clamp(const int value, const int min, const int max)
+		{
+			return (std::max)((std::min)(value, max), min);
+		}
 	}
 }

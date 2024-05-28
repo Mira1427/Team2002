@@ -24,6 +24,33 @@ enum class EventMessage
 };
 
 
+enum class ButtonState
+{
+	NONE,
+	TITLE,
+	GAME,
+	PAUSE,
+	OVER,
+	CLEAR
+};
+
+
+enum class TitleEvent
+{
+	START,
+	END,
+	MAX
+};
+
+
+enum class PauseEvent
+{
+	CONTINUE,
+	END,
+	MAX
+};
+
+
 class EventManager
 {
 private:
@@ -39,12 +66,26 @@ public:
 
 	void Initialize();
 	void Update(float elapsedTime);
+	void UpdateButton();
+	void UpdateDebugGui();
 
 	void TranslateMessage(EventMessage msg) { messages_.emplace_back(msg); }
+
+
+	void UpdateTitleEvent();
+	void UpdatePauseEvent();
+
 
 	std::list<EventMessage> messages_;
 
 	GameObject* stages_[static_cast<size_t>(StageDirection::MAX)];	// ŠX‚Ì4“™•ª‚³‚ê‚½”»’è—p
 	bool paused_ = false;
+
+
+	struct Button
+	{
+		ButtonState state_;
+		int eventIndex_;
+	}button_;
 };
 

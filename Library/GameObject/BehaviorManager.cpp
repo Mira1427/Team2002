@@ -4,6 +4,8 @@
 
 #include "CameraBehavior.h"
 
+#include "../../Library/GameObject/ParticleBehavior.h"
+
 #include "../../Sources/Behavior/Player/PlayerBehavior.h"
 #include "../../Sources/Behavior/Player/BulletBehavior.h"
 #include "../../Sources/Behavior/Player/AttackGaugeBehavior.h"
@@ -18,6 +20,8 @@ BehaviorManager::BehaviorManager()
 {
 	behaviors_.insert(std::make_pair("DebugCamera",			std::make_shared<DebugCameraBehavior>()));
 	behaviors_.insert(std::make_pair("GameCamera",			std::make_shared<GameCameraBehavior>()));
+
+	behaviors_.insert(std::make_pair("Particle",			std::make_shared<ParticleBehavior>()));
 
 	behaviors_.insert(std::make_pair("BasePlayer",			std::make_shared<BasePlayerBehavior>()));
 	behaviors_.insert(std::make_pair("PlayerController",	std::make_shared<PlayerControllerBehavior>()));

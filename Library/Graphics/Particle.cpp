@@ -61,14 +61,15 @@ Particle::Particle(ID3D11Device* device, size_t count) : maxParticleCount_(count
 }
 
 
-void Particle::Initialize(ID3D11DeviceContext* dc, float deltaTime)
+void Particle::Initialize(ID3D11DeviceContext* dc, float deltaTime, const Vector3& position)
 {
 	std::lock_guard<std::mutex> lock(Graphics::Instance().GetMutex());
 
 	dc->CSSetUnorderedAccessViews(0, 1, bufferUAV_.GetAddressOf(), NULL);
 
-	particleData_.time_			+= deltaTime;
-	particleData_.deltaTime_	= deltaTime;
+	particleData_.time_ += deltaTime;
+	particleData_.deltaTime_ = deltaTime;
+	particleData_.emitterPosition_ = position;
 	Shader::UpdateConstantBuffer(dc, constantBuffer_.Get(), particleData_);
 	dc->CSSetConstantBuffers(0, 1, constantBuffer_.GetAddressOf());
 	dc->CSSetShader(initializerCS_.Get(), NULL, 0);
@@ -82,13 +83,13 @@ void Particle::Initialize(ID3D11DeviceContext* dc, float deltaTime)
 }
 
 
-void Particle::Update(ID3D11DeviceContext* dc, float deltaTime)
+void Particle::Update(ID3D11DeviceContext* dc, float deltaTime, const Vector3& position)
 {
 	dc->CSSetUnorderedAccessViews(0, 1, bufferUAV_.GetAddressOf(), NULL);
 
 	particleData_.time_ += deltaTime;
 	particleData_.deltaTime_ = deltaTime;
-	particleData_.emitterPosition_ = { 0.0f, 0.0f, -5.0f };
+	particleData_.emitterPosition_ = position;
 	Shader::UpdateConstantBuffer(dc, constantBuffer_.Get(), particleData_);
 	dc->CSSetConstantBuffers(0, 1, constantBuffer_.GetAddressOf());
 	dc->CSSetShader(cs_.Get(), NULL, 0);

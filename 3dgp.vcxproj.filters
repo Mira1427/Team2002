@@ -294,7 +294,12 @@
     <ClInclude Include="Library\Scene\SceneClear.h">
       <Filter>Library\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\Behavior\GameCamera.h" />
+    <ClInclude Include="Library\GameObject\ParticleBehavior.h">
+      <Filter>Library\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Behavior\GameCamera.h">
+      <Filter>Sources</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="External\ImGui\imgui.cpp">
@@ -474,7 +479,12 @@
     <ClCompile Include="Library\Scene\SceneClear.cpp">
       <Filter>Library\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\Behavior\GameCamera.cpp" />
+    <ClCompile Include="Library\GameObject\ParticleBehavior.cpp">
+      <Filter>Library\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Behavior\GameCamera.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="HLSL\Primitive.hlsli">

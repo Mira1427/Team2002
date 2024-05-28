@@ -17,6 +17,7 @@
 
 void SceneTitle::Initialize()
 {
+	EventManager::Instance().button_.state_ = ButtonState::TITLE;
 }
 
 void SceneTitle::Finalize()
@@ -25,12 +26,8 @@ void SceneTitle::Finalize()
 
 void SceneTitle::Update(float elapsedTime)
 {
-
 	EventManager::Instance().Update(elapsedTime);
-
-	if(InputManager::Instance().down(0) & Input::CONFIRM)
-		EventManager::Instance().TranslateMessage(EventMessage::TO_GAME_SCENE);
-
+	EventManager::Instance().UpdateButton();
 
 	GameObjectManager::Instance().Update(elapsedTime);			// オブジェクトの更新
 	GameObjectManager::Instance().ShowDebugList();				// デバッグリストの表示
