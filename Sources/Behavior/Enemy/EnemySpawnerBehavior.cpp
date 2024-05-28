@@ -72,10 +72,15 @@ void EnemySpawnerBehavior::AddEnemy(GameObject* obj)
 	EnemyComponent* enemyComp = enemy->AddComponent<EnemyComponent>();
 	enemyComp->life_ = 3.0f;	// ライフの設定
 
+	size_t colorIndex = rand() % 3;
+	Vector4 colors[3] = { {1.0f, 1.0f, 1.0f, 1.0f}, {0.0f, 0.0f, 0.0f, 1.0f}, {0.5f, 0.5f, 0.5f, 1.0f} };
+	enemyComp->type_ = static_cast<CharactorType>(colorIndex);
+
 
 	// --- 描画コンポーネント追加 ---
 	MeshRendererComponent* renderer = enemy->AddComponent<MeshRendererComponent>();
 	renderer->model_ = ModelManager::Instance().GetModel("./Data/Model/plantune.fbx");
+	renderer->color_ = colors[colorIndex];
 
 
 	// --- アニメーションコンポーネント追加 ---

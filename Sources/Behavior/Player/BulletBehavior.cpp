@@ -44,10 +44,14 @@ void BaseBulletBehavior::Hit(GameObject* src, GameObject* dst, float elapsedTime
 
 		BulletComponent* bullet = src->GetComponent<BulletComponent>();
 		EnemyComponent* enemy   = dst->GetComponent<EnemyComponent>();
-		enemy->life_ -= bullet->attack_;
 
-		// --- Ž€–Sˆ— ---
-		if (enemy->life_ <= 0.0f)
-			dst->Destroy();
+		if(bullet->type_ == enemy->type_ || enemy->type_ == CharactorType::GRAY)
+		{
+			enemy->life_ -= bullet->attack_;
+
+			// --- Ž€–Sˆ— ---
+			if (enemy->life_ <= 0.0f)
+				dst->Destroy();
+		}
 	}
 }

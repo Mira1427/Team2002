@@ -79,6 +79,20 @@ void SceneGame::Initialize()
 
 	// --- 範囲ゲージ ---
 	AddRangeGauge(attackGaugeController, 50.0f);
+
+	{
+		auto* obj = GameObjectManager::Instance().Add(
+			std::make_shared<GameObject>(),
+			Vector3(),
+			BehaviorManager::Instance().GetBehavior("Particle")
+		);
+
+		obj->name_ = u8"パーティクル";
+
+		auto* particle = obj->AddComponent<ParticleComponent>();
+		particle->particle_ = std::make_unique<Particle>(RootsLib::DX11::GetDevice(), 1000);
+		particle->Initialize(RootsLib::DX11::GetDeviceContext());
+	}
 }
 
 
@@ -560,6 +574,9 @@ GameObject* SceneGame::AddPlayer(std::string name, GameObject* parent, float rot
 	MeshRendererComponent* renderer = obj->AddComponent<MeshRendererComponent>();
 	renderer->model_ = ModelManager::Instance().LoadModel(RootsLib::DX11::GetDevice(), "./Data/Model/plantune.fbx", false, false, nullptr);
 
+	Vector4 colors[2] = { {1.0f, 1.0f, 1.0f, 1.0f}, {0.0f, 0.0f, 0.0f, 1.0f} };
+	renderer->color_ = colors[static_cast<size_t>(playerNum)];
+
 	// --- アニメーションコンポーネントの追加 ---
 	AnimatorComponent* animator = obj->AddComponent<AnimatorComponent>();
 	animator->isPlay_ = true;
@@ -569,6 +586,7 @@ GameObject* SceneGame::AddPlayer(std::string name, GameObject* parent, float rot
 	PlayerComponent* player = obj->AddComponent<PlayerComponent>();
 	player->angleOffset_ = rotate;
 	player->playerNum_ = playerNum;
+	player->type_ = static_cast<CharactorType>(playerNum);
 
 	return obj;
 }

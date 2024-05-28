@@ -3,6 +3,14 @@
 #include "../../Library/GameObject/GameObject.h"
 
 
+
+enum class CharactorType
+{
+	WHITE,
+	BLACK,
+	GRAY
+};
+
 // --- プレイヤーのコンポーネント ---
 class PlayerComponent final : public Component
 {
@@ -17,6 +25,7 @@ public:
 
 	float angleOffset_;
 	int playerNum_;
+	CharactorType type_;
 };
 
 
@@ -78,14 +87,6 @@ public:
 	float spawnSpeed_;
 };
 
-
-enum class EnemyType
-{
-	WHITE,
-	BLACK,
-	GRAY
-};
-
 // --- 敵のコンポーネント ---
 class EnemyComponent final : public Component
 {
@@ -98,7 +99,7 @@ public:
 	void UpdateDebugGui(float elapsedTime) override;
 
 	float life_;
-	EnemyType type_;
+	CharactorType type_;
 };
 
 
@@ -129,4 +130,5 @@ public:
 	void UpdateDebugGui(float elapsedTime) override;
 
 	float attack_;
+	CharactorType type_;
 };

@@ -14,7 +14,7 @@ public:
 private:
 	void Rotate(GameObject* obj, PlayerComponent* player, PlayerControllerComponent* controller, float angleOffset);	// ‰ñ“]ˆ—
 	void Shot(GameObject* obj, PlayerComponent* player, PlayerControllerComponent* controller);	// ËŒ‚ˆ—
-	void AddBullet(const GameObject* parent, const float scaling, const float attackAmount, const float radius);	// ’eŠÛ‚Ì’Ç‰Á
+	void AddBullet(GameObject* parent, const float scaling, const float attackAmount, const float radius);	// ’eŠÛ‚Ì’Ç‰Á
 };
 
 

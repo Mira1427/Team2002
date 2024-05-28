@@ -108,7 +108,7 @@ void BasePlayerBehavior::Shot(GameObject* obj, PlayerComponent* player, PlayerCo
 
 
 // --- ’eŠÛ‚Ì’Ç‰Á ---
-void BasePlayerBehavior::AddBullet(const GameObject* parent, const float scaling, const float attackAmount, const float radius)
+void BasePlayerBehavior::AddBullet(GameObject* parent, const float scaling, const float attackAmount, const float radius)
 {
 	GameObject* bullet = GameObjectManager::Instance().Add(
 		std::make_shared<GameObject>(),
@@ -129,6 +129,7 @@ void BasePlayerBehavior::AddBullet(const GameObject* parent, const float scaling
 
 	BulletComponent* bulletComp = bullet->AddComponent<BulletComponent>();
 	bulletComp->attack_ = attackAmount;
+	bulletComp->type_ = parent->GetComponent<PlayerComponent>()->type_;
 
 	SphereCollider* collider = bullet->AddCollider<SphereCollider>();
 	collider->radius_ = radius;
