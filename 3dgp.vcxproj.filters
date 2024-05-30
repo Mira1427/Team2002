@@ -98,6 +98,9 @@
     <Filter Include="Sources\Eraser">
       <UniqueIdentifier>{885a3f88-9d07-43aa-8140-5af5297f3c8d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="HLSL\VideoTexture">
+      <UniqueIdentifier>{6e94a158-6ee3-43dc-bcd0-f4357ff83630}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="3dgp.rc">
@@ -300,6 +303,9 @@
     <ClInclude Include="Sources\Behavior\GameCamera.h">
       <Filter>Sources</Filter>
     </ClInclude>
+    <ClInclude Include="Library\Graphics\VideoTexture.h">
+      <Filter>Library\Graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="External\ImGui\imgui.cpp">
@@ -485,6 +491,9 @@
     <ClCompile Include="Sources\Behavior\GameCamera.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
+    <ClCompile Include="Library\Graphics\VideoTexture.cpp">
+      <Filter>Library\Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="HLSL\Primitive.hlsli">
@@ -620,6 +629,9 @@
     </FxCompile>
     <FxCompile Include="HLSL\ParticleInitializer_CS.hlsl">
       <Filter>HLSL\Particle</Filter>
+    </FxCompile>
+    <FxCompile Include="HLSL\Video_PS.hlsl">
+      <Filter>HLSL\VideoTexture</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

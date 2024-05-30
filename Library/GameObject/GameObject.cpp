@@ -2,6 +2,7 @@
 
 #include "../../External/ImGui/imgui.h"
 
+#include "../Graphics/Shader.h"
 #include "../Graphics/LightingManager.h"
 #include "../Graphics/ModelManager.h"
 
@@ -1176,6 +1177,103 @@ void ParticleComponent::UpdateDebugGui(float elapsedTime)
 		ImGui::TreePop();
 	}
 }
+
+
+
+
+VideoComponent::~VideoComponent()
+{
+	video_.Destroy();
+}
+
+void VideoComponent::Initialize(const char* fileName)
+{
+	video_.Create(fileName);
+	texSize_.x = video_.GetWidth();
+	texSize_.y = video_.GetHeight();
+}
+
+void VideoComponent::Update(float elapsedTime)
+{
+	if (video_.internalData_)
+		video_.Update(elapsedTime * timeScale_);
+}
+
+void VideoComponent::Draw(ID3D11DeviceContext* dc)
+{
+	if (!video_.internalData_)
+		return;
+
+	if (!visible_)
+		return;
+
+	RootsLib::Blender::SetState(static_cast<BlendState>(blendState_));
+	RootsLib::Raster::SetState(static_cast<RasterState>(rasterState_));
+	RootsLib::Depth::SetState(static_cast<DepthState>(testDepth_), static_cast<DepthState>(writeDepth_));
+
+	Graphics::Instance().GetSpriteRenderer()->Draw(
+		dc,
+		video_.GetTexture().GetAddressOf(),
+		video_.GetWidth(),
+		video_.GetHeight(),
+		object_->transform_->position_,
+		object_->transform_->scaling_,
+		texPos_,
+		texSize_,
+		Vector2::Zero_,
+		object_->transform_->rotation_,
+		Vector4::White_,
+		inWorld_,
+		false,
+		Shader::GetPixelShader(PixelShader::VIDEO)
+	);
+}
+
+void VideoComponent::UpdateDebugGui(float elapsedTime)
+{
+	ImGui::Spacing();
+	ImGui::Separator();
+	if (ImGui::TreeNode("Video"))
+	{
+		ImGui::SameLine();
+		ImGui::Text("          ");
+		ImGui::SameLine();
+		ImGui::Checkbox(u8"可視化", &visible_);
+		ImGui::Spacing();
+
+		if (ImGui::Button(u8". . .", ImVec2(30.0f, 20.0f)))
+		{
+			video_.Create(RootsLib::String::ConvertWideChar(RootsLib::File::GetFileName().c_str()).c_str());
+		}
+
+		if (ImGui::Button(u8"再生", ImVec2(35.0f, 20.0f)))
+			video_.Resume();
+
+		ImGui::SameLine();
+
+		if (ImGui::Button(u8"停止", ImVec2(35.0f, 20.0f)))
+			video_.Pause();
+
+		ImGui::DragFloat(u8"タイムスケール", &timeScale_, 0.01f);
+
+
+		static const char* blendStates[] = { u8"なし", u8"透明", u8"加算", u8"減算" };
+		ImGui::Combo(u8"ブレンド", &blendState_, blendStates, ARRAYSIZE(blendStates));
+
+		static const char* rasterStates[] = { u8"カリングなし", u8"背面カリング", u8"前面カリング", u8"ワイヤーフレーム", u8"ワイヤーフレーム カリングなし" };
+		ImGui::Combo("ラスター", &rasterState_, rasterStates, ARRAYSIZE(rasterStates));
+
+		ImGui::Checkbox(u8"深度テスト", &testDepth_);
+		ImGui::Checkbox(u8"深度書き込み", &writeDepth_);
+
+		ImGui::DragFloat2(u8"切り抜き位置", &texPos_.x);
+		ImGui::DragFloat2(u8"切り抜きサイズ", &texSize_.x);
+		ImGui::Checkbox(u8"ワールド空間", &inWorld_);
+
+		ImGui::TreePop();
+	}
+}
+
 
 
 // ===== ゲームオブジェクトクラス =============================================================================================================================

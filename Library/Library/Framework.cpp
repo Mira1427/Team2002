@@ -7,6 +7,7 @@
 #include "../Graphics/Graphics.h"
 #include "../Graphics/Shader.h"
 #include "../Graphics/LightingManager.h"
+#include "../Graphics/VideoTexture.h"
 
 #include "../Scene/SceneManager.h"
 #include "../Scene/SceneExperiment.h"
@@ -66,6 +67,8 @@ bool Framework::Initialize()
 
 	Graphics::Instance().InitializeManager();
 
+	VideoTexture::CreateAPI();
+
 	// --- ImGuiの初期化 ---
 	RootsLib::ImGui::Initialize();
 
@@ -124,6 +127,7 @@ bool Framework::Initialize()
 			BehaviorManager::Instance().GetBehavior("DebugCamera")
 		);
 
+		CameraManager::Instance().debugCamera_ = camera;
 		CameraManager::Instance().currentCamera_ = camera;
 
 		camera->name_ = u8"デバッグカメラ";
@@ -147,6 +151,8 @@ void Framework::Finalize()
 {
 	// --- ImGuiの終了処理 ---
 	RootsLib::ImGui::Finalize();
+
+	VideoTexture::DestroyAPI();
 }
 
 

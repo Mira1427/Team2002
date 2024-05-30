@@ -15,8 +15,8 @@ std::list<InputAssign> keyAssign = {
 	{"Delete",	Input::DELETE_, DirectX::Keyboard::Delete},
 	{"Enter",	Input::ENTER,	DirectX::Keyboard::Enter},
 	{"Escape",	Input::ESCAPE,	DirectX::Keyboard::Escape},
-	{"Space",	Input::CONFIRM, DirectX::Keyboard::Space},
-	{"P",		Input::PAUSE,	DirectX::Keyboard::P},
+	{"Space",	Input::CONFIRM, DirectX::Keyboard::Enter},
+	{"Escape",	Input::PAUSE,	DirectX::Keyboard::Escape},
 	{"---keyAssignEnd---", -1, -1}
 };
 

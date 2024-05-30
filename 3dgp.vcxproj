@@ -231,6 +231,7 @@
     <ClInclude Include="Library\Graphics\SkyMap.h" />
     <ClInclude Include="Library\Graphics\SpriteRenderer.h" />
     <ClInclude Include="Library\Graphics\TextureManager.h" />
+    <ClInclude Include="Library\Graphics\VideoTexture.h" />
     <ClInclude Include="Library\ImGui\ImGuiManager.h" />
     <ClInclude Include="Library\Input\InputManager.h" />
     <ClInclude Include="Library\Library\Application.h" />
@@ -296,6 +297,7 @@
     <ClCompile Include="Library\Graphics\SkyMap.cpp" />
     <ClCompile Include="Library\Graphics\SpriteRenderer.cpp" />
     <ClCompile Include="Library\Graphics\TextureManager.cpp" />
+    <ClCompile Include="Library\Graphics\VideoTexture.cpp" />
     <ClCompile Include="Library\ImGui\ImGuiManager.cpp" />
     <ClCompile Include="Library\Input\InputManager.cpp" />
     <ClCompile Include="Library\Library\Application.cpp" />
@@ -496,6 +498,9 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="HLSL\Video_PS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
     </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

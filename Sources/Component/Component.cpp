@@ -12,7 +12,7 @@ void PlayerComponent::UpdateDebugGui(float elapsedTime)
 		ImGui::Spacing();
 
 		ImGui::DragFloat(u8"回転のオフセット", &angleOffset_, 0.1f);
-		ImGui::Text(type_ == CharactorType::BLACK ? u8"黒" : u8"白");
+		ImGui::Text(type_ == CharacterType::BLACK ? u8"黒" : u8"白");
 
 		ImGui::TreePop();
 	}
@@ -43,6 +43,7 @@ void PlayerControllerComponent::UpdateDebugGui(float elapsedTime)
 		ImGui::DragFloat(u8"最小攻撃力", &minAttackAmount_);
 		ImGui::DragFloat(u8"最大範囲", &maxRangeAmount_);
 		ImGui::DragFloat(u8"最小範囲", &minRangeAmount_);
+		ImGui::DragFloat(u8"攻撃ゲージの高さ", &maxAttackGaugeHeight_);
 
 		ImGui::TreePop();
 	}

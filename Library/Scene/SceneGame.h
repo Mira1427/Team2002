@@ -51,9 +51,9 @@ public:
 	GameObject* AddAttackGaugeController(GameObject* parent, const Vector3& position);
 
 	// --- UŒ‚ƒQ[ƒW‚Ì’Ç‰Á ---
-	void AddAttackGauge(GameObject* parent, float height);
+	void AddAttackGauge(GameObject* parent, float width);
 
 	// --- ”ÍˆÍƒQ[ƒW‚Ì’Ç‰Á ---
-	void AddRangeGauge(GameObject* parent, float height);
+	void AddRangeGauge(GameObject* parent, float width);
 };
 

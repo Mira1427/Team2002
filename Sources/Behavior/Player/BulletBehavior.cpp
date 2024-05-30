@@ -1,5 +1,8 @@
 #include "BulletBehavior.h"
 
+#include "../../Library/GameObject/BehaviorManager.h"
+#include "../../Library/GameObject/EraserManager.h"
+
 #include "../../EventManager.h"
 
 
@@ -45,13 +48,64 @@ void BaseBulletBehavior::Hit(GameObject* src, GameObject* dst, float elapsedTime
 		BulletComponent* bullet = src->GetComponent<BulletComponent>();
 		EnemyComponent* enemy   = dst->GetComponent<EnemyComponent>();
 
-		if(bullet->type_ == enemy->type_ || enemy->type_ == CharactorType::GRAY)
+		// TODO : Ží—Þ‚Ìˆá‚¤“G‚ÅUŒ‚”»’è‚ðo‚·‚©
+		if(bullet->type_ == enemy->type_ || enemy->type_ == CharacterType::GRAY)
 		{
-			enemy->life_ -= bullet->attack_;
+			AddExplosion(src->transform_->position_, bullet->type_, bullet->attack_, bullet->radius_);
+		}
+	}
+}
 
-			// --- Ž€–Sˆ— ---
-			if (enemy->life_ <= 0.0f)
-				dst->Destroy();
+
+void BaseBulletBehavior::AddExplosion(const Vector3& position, CharacterType type, float attack, float radius)
+{
+	GameObject* explosion = GameObjectManager::Instance().Add(
+		std::make_shared<GameObject>(),
+		position,
+		BehaviorManager::Instance().GetBehavior("BulletExplosion")
+	);
+
+	explosion->name_ = u8"’e‚Ì”š”­";
+	explosion->eraser_ = EraserManager::Instance().GetEraser("Scene");
+
+	SphereCollider* collider = explosion->AddCollider<SphereCollider>();
+	collider->radius_ = radius;
+
+	BulletComponent* bulletComp = explosion->AddComponent<BulletComponent>();
+	bulletComp->attack_ = attack;
+	bulletComp->type_ = type;
+}
+
+
+
+void BulletExplosionBehavior::Execute(GameObject* obj, float elapsedTime)
+{
+	if (EventManager::Instance().paused_)
+		return;
+
+	obj->state_++;
+
+	if (obj->state_ >= 2/*ˆ—‚ª2‰ñ–Ú‚È‚ç*/ && !GameObjectManager::Instance().showCollision_)
+		obj->Destroy();
+}
+
+void BulletExplosionBehavior::Hit(GameObject* src, GameObject* dst, float elapsedTime)
+{
+	if(src->state_ == 1/*ˆ—‚ª1‰ñ–Ú‚È‚ç*/)
+	{
+		if (dst->type_ == ObjectType::ENEMY)
+		{
+			BulletComponent* bullet = src->GetComponent<BulletComponent>();
+			EnemyComponent* enemy = dst->GetComponent<EnemyComponent>();
+
+			if (bullet->type_ == enemy->type_ || enemy->type_ == CharacterType::GRAY)
+			{
+				enemy->life_ -= bullet->attack_;
+
+				// --- Ž€–Sˆ— ---
+				if (enemy->life_ <= 0.0f)
+					dst->Destroy();
+			}
 		}
 	}
 }

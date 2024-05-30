@@ -5,6 +5,8 @@
 
 #include "../../Sources/Component/Component.h"
 
+#include "../../Library/Library/CameraManager.h"
+
 #include "../../Sources/EventManager.h"
 
 
@@ -48,8 +50,11 @@ void BaseEnemyBehavior::Execute(GameObject* obj, float elapsedTime)
 			StageComponent* stage = EventManager::Instance().stages_[index]->GetComponent<StageComponent>();
 			stage->life_ -= 1.0f;
 
-			if (stage->life_ < 0.0f)
+			if (stage->life_ <= 0.0f)
+			{
 				EventManager::Instance().TranslateMessage(EventMessage::TO_OVER_SCENE);
+				CameraManager::Instance().currentCamera_ = CameraManager::Instance().debugCamera_;
+			}
 
 			stage->life_ = (std::max)(stage->life_, 0.0f);
 		}

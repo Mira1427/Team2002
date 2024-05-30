@@ -74,7 +74,7 @@ void EnemySpawnerBehavior::AddEnemy(GameObject* obj)
 
 	size_t colorIndex = rand() % 3;
 	Vector4 colors[3] = { {1.0f, 1.0f, 1.0f, 1.0f}, {0.0f, 0.0f, 0.0f, 1.0f}, {0.5f, 0.5f, 0.5f, 1.0f} };
-	enemyComp->type_ = static_cast<CharactorType>(colorIndex);
+	enemyComp->type_ = static_cast<CharacterType>(colorIndex);
 
 
 	// --- 描画コンポーネント追加 ---

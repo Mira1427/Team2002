@@ -27,6 +27,7 @@ BehaviorManager::BehaviorManager()
 	behaviors_.insert(std::make_pair("PlayerController",	std::make_shared<PlayerControllerBehavior>()));
 	behaviors_.insert(std::make_pair("BulletGauge",			std::make_shared<PlayerBulletGaugeBehavior>()));
 	behaviors_.insert(std::make_pair("Bullet",				std::make_shared<BaseBulletBehavior>()));
+	behaviors_.insert(std::make_pair("BulletExplosion",		std::make_shared<BulletExplosionBehavior>()));
 	behaviors_.insert(std::make_pair("AttackGauge",			std::make_shared<AttackGaugeBehavior>()));
 	behaviors_.insert(std::make_pair("RangeGauge",			std::make_shared<RangeGaugeBehavior>()));
 

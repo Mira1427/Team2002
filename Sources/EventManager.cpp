@@ -10,6 +10,7 @@
 
 #include "../Library/Input/InputManager.h"
 
+#include "../Library/Library/CameraManager.h"
 #include "../Library/Library/Library.h"
 
 
@@ -181,6 +182,7 @@ void EventManager::UpdatePauseEvent()
 			TranslateMessage(EventMessage::TO_TITLE_SCENE);
 			button_.state_ = ButtonState::TITLE;
 			button_.eventIndex_ = 0;
+			CameraManager::Instance().currentCamera_ = CameraManager::Instance().debugCamera_;
 		}
 
 		break;

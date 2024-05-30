@@ -17,5 +17,6 @@ public:
 	}
 
 	GameObject* currentCamera_;
+	GameObject* debugCamera_;
 };
 

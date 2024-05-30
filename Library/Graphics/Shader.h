@@ -43,6 +43,7 @@ enum class PixelShader
 	GAUSSIAN_BLUR,
 	LUMINANCE_EXTRACTION,
 	BLUR_SCENE,
+	VIDEO,
 	MAX
 };
 

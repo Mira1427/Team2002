@@ -443,6 +443,7 @@ void Shader::CreatePostEffectShaders(ID3D11Device* device)
 	CreatePSFromCSO(device, "./Data/Shader/GaussianBlur_PS.cso", pixelShaders_[static_cast<size_t>(PixelShader::GAUSSIAN_BLUR)].GetAddressOf());
 	CreatePSFromCSO(device, "./Data/Shader/LuminanceExtraction.cso", pixelShaders_[static_cast<size_t>(PixelShader::LUMINANCE_EXTRACTION)].GetAddressOf());
 	CreatePSFromCSO(device, "./Data/Shader/Bloom.cso", pixelShaders_[static_cast<size_t>(PixelShader::BLUR_SCENE)].GetAddressOf());
+	CreatePSFromCSO(device, "./Data/Shader/Video_PS.cso", pixelShaders_[static_cast<size_t>(PixelShader::VIDEO)].GetAddressOf());
 
 	// --- 頂点シェーダー ---
 	CreateVSFromCSO(device, "./Data/Shader/HorizontalBlur_VS.cso", vertexShaders_[static_cast<size_t>(VertexShader::HORIZONTAL_BLUR)].GetAddressOf());

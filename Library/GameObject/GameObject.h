@@ -14,6 +14,7 @@
 #include "../Graphics/InstancedMesh.h"
 #include "../Graphics/TextureManager.h"
 #include "../Graphics/Particle.h"
+#include "../Graphics/VideoTexture.h"
 
 
 
@@ -532,6 +533,43 @@ public:
 	float timeScale_;
 	bool isPlay_;
 	bool isVisible_;
+};
+
+
+
+class VideoComponent final : public Component
+{
+public:
+	VideoComponent() :
+		video_(),
+		texPos_(),
+		texSize_(),
+		timeScale_(1.0f),
+		blendState_(0),
+		rasterState_(1),
+		testDepth_(true),
+		writeDepth_(true),
+		inWorld_(false),
+		visible_(true)
+	{}
+
+	~VideoComponent();
+
+	void Initialize(const char* fileName);
+	void Update(float elapsedTime);
+	void Draw(ID3D11DeviceContext* dc) override;
+	void UpdateDebugGui(float elapsedTime) override;
+
+	VideoTexture video_;
+	Vector2 texPos_;
+	Vector2 texSize_;
+	float	timeScale_;
+	int		blendState_;
+	int		rasterState_;
+	bool	testDepth_;
+	bool	writeDepth_;
+	bool	inWorld_;
+	bool	visible_;
 };
 
 

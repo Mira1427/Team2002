@@ -5,8 +5,8 @@ Down 8 83
 Delete 128 46
 Enter 256 13
 Escape 512 27
-Space 1024 32
-P 2048 80
+Space 1024 13
+Escape 2048 27
 ---keyAssignEnd--- -1 -1
 ---PadAssignEnd--- -1 -1
 LMB 16 1

@@ -46,7 +46,8 @@ void BasePlayerBehavior::Execute(GameObject* obj, float elapsedTime)
 
 
 		// --- アニメーションの更新 ---
-		animator->Update(elapsedTime);
+		if (animator)
+			animator->Update(elapsedTime);
 	}
 
 		break;
@@ -61,7 +62,7 @@ void BasePlayerBehavior::Rotate(GameObject* obj, PlayerComponent* player, Player
 	obj->transform_->position_.x = cosf(-theta) * controller->range_;
 	obj->transform_->position_.z = sinf(-theta) * controller->range_;
 
-	obj->transform_->rotation_.y = obj->parent_->transform_->rotation_.y + player->angleOffset_;
+	obj->transform_->rotation_.y = obj->parent_->transform_->rotation_.y + player->angleOffset_ + 90.0f;
 }
 
 
@@ -90,9 +91,11 @@ void BasePlayerBehavior::Shot(GameObject* obj, PlayerComponent* player, PlayerCo
 		// --- 射撃処理 ---
 		if (shootable[playerIndex] && controller->bullet_[playerIndex] >= controller->bulletCost_)
 		{
-			float g = controller->attackGauge_;
-			float a = RootsLib::Math::Lerp(controller->minAttackAmount_, controller->maxAttackAmount_, (g > 0.0f) ?  g : 0.0f);
-			float r = RootsLib::Math::Lerp(controller->minRangeAmount_, controller->maxRangeAmount_, (g < 0.0f) ? -g : 0.0f);
+			float g = controller->attackGauge_;	// -1.0 ~ 1.0
+			g = (g + 1.0f) / 2.0f;	// 0.0 ~ 1.0
+			float a = RootsLib::Math::Lerp(controller->minAttackAmount_, controller->maxAttackAmount_, g);
+			g = 1 - g;
+			float r = RootsLib::Math::Lerp(controller->minRangeAmount_, controller->maxRangeAmount_, g);
 
 			// --- 弾丸の追加 ---
 			AddBullet(obj, 0.02f, a, r);
@@ -129,10 +132,11 @@ void BasePlayerBehavior::AddBullet(GameObject* parent, const float scaling, cons
 
 	BulletComponent* bulletComp = bullet->AddComponent<BulletComponent>();
 	bulletComp->attack_ = attackAmount;
+	bulletComp->radius_ = radius;
 	bulletComp->type_ = parent->GetComponent<PlayerComponent>()->type_;
 
 	SphereCollider* collider = bullet->AddCollider<SphereCollider>();
-	collider->radius_ = radius;
+	collider->radius_ = 1.0f;
 
 }
 

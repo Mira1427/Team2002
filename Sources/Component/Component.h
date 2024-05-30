@@ -4,7 +4,7 @@
 
 
 
-enum class CharactorType
+enum class CharacterType
 {
 	WHITE,
 	BLACK,
@@ -25,7 +25,7 @@ public:
 
 	float angleOffset_;
 	int playerNum_;
-	CharactorType type_;
+	CharacterType type_;
 };
 
 
@@ -47,7 +47,8 @@ public:
 		maxAttackAmount_(),
 		minAttackAmount_(),
 		maxRangeAmount_(),
-		minRangeAmount_()
+		minRangeAmount_(),
+		maxAttackGaugeHeight_()
 	{}
 
 	void Draw(ID3D11DeviceContext* dc) override {};
@@ -66,10 +67,11 @@ public:
 
 	float attackAmount_;	// 攻撃力
 	float rangeAmount_;		// 範囲
-	float maxAttackAmount_;		// 攻撃の最大値
-	float minAttackAmount_;		// 攻撃の最小値
-	float maxRangeAmount_;		// 範囲の最大値
-	float minRangeAmount_;		// 範囲の最小値
+	float maxAttackAmount_;	// 攻撃の最大値
+	float minAttackAmount_;	// 攻撃の最小値
+	float maxRangeAmount_;	// 範囲の最大値
+	float minRangeAmount_;	// 範囲の最小値
+	float maxAttackGaugeHeight_;
 };
 
 
@@ -99,7 +101,7 @@ public:
 	void UpdateDebugGui(float elapsedTime) override;
 
 	float life_;
-	CharactorType type_;
+	CharacterType type_;
 };
 
 
@@ -123,12 +125,15 @@ class BulletComponent final : public Component
 {
 public:
 	BulletComponent() :
-		attack_()
+		attack_(),
+		radius_(),
+		type_()
 	{}
 
 	void Draw(ID3D11DeviceContext* dc) override {};
 	void UpdateDebugGui(float elapsedTime) override;
 
 	float attack_;
-	CharactorType type_;
+	float radius_;
+	CharacterType type_;
 };

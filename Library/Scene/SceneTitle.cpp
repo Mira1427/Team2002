@@ -15,9 +15,14 @@
 #include "../../Sources/EventManager.h"
 
 
+GameObject* obj;
 void SceneTitle::Initialize()
 {
 	EventManager::Instance().button_.state_ = ButtonState::TITLE;
+	obj = GameObjectManager::Instance().Add(
+		std::make_shared<GameObject>()
+	);
+	obj->AddComponent<VideoComponent>();
 }
 
 void SceneTitle::Finalize()
@@ -26,6 +31,14 @@ void SceneTitle::Finalize()
 
 void SceneTitle::Update(float elapsedTime)
 {
+	auto* video = obj->GetComponent<VideoComponent>();
+	static bool created = false;
+	if (!created)
+	{
+		video->Initialize("./Data/Video/demo.mp4");
+		created = true;
+	}
+	video->Update(elapsedTime);
 	EventManager::Instance().Update(elapsedTime);
 	EventManager::Instance().UpdateButton();
 

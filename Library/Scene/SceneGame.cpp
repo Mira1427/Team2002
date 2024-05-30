@@ -34,6 +34,7 @@ void SceneGame::Initialize()
 		);
 
 		obj->name_ = u8"ゲームカメラ";
+		obj->eraser_ = EraserManager::Instance().GetEraser("Scene");
 
 		obj->AddComponent<CameraComponent>();
 
@@ -70,7 +71,7 @@ void SceneGame::Initialize()
 
 
 	// --- 攻撃ゲージのコントローラー ---
-	GameObject* attackGaugeController = AddAttackGaugeController(controller, { 1060.0f, 560.0f, 0.0f });
+	GameObject* attackGaugeController = AddAttackGaugeController(controller, { 80.0f, 360.0f, 0.0f });
 
 
 	// --- 攻撃ゲージ ---
@@ -80,19 +81,19 @@ void SceneGame::Initialize()
 	// --- 範囲ゲージ ---
 	AddRangeGauge(attackGaugeController, 50.0f);
 
-	{
-		auto* obj = GameObjectManager::Instance().Add(
-			std::make_shared<GameObject>(),
-			Vector3(),
-			BehaviorManager::Instance().GetBehavior("Particle")
-		);
+	//{
+	//	auto* obj = GameObjectManager::Instance().Add(
+	//		std::make_shared<GameObject>(),
+	//		Vector3(),
+	//		BehaviorManager::Instance().GetBehavior("Particle")
+	//	);
 
-		obj->name_ = u8"パーティクル";
+	//	obj->name_ = u8"パーティクル";
 
-		auto* particle = obj->AddComponent<ParticleComponent>();
-		particle->particle_ = std::make_unique<Particle>(RootsLib::DX11::GetDevice(), 1000);
-		particle->Initialize(RootsLib::DX11::GetDeviceContext());
-	}
+	//	auto* particle = obj->AddComponent<ParticleComponent>();
+	//	particle->particle_ = std::make_unique<Particle>(RootsLib::DX11::GetDevice(), 1000);
+	//	particle->Initialize(RootsLib::DX11::GetDeviceContext());
+	//}
 }
 
 
@@ -568,11 +569,11 @@ GameObject* SceneGame::AddPlayer(std::string name, GameObject* parent, float rot
 	obj->parent_ = parent;
 	obj->eraser_ = EraserManager::Instance().GetEraser("Scene");
 
-	obj->transform_->scaling_ *= 0.008f;
+	obj->transform_->scaling_ *= 0.35f;
 
 	// --- モデル描画コンポーネント追加 ---
 	MeshRendererComponent* renderer = obj->AddComponent<MeshRendererComponent>();
-	renderer->model_ = ModelManager::Instance().LoadModel(RootsLib::DX11::GetDevice(), "./Data/Model/plantune.fbx", false, false, nullptr);
+	renderer->model_ = ModelManager::Instance().LoadModel(RootsLib::DX11::GetDevice(), "./Data/Model/dennsya.fbx", true, false, nullptr);
 
 	Vector4 colors[2] = { {1.0f, 1.0f, 1.0f, 1.0f}, {0.0f, 0.0f, 0.0f, 1.0f} };
 	renderer->color_ = colors[static_cast<size_t>(playerNum)];
@@ -586,7 +587,7 @@ GameObject* SceneGame::AddPlayer(std::string name, GameObject* parent, float rot
 	PlayerComponent* player = obj->AddComponent<PlayerComponent>();
 	player->angleOffset_ = rotate;
 	player->playerNum_ = playerNum;
-	player->type_ = static_cast<CharactorType>(playerNum);
+	player->type_ = static_cast<CharacterType>(playerNum);
 
 	return obj;
 }
@@ -619,6 +620,7 @@ GameObject* SceneGame::AddPlayerController(float rotateSpeed, float range)
 	controller->minAttackAmount_ = 1.0f;	// 最小攻撃力
 	controller->maxRangeAmount_ = 10.0f;	// 最大範囲
 	controller->minRangeAmount_ = 1.0f;		// 最小範囲
+	controller->maxAttackGaugeHeight_ = 330.0f;
 
 	return obj;
 }
@@ -719,7 +721,7 @@ GameObject* SceneGame::AddAttackGaugeController(GameObject* parent, const Vector
 
 
 // --- 攻撃のゲージ ---
-void SceneGame::AddAttackGauge(GameObject* parent, float height)
+void SceneGame::AddAttackGauge(GameObject* parent, float width)
 {
 	GameObject* obj = GameObjectManager::Instance().Add(
 		std::make_shared<GameObject>(),
@@ -732,7 +734,7 @@ void SceneGame::AddAttackGauge(GameObject* parent, float height)
 	obj->parent_ = parent;
 
 	PrimitiveRendererComponent* renderer = obj->AddComponent<PrimitiveRendererComponent>();
-	renderer->size_.y = 50.0f;
+	renderer->size_.x = 50.0f;
 	renderer->testDepth_ = true;
 	renderer->writeDepth_ = true;
 	renderer->color_ = { 1.0f, 0.0f, 0.0f, 1.0f };
@@ -740,7 +742,7 @@ void SceneGame::AddAttackGauge(GameObject* parent, float height)
 
 
 // --- 範囲ゲージの追加 ---
-void SceneGame::AddRangeGauge(GameObject* parent, float height)
+void SceneGame::AddRangeGauge(GameObject* parent, float width)
 {
 	GameObject* obj = GameObjectManager::Instance().Add(
 		std::make_shared<GameObject>(),
@@ -753,7 +755,7 @@ void SceneGame::AddRangeGauge(GameObject* parent, float height)
 	obj->parent_ = parent;
 
 	PrimitiveRendererComponent* renderer = obj->AddComponent<PrimitiveRendererComponent>();
-	renderer->size_.y = 50.0f;
+	renderer->size_.x = 50.0f;
 	renderer->testDepth_ = true;
 	renderer->writeDepth_ = true;
 	renderer->color_ = { 0.0f, 0.0f, 1.0f, 1.0f };
