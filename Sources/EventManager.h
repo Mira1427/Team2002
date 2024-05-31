@@ -73,6 +73,7 @@ public:
 
 
 	void UpdateTitleEvent();
+	void UpdateGameEvent();
 	void UpdatePauseEvent();
 
 

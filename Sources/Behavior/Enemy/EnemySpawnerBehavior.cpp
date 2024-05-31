@@ -65,22 +65,28 @@ void EnemySpawnerBehavior::AddEnemy(GameObject* obj)
 	enemy->type_ = ObjectType::ENEMY;
 	enemy->eraser_ = EraserManager::Instance().GetEraser("Scene");
 
-	enemy->transform_->scaling_ *= 0.009f;
+	enemy->transform_->scaling_ *= 0.2f;
 
 
 	// --- 敵コンポーネントの追加 ---
 	EnemyComponent* enemyComp = enemy->AddComponent<EnemyComponent>();
 	enemyComp->life_ = 3.0f;	// ライフの設定
 
-	size_t colorIndex = rand() % 3;
+	size_t colorIndex = rand() % 3;	// 白 黒 グレー
 	Vector4 colors[3] = { {1.0f, 1.0f, 1.0f, 1.0f}, {0.0f, 0.0f, 0.0f, 1.0f}, {0.5f, 0.5f, 0.5f, 1.0f} };
 	enemyComp->type_ = static_cast<CharacterType>(colorIndex);
 
 
 	// --- 描画コンポーネント追加 ---
-	MeshRendererComponent* renderer = enemy->AddComponent<MeshRendererComponent>();
-	renderer->model_ = ModelManager::Instance().GetModel("./Data/Model/plantune.fbx");
-	renderer->color_ = colors[colorIndex];
+	//MeshRendererComponent* renderer = enemy->AddComponent<MeshRendererComponent>();
+	//renderer->model_ = ModelManager::Instance().GetModel("./Data/Model/plantune.fbx");
+	//renderer->color_ = colors[colorIndex];
+
+	InstancedMeshComponent* renderer = enemy->AddComponent<InstancedMeshComponent>();
+	static const char* grayFileName = ((rand() % 2) == 0) ? "./Data/Model/InstancedMesh/Enemy/enemy2_gray.fbx" : "./Data/Model/InstancedMesh/Enemy/enemy3_gray.fbx";
+	static const char* fileNames[3] = { "./Data/Model/InstancedMesh/Enemy/enemy4_white.fbx", "./Data/Model/InstancedMesh/Enemy/enemy1_black.fbx" , grayFileName };
+	renderer->model_ = ModelManager::Instance().GetInstancedMesh(fileNames[colorIndex], 1000);
+	//renderer->color_ = colors[colorIndex];
 
 
 	// --- アニメーションコンポーネント追加 ---

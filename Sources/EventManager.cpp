@@ -74,24 +74,7 @@ void EventManager::UpdateButton()
 
 
 	case ButtonState::GAME:
-
-		if (input.down(0) & Input::PAUSE)
-		{
-			paused_ = true;
-			button_.state_ = ButtonState::PAUSE;
-
-			GameObject* overlay = GameObjectManager::Instance().Add(
-				std::make_shared<GameObject>(),
-				Vector3(),
-				BehaviorManager::Instance().GetBehavior("PauseOverlay")
-			);
-
-			overlay->name_ = u8"ポーズのオーバーレイ";
-			overlay->eraser_ = EraserManager::Instance().GetEraser("Pause");
-
-			overlay->AddComponent<PrimitiveRendererComponent>();
-		}
-
+		UpdateGameEvent();
 		break;
 
 
@@ -162,6 +145,29 @@ void EventManager::UpdateTitleEvent()
 
 	case static_cast<int>(TitleEvent::END):
 		break;
+	}
+}
+
+
+void EventManager::UpdateGameEvent()
+{
+	auto& input = InputManager::Instance();
+
+	if (input.down(0) & Input::PAUSE)
+	{
+		paused_ = true;
+		button_.state_ = ButtonState::PAUSE;
+
+		GameObject* overlay = GameObjectManager::Instance().Add(
+			std::make_shared<GameObject>(),
+			Vector3(),
+			BehaviorManager::Instance().GetBehavior("PauseOverlay")
+		);
+
+		overlay->name_ = u8"ポーズのオーバーレイ";
+		overlay->eraser_ = EraserManager::Instance().GetEraser("Pause");
+
+		overlay->AddComponent<PrimitiveRendererComponent>();
 	}
 }
 
