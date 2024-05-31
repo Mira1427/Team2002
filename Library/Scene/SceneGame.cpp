@@ -183,8 +183,8 @@ void SceneGame::Render(ID3D11DeviceContext* dc)
 	Shader::GetShadowMap()->Clear(dc);
 	Shader::GetShadowMap()->Activate(dc);
 
-	GameObjectManager::Instance().castShadow_ = true;
-	GameObjectManager::Instance().Draw(dc);
+	RootsLib::Depth::SetState(DepthState::TEST_ON, DepthState::WRITE_ON);
+	RootsLib::Raster::SetState(RasterState::CULL_BACK);
 
 	// --- インスタンスメッシュの描画 ---
 	for (auto& mesh : ModelManager::Instance().GetInstancedMeshes())
@@ -192,6 +192,9 @@ void SceneGame::Render(ID3D11DeviceContext* dc)
 		ID3D11PixelShader* nullPS = NULL;
 		mesh.second->Draw(RootsLib::DX11::GetDeviceContext(), &nullPS, false);
 	}
+
+	GameObjectManager::Instance().castShadow_ = true;
+	GameObjectManager::Instance().Draw(dc);
 
 	Shader::GetShadowMap()->Deactivate(dc);
 
@@ -224,14 +227,17 @@ void SceneGame::Render(ID3D11DeviceContext* dc)
 	// --- デバッグライン描画 ---
 	//Graphics::Instance().GetDebugLineRenderer()->Draw(dc);
 
-	// --- オブジェクトの描画 ---
-	GameObjectManager::Instance().castShadow_ = false;
-	GameObjectManager::Instance().Draw(dc);
+	RootsLib::Depth::SetState(DepthState::TEST_ON, DepthState::WRITE_ON);
+	RootsLib::Raster::SetState(RasterState::CULL_BACK);
 
 	for (auto& mesh : ModelManager::Instance().GetInstancedMeshes())
 	{
 		mesh.second->Draw(RootsLib::DX11::GetDeviceContext());
 	}
+
+	// --- オブジェクトの描画 ---
+	GameObjectManager::Instance().castShadow_ = false;
+	GameObjectManager::Instance().Draw(dc);
 
 	RootsLib::Depth::SetState(DepthState::TEST_ON, DepthState::WRITE_ON);
 	RootsLib::Raster::SetState(RasterState::CULL_BACK);

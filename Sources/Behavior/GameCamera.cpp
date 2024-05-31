@@ -24,9 +24,12 @@ void GameCameraBehavior::Execute(GameObject* obj, float elapsedTime)
 	{
 		CameraComponent* camera = obj->GetComponent<CameraComponent>();
 
-		const float height = 175.0f;
-		const float range = 100.0f; 
+		static float height = 190.0f;
+		static float range = 50.0f; 
 		const float rotateSpeed = DirectX::XMConvertToRadians(45.0f) * elapsedTime;
+
+		ImGui::DragFloat(u8"‚‚³", &height);
+		ImGui::DragFloat(u8"‹——£", &range);
 
 		switch (InputManager::Instance().state(0) & (Input::LEFT | Input::RIGHT))
 		{

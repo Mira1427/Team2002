@@ -49,10 +49,10 @@ void BaseBulletBehavior::Hit(GameObject* src, GameObject* dst, float elapsedTime
 		EnemyComponent* enemy   = dst->GetComponent<EnemyComponent>();
 
 		// TODO : Ží—Þ‚Ìˆá‚¤“G‚ÅUŒ‚”»’è‚ðo‚·‚©
-		if(bullet->type_ == enemy->type_ || enemy->type_ == CharacterType::GRAY)
-		{
+		//if(bullet->type_ == enemy->type_ || enemy->type_ == CharacterType::GRAY)
+		//{
 			AddExplosion(src->transform_->position_, bullet->type_, bullet->attack_, bullet->radius_);
-		}
+		//}
 	}
 }
 

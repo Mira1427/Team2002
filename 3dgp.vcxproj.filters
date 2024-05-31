@@ -101,6 +101,9 @@
     <Filter Include="HLSL\VideoTexture">
       <UniqueIdentifier>{6e94a158-6ee3-43dc-bcd0-f4357ff83630}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\Behavior\UI">
+      <UniqueIdentifier>{e6d9c4c2-5812-4bb2-86d1-b808158b1d87}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="3dgp.rc">
@@ -306,6 +309,7 @@
     <ClInclude Include="Library\Graphics\VideoTexture.h">
       <Filter>Library\Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="Sources\Behavior\UI\PauseBehavior.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="External\ImGui\imgui.cpp">
@@ -494,6 +498,7 @@
     <ClCompile Include="Library\Graphics\VideoTexture.cpp">
       <Filter>Library\Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="Sources\Behavior\UI\PauseBehavior.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="HLSL\Primitive.hlsli">

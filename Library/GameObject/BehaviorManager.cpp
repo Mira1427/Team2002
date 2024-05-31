@@ -13,6 +13,8 @@
 #include "../../Sources/Behavior/Enemy/EnemyBehavior.h"
 #include "../../Sources/Behavior/Enemy/EnemySpawnerBehavior.h"
 
+#include "../../Sources/Behavior/UI/PauseBehavior.h"
+
 #include "../../Sources/Behavior/GameCamera.h"
 
 
@@ -33,6 +35,8 @@ BehaviorManager::BehaviorManager()
 
 	behaviors_.insert(std::make_pair("BaseEnemy",			std::make_shared<BaseEnemyBehavior>()));
 	behaviors_.insert(std::make_pair("EnemySpawner",		std::make_shared<EnemySpawnerBehavior>()));
+
+	behaviors_.insert(std::make_pair("PauseOverlay",		std::make_shared<PauseOverlayBehavior>()));
 }
 
 

@@ -200,6 +200,13 @@ void PlayerControllerBehavior::Rotate(GameObject* obj, PlayerControllerComponent
 	}
 
 
+	// --- ƒQ[ƒW‚Ì”½“] ---
+	//if (input.down(0) & Input::UP)
+	//{
+	//	controller->attackGauge_ *= -1.0f;
+	//}
+
+
 	// --- Šp“x‚ð 0 ~ 360 ‚É§ŒÀ ---
 	if (obj->transform_->rotation_.y > 360.0f) obj->transform_->rotation_.y -= 360.0f;
 	if (obj->transform_->rotation_.y < 0.0f) obj->transform_->rotation_.y += 360.0f;

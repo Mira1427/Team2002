@@ -4,10 +4,14 @@
 
 #include "../../Sources/Eraser/SceneEraser.h"
 
+#include "../../Sources/Behavior/UI/PauseBehavior.h"
+
 
 EraserManager::EraserManager()
 {
 	erasers_.insert(std::make_pair("Scene", std::make_shared<SceneEraser>()));
+
+	erasers_.insert(std::make_pair("Pause", std::make_shared<PauseEraser>()));
 }
 
 

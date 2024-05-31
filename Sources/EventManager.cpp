@@ -10,8 +10,13 @@
 
 #include "../Library/Input/InputManager.h"
 
+#include "../Library/GameObject/GameObject.h"
+#include "../Library/GameObject/BehaviorManager.h"
+#include "../Library/GameObject/EraserManager.h"
+
 #include "../Library/Library/CameraManager.h"
 #include "../Library/Library/Library.h"
+
 
 
 void EventManager::Initialize()
@@ -74,6 +79,17 @@ void EventManager::UpdateButton()
 		{
 			paused_ = true;
 			button_.state_ = ButtonState::PAUSE;
+
+			GameObject* overlay = GameObjectManager::Instance().Add(
+				std::make_shared<GameObject>(),
+				Vector3(),
+				BehaviorManager::Instance().GetBehavior("PauseOverlay")
+			);
+
+			overlay->name_ = u8"ポーズのオーバーレイ";
+			overlay->eraser_ = EraserManager::Instance().GetEraser("Pause");
+
+			overlay->AddComponent<PrimitiveRendererComponent>();
 		}
 
 		break;
@@ -161,6 +177,16 @@ void EventManager::UpdatePauseEvent()
 		button_.eventIndex_++;
 
 	button_.eventIndex_ = RootsLib::Math::Clamp(button_.eventIndex_, 0, static_cast<int>(PauseEvent::MAX) - 1);
+
+
+	if (input.down(0) & Input::ESCAPE)
+	{
+		paused_ = false;
+		button_.state_ = ButtonState::GAME;
+		button_.eventIndex_ = 0;
+		return;
+	}
+
 
 	switch (button_.eventIndex_)
 	{
