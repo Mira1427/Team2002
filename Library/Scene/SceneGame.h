@@ -38,6 +38,9 @@ public:
 	// --- ステージの追加 ---
 	void AddStage();
 
+	// --- レールの追加 ---
+	void AddRail();
+
 	// --- 弾薬ゲージの追加 ---
 	void AddBulletGauge(GameObject* parent, int i);
 
@@ -47,6 +50,9 @@ public:
 	// --- 街のライフ追加 ---
 	void AddTownLife(const float life);
 
+	// --- ライフゲージの追加 ---
+	void AddLifeGauge();
+
 	// --- 攻撃ゲージのコントローラー追加 ---
 	GameObject* AddAttackGaugeController(GameObject* parent, const Vector3& position);
 
@@ -55,5 +61,8 @@ public:
 
 	// --- 範囲ゲージの追加 ---
 	void AddRangeGauge(GameObject* parent, float width);
+
+	// --- 攻撃ゲージのバーの追加 ---
+	void AddAttackGaugeBar(GameObject* parent);
 };
 

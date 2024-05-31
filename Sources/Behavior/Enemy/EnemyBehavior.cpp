@@ -62,6 +62,10 @@ void BaseEnemyBehavior::Execute(GameObject* obj, float elapsedTime)
 
 		// --- ˆÚ“®ˆ— ---
 		obj->transform_->position_ += rigidBody->velocity_ * elapsedTime;
+
+		AnimatorComponent* animator = obj->GetComponent<AnimatorComponent>();
+		if (animator)
+			animator->Update(elapsedTime);
 	}
 
 	break;

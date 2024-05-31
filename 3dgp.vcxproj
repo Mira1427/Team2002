@@ -261,6 +261,7 @@
     <ClInclude Include="Sources\Behavior\Player\BulletBehavior.h" />
     <ClInclude Include="Sources\Behavior\Player\PlayerBehavior.h" />
     <ClInclude Include="Sources\Behavior\Stage\StageBehavior.h" />
+    <ClInclude Include="Sources\Behavior\UI\LifeGaugeBehavior.h" />
     <ClInclude Include="Sources\Behavior\UI\PauseBehavior.h" />
     <ClInclude Include="Sources\Component\Component.h" />
     <ClInclude Include="Sources\Eraser\SceneEraser.h" />
@@ -326,6 +327,7 @@
     <ClCompile Include="Sources\Behavior\Player\BulletBehavior.cpp" />
     <ClCompile Include="Sources\Behavior\Player\PlayerBehavior.cpp" />
     <ClCompile Include="Sources\Behavior\Stage\StageBehavior.cpp" />
+    <ClCompile Include="Sources\Behavior\UI\LifeGaugeBehavior.cpp" />
     <ClCompile Include="Sources\Behavior\UI\PauseBehavior.cpp" />
     <ClCompile Include="Sources\Component\Component.cpp" />
     <ClCompile Include="Sources\Eraser\SceneEraser.cpp" />

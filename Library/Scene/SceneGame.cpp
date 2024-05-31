@@ -49,13 +49,21 @@ void SceneGame::Initialize()
 	// --- 弾丸のモデルの読み込み ---
 	ModelManager::Instance().LoadInstancedMesh(RootsLib::DX11::GetDevice(), "./Data/Model/InstancedMesh/Bullet.fbx", 100, true);
 
-	ModelManager::Instance().LoadInstancedMesh(RootsLib::DX11::GetDevice(), "./Data/Model/InstancedMesh/Enemy/enemy1_black.fbx", 100, true);
-	ModelManager::Instance().LoadInstancedMesh(RootsLib::DX11::GetDevice(), "./Data/Model/InstancedMesh/Enemy/enemy2_gray.fbx", 100, true);
+
+	// --- レール ---
+	ModelManager::Instance().LoadInstancedMesh(RootsLib::DX11::GetDevice(), "./Data/Model/InstancedMesh/re-ru.fbx", 5, true);
+	AddRail();
+
+
+	// --- キャラモデルの読み込み ---
+	ModelManager::Instance().LoadModel(RootsLib::DX11::GetDevice(), "./Data/Model/SkeletalMesh/Enemy/enemy_1walk.fbx", true);
+	ModelManager::Instance().LoadModel(RootsLib::DX11::GetDevice(), "./Data/Model/SkeletalMesh/Enemy/enemy_2walk.fbx", true);
 	ModelManager::Instance().LoadInstancedMesh(RootsLib::DX11::GetDevice(), "./Data/Model/InstancedMesh/Enemy/enemy3_gray.fbx", 100, true);
 	ModelManager::Instance().LoadInstancedMesh(RootsLib::DX11::GetDevice(), "./Data/Model/InstancedMesh/Enemy/enemy4_white.fbx", 100, true);
 
+
 	// --- コントローラーの追加 ---
-	GameObject* controller = AddPlayerController(45.0f, 85.0f);
+	GameObject* controller = AddPlayerController(45.0f, 94.0f);
 
 	// --- キャラの追加 ---
 	GameObject* player1 = AddPlayer(u8"キャラ１", controller, 0.0f, 20.0f, 0);
@@ -74,6 +82,8 @@ void SceneGame::Initialize()
 	// --- 街の4等分された判定用 ---
 	AddTownLife(5.0f);
 
+	// --- ライフゲージの追加 ---
+	AddLifeGauge();
 
 	// --- 攻撃ゲージのコントローラー ---
 	GameObject* attackGaugeController = AddAttackGaugeController(controller, { 80.0f, 360.0f, 0.0f });
@@ -85,6 +95,10 @@ void SceneGame::Initialize()
 
 	// --- 範囲ゲージ ---
 	AddRangeGauge(attackGaugeController, 50.0f);
+
+
+	// --- 攻撃ゲージのバー ---
+	AddAttackGaugeBar(attackGaugeController);
 
 	//{
 	//	auto* obj = GameObjectManager::Instance().Add(
@@ -584,8 +598,8 @@ GameObject* SceneGame::AddPlayer(std::string name, GameObject* parent, float rot
 
 	// --- モデル描画コンポーネント追加 ---
 	MeshRendererComponent* renderer = obj->AddComponent<MeshRendererComponent>();
-	renderer->model_ = ModelManager::Instance().LoadModel(RootsLib::DX11::GetDevice(), "./Data/Model/dennsya.fbx", true, false, nullptr);
-
+	renderer->model_ = ModelManager::Instance().LoadModel(RootsLib::DX11::GetDevice(), "./Data/Model/InstancedMesh/Player/dennsya2.fbx", true, false, nullptr);
+	
 	Vector4 colors[2] = { {1.0f, 1.0f, 1.0f, 1.0f}, {0.0f, 0.0f, 0.0f, 1.0f} };
 	renderer->color_ = colors[static_cast<size_t>(playerNum)];
 
@@ -654,6 +668,24 @@ void SceneGame::AddStage()
 }
 
 
+// --- レールの追加 ---
+void SceneGame::AddRail()
+{
+	GameObject* obj = GameObjectManager::Instance().Add(
+		std::make_shared<GameObject>()
+	);
+
+	obj->name_ = u8"レール";
+	obj->eraser_ = EraserManager::Instance().GetEraser("Scene");
+
+	obj->transform_->position_.y = 0.38f;
+	obj->transform_->scaling_ *= 0.3f;
+
+	InstancedMeshComponent* renderer = obj->AddComponent<InstancedMeshComponent>();
+	renderer->model_ = ModelManager::Instance().GetInstancedMesh("./Data/Model/InstancedMesh/re-ru.fbx", 5);
+}
+
+
 // --- 弾薬ゲージの追加 ---
 void SceneGame::AddBulletGauge(GameObject* parent, int i)
 {
@@ -715,6 +747,30 @@ void SceneGame::AddTownLife(const float life)
 }
 
 
+void SceneGame::AddLifeGauge()
+{
+	for (size_t i = 0; i < 4; i++)
+	{
+		GameObject* lifeGauge = GameObjectManager::Instance().Add(
+			std::make_shared<GameObject>(),
+			Vector3(),
+			BehaviorManager::Instance().GetBehavior("LifeGauge")
+		);
+
+		lifeGauge->state_ = static_cast<int>(i);
+		lifeGauge->name_ = u8"ライフゲージ" + std::to_string(i);
+		lifeGauge->eraser_ = EraserManager::Instance().GetEraser("Scene");
+
+		lifeGauge->transform_->position_ = { RootsLib::Window::GetWidth() - 100.0f, (RootsLib::Window::GetHeight() / 4.0f) * i, 0.0f };
+
+		PrimitiveRendererComponent* renderer = lifeGauge->AddComponent<PrimitiveRendererComponent>();
+		renderer->size_.x = 100.0f;
+		float color = i / 4.0f;
+		renderer->color_ = { color, color, color, 1.0f };
+	}
+}
+
+
 // --- 攻撃ゲージのコントローラー追加 ---
 GameObject* SceneGame::AddAttackGaugeController(GameObject* parent, const Vector3& position)
 {
@@ -770,4 +826,20 @@ void SceneGame::AddRangeGauge(GameObject* parent, float width)
 	renderer->testDepth_ = true;
 	renderer->writeDepth_ = true;
 	renderer->color_ = { 0.0f, 0.0f, 1.0f, 1.0f };
+}
+
+
+void SceneGame::AddAttackGaugeBar(GameObject* parent)
+{
+	GameObject* attackGaugeBar = GameObjectManager::Instance().Add(
+		std::make_shared<GameObject>(),
+		Vector3(),
+		BehaviorManager::Instance().GetBehavior("AttackGaugeBar")
+	);
+
+	attackGaugeBar->name_ = u8"攻撃ゲージのバー";
+	attackGaugeBar->parent_ = parent;
+	attackGaugeBar->eraser_ = EraserManager::Instance().GetEraser("Scene");
+
+	attackGaugeBar->AddComponent<PrimitiveRendererComponent>();
 }

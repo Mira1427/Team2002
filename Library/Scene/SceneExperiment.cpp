@@ -26,122 +26,103 @@
 // --- 初期化 ---
 void SceneExperiment::Initialize()
 {
-	noise_.SetSeed(10);
+	ModelManager::Instance().LoadModel(RootsLib::DX11::GetDevice(), "./Data/Model/SkeletalMesh/Enemy/enemy_1walk.fbx");
+	ModelManager::Instance().LoadModel(RootsLib::DX11::GetDevice(), "./Data/Model/SkeletalMesh/Enemy/enemy_2walk.fbx");
 
+	ModelManager::Instance().LoadInstancedMesh(RootsLib::DX11::GetDevice(), "./Data/Model/InstancedMesh/Enemy/enemy3_gray.fbx", 100);
+	ModelManager::Instance().LoadInstancedMesh(RootsLib::DX11::GetDevice(), "./Data/Model/InstancedMesh/Enemy/enemy4_white.fbx", 100);
 
-	primitiveBatch_ = std::make_unique<PrimitiveBatch>(RootsLib::DX11::GetDevice(), 5000);
+	ModelManager::Instance().LoadInstancedMesh(RootsLib::DX11::GetDevice(), "./Data/Model/InstancedMesh/Player/dennsya2.fbx", 100);
 
-	geometricPrimitive_ = std::make_unique<GeometricPrimitiveBatch>(RootsLib::DX11::GetDevice(), 10001);
-
-	model_ = std::make_shared<MeshRenderer>(RootsLib::DX11::GetDevice(), "./Data/Model/UV.fbx", true);
-	model2_ = std::make_shared<MeshRenderer>(RootsLib::DX11::GetDevice(), "./Data/Model/Land.fbx", true);
-
-
-	// --- テクスチャの読み込み ---
-	//TextureManager::Instance().LoadTexture(RootsLib::DX11::GetDevice(), L"./Data/Texture/maru.png");
-	//TextureManager::Instance().LoadTexture(RootsLib::DX11::GetDevice(), L"./Data/Texture/Epic_BlueSunset_EquiRect_flat.png");
-
-	//ModelManager::Instance().LoadModel(RootsLib::DX11::GetDevice(), "./Data/Model/UV.fbx", true);
-
-
+	// --- 敵１ ---
 	{
-		auto* obj = GameObjectManager::Instance().Add(
-			std::make_shared<GameObject>()
-		);
-
-		obj->name_ = u8"テスト";
-
-		obj->AddComponent<PrimitiveRendererComponent>();
-	}
-
-
-	{
-		auto* obj = GameObjectManager::Instance().Add(
-			std::make_shared<GameObject>()
-		);
-
-		obj->name_ = u8"スプライト　テスト";
-
-		SpriteRendererComponent* renderer = obj->AddComponent<SpriteRendererComponent>();
-		renderer->texture_ = TextureManager::Instance().LoadTexture(RootsLib::DX11::GetDevice(), L"./Data/Texture/maru.png");
-	}
-
-
-	{
-		obj_ = GameObjectManager::Instance().Add(
-			std::make_shared<GameObject>()
-		);
-
-		obj_->name_ = u8"PBR テスト";
-
-		MeshRendererComponent* renderer = obj_->AddComponent<MeshRendererComponent>();
-		renderer->model_ = ModelManager::Instance().LoadModel(RootsLib::DX11::GetDevice(), "./Data/Model/stan.fbx", true, true);
-		TextureManager& texManager = TextureManager::Instance();
-		MeshRenderer::Material& material = renderer->model_->materials.begin()->second;
-		material.shaderResourceViews[static_cast<size_t>(MaterialLabel::DIFFUSE)] = texManager.GetTexture(L"./Data/Model/stagure_color.png")->srv_;
-		material.shaderResourceViews[static_cast<size_t>(MaterialLabel::NORMAL)] = texManager.GetTexture(L"./Data/Model/stagure_normal.png")->srv_;
-		material.shaderResourceViews[static_cast<size_t>(MaterialLabel::ROUGHNESS)] = texManager.GetTexture(L"./Data/Model/stagure_roughness.png")->srv_;
-		material.shaderResourceViews[static_cast<size_t>(MaterialLabel::METARIC)] = texManager.GetTexture(L"./Data/Model/stagure_metal.png")->srv_;
-
-		obj_->transform_->scaling_ *= 0.005f;
-	}
-
-
-	{
-		obj2_ = GameObjectManager::Instance().Add(
-			std::make_shared<GameObject>()
-		);
-
-		obj2_->name_ = u8"地形";
-
-		obj2_->transform_->scaling_ *= 0.1f;
-
-		MeshRendererComponent* renderer = obj2_->AddComponent<MeshRendererComponent>();
-		renderer->model_ = ModelManager::Instance().GetModel("./Data/Model/Land.fbx");
-	}
-
-
-	{
-		playerObj_ = GameObjectManager::Instance().Add(
-			std::make_shared<GameObject>()
-		);
-
-		playerObj_->name_ = u8"プレイヤー";
-
-		playerObj_->transform_->scaling_ *= 0.005f;
-
-		MeshRendererComponent* renderer = playerObj_->AddComponent<MeshRendererComponent>();
-		renderer->model_ = ModelManager::Instance().GetModel("./Data/Model/plantune.fbx");
-	}
-
-
-	{
-		enemyObj_ = GameObjectManager::Instance().Add(
+		chara1_ = GameObjectManager::Instance().Add(
 			std::make_shared<GameObject>(),
-			Vector3(10.0f, 0.0f, 0.0f)
+			Vector3(-14.0f, 0.0f, 0.0f)
 		);
 
-		enemyObj_->name_ = u8"敵";
+		chara1_->name_ = u8"敵1";
 
-		enemyObj_->transform_->scaling_ *= 0.005f;
+		chara1_->transform_->scaling_ *= 0.1f;
+		chara1_->transform_->rotation_.y = 180.0f;
 
-		MeshRendererComponent* renderer = enemyObj_->AddComponent<MeshRendererComponent>();
-		renderer->model_ = ModelManager::Instance().GetModel("./Data/Model/plantune.fbx");
+		auto* renderer = chara1_->AddComponent<MeshRendererComponent>();
+		renderer->model_ = ModelManager::Instance().GetModel("./Data/Model/SkeletalMesh/Enemy/enemy_1walk.fbx");
+
+		auto* animator = chara1_->AddComponent<AnimatorComponent>();
+		animator->isLoop_ = animator->isPlay_ = true;
+		animator->timeScale_ = 30.0f;
 	}
 
-
+	// --- 敵２ ---
 	{
-		pointLight_ = GameObjectManager::Instance().Add(
-			std::make_shared<GameObject>()
+		chara2_ = GameObjectManager::Instance().Add(
+			std::make_shared<GameObject>(),
+			Vector3(-8.0f, 0.0f, 0.0f)
 		);
 
-		pointLight_->name_ = u8"ポイントライト";
+		chara2_->name_ = u8"敵2";
 
-		pointLight_->AddComponent<PointLightComponent>();
+		chara2_->transform_->scaling_ *= 0.1f;
+		chara2_->transform_->rotation_.y = 180.0f;
+
+		auto* renderer = chara2_->AddComponent<MeshRendererComponent>();
+		renderer->model_ = ModelManager::Instance().GetModel("./Data/Model/SkeletalMesh/Enemy/enemy_2walk.fbx");
+
+		auto* animator = chara2_->AddComponent<AnimatorComponent>();
+		animator->isLoop_ = animator->isPlay_ = true;
+		animator->timeScale_ = 30.0f;
 	}
 
-	instancedMesh_ = std::make_unique<InstancedMesh>(RootsLib::DX11::GetDevice(), "./Data/Model/LandScape.fbx", true, 1000);
-	instancedMesh_->materials_.begin()->second.shaderResourceViews[0] = TextureManager::Instance().GetTexture(L"./Data/Texture/Cold Sunset Equirect.png")->srv_;;
+	// --- 敵３ ---
+	{
+		auto* obj = GameObjectManager::Instance().Add(
+			std::make_shared<GameObject>(),
+			Vector3(2.5f, 0.0f, 0.0f)
+		);
+
+		obj->name_ = u8"敵3";
+
+		obj->transform_->scaling_ *= 0.1f;
+		obj->transform_->rotation_.y = 180.0f;
+
+		auto* renderer = obj->AddComponent<InstancedMeshComponent>();
+		renderer->model_ = ModelManager::Instance().GetInstancedMesh("./Data/Model/InstancedMesh/Enemy/enemy3_gray.fbx", 100);
+	}
+
+	// --- 敵４ ---
+	{
+		auto* obj = GameObjectManager::Instance().Add(
+			std::make_shared<GameObject>(),
+			Vector3(-2.5f, 0.0f, 0.0f)
+		);
+
+		obj->name_ = u8"敵4";
+
+		obj->transform_->scaling_ *= 0.1f;
+		obj->transform_->rotation_.y = 180.0f;
+
+		auto* renderer = obj->AddComponent<InstancedMeshComponent>();
+		renderer->model_ = ModelManager::Instance().GetInstancedMesh("./Data/Model/InstancedMesh/Enemy/enemy4_white.fbx", 100);
+	}
+
+
+	// --- 自機 ---
+	{
+		auto* obj = GameObjectManager::Instance().Add(
+			std::make_shared<GameObject>(),
+			Vector3(2.5f, 0.0f, 0.0f)
+		);
+
+		obj->name_ = u8"自機";
+
+		obj->transform_->position_ = { -5.0f, 0.0f, 7.5f };
+		obj->transform_->scaling_ *= 0.3f;
+		obj->transform_->rotation_.y = 270.0f;
+
+		auto* renderer = obj->AddComponent<InstancedMeshComponent>();
+		renderer->model_ = ModelManager::Instance().GetInstancedMesh("./Data/Model/InstancedMesh/Player/dennsya2.fbx", 100);
+	}
 }
 
 
@@ -154,42 +135,8 @@ void SceneExperiment::Finalize()
 // --- 更新処理 ---
 void SceneExperiment::Update(float elapsedTime)
 {
-	//obj2_->GetComponent<AnimatorComponent>()->Update(elapsedTime);
-	pointLight_->GetComponent<PointLightComponent>()->Update();
-
-	GameObject* camera = CameraManager::Instance().currentCamera_;
-	CameraComponent* cameraComp = camera->GetComponent<CameraComponent>();
-
-	InputManager& input = InputManager::Instance();
-
-	Vector3 right = cameraComp->rightVec_;
-	Vector3 front = cameraComp->frontVec_;
-	right.y = 0.0f;
-	front.y = 0.0f;
-
-
-	if (input.state(0) & Input::LEFT)
-		playerObj_->transform_->position_ -= right * 3.0f * elapsedTime;
-
-	if (input.state(0) & Input::RIGHT)
-		playerObj_->transform_->position_ += right * 3.0f * elapsedTime;
-
-	if (input.state(0) & Input::UP)
-		playerObj_->transform_->position_ += front * 3.0f * elapsedTime;
-
-	if (input.state(0) & Input::DOWN)
-		playerObj_->transform_->position_ -= front * 3.0f * elapsedTime;
-
-	Vector3 vec = playerObj_->transform_->position_ - enemyObj_->transform_->position_;
-	vec *= 2.0f;
-	vec.y += 5.0f;
-	camera->transform_->position_ = enemyObj_->transform_->position_ + vec;
-	cameraComp->target_ = enemyObj_->transform_->position_;
-
-	float atan = DirectX::XMConvertToDegrees(atan2(enemyObj_->transform_->position_.z - playerObj_->transform_->position_.z, enemyObj_->transform_->position_.x - playerObj_->transform_->position_.x ));
-	//playerObj_->transform_->rotation_.y = -atan + 90.0f;
-
-	ImGui::DragFloat(u8"atan2", &atan);
+	chara1_->GetComponent<AnimatorComponent>()->Update(elapsedTime);
+	chara2_->GetComponent<AnimatorComponent>()->Update(elapsedTime);
 
 	GameObjectManager::Instance().Update(elapsedTime);
 	GameObjectManager::Instance().ShowDebugList();
@@ -202,102 +149,6 @@ void SceneExperiment::Update(float elapsedTime)
 // --- 描画処理 ---
 void SceneExperiment::Render(ID3D11DeviceContext* dc)
 {
-	// --- プリミティブ描画処理 ---
-#if 0
-	RootsLib::Primitive::DrawRectangle(
-		dc,
-		position_,
-		size_,
-		center_,
-		angle_,
-		color_
-	);
-
-	primitiveBatch_->Begin(dc);
-
-	primitiveBatch_->Draw(
-		dc,
-		position_,
-		size_,
-		center_,
-		angle_,
-		color_
-	);
-
-	primitiveBatch_->End(dc);
-#endif
-
-
-	// --- パーリンノイズ描画テスト ---
-#if 0
-	primitiveBatch_->Begin(dc);
-
-	for (size_t i = 0; i < 50; i++)
-	{
-		for (size_t j = 0; j < 50; j++)
-		{
-			float color = static_cast<float>(noise_.Noise(i / 10.0f, j / 10.0f, 0));
-
-			primitiveBatch_->Draw(
-				dc,
-				{ i * 10.0f, j * 10.0f },
-				{ 10.0f, 10.0f },
-				{ 0.0f, 0.0f },
-				0.0f,
-				{ color, color, color, 1.0f }
-			);
-		}
-	}
-
-	primitiveBatch_->End(dc);
-#endif
-
-
-#if 0
-	RootsLib::Depth::SetState(DepthState::TEST_ON, DepthState::WRITE_ON);
-	RootsLib::Raster::SetState(RasterState::CULL_NONE);
-
-	if(isDrawLandScape_)
-	{
-		geometricPrimitive_->Begin(dc);
-
-		for (size_t x = 0; x < 50; x++)
-		{
-			for (size_t z = 0; z < 50; z++)
-			{
-				float color = static_cast<float>(noise_.Noise(x / 10.0f, z / 10.0f, 0));
-				const float height = noiseHeight_;
-
-				Matrix T;
-				Vector3 translation = modelData_.translation_;
-				translation.x += static_cast<float>(x);
-				translation.z += static_cast<float>(z);
-				translation.y += color * height;
-				T.MakeTranslation(translation);
-
-				Vector3 scaling = modelData_.scaling_;
-				scaling.y *= color * height;
-
-				Matrix S;
-				S.MakeScaling(scaling);
-
-				Quaternion rot;
-				rot.SetRotationDegFromVector(modelData_.rotation_);
-				Matrix R;
-				R.MakeRotationFromQuaternion(rot);
-
-				Matrix W = S * R * T;
-
-				geometricPrimitive_->Draw(dc, W.mat_, { color, color, color, 1.0f });
-			}
-		}
-
-		geometricPrimitive_->End(dc);
-	}
-
-#endif
-
-
 	SceneConstant data;
 	// --- シーン定数バッファの更新 ---
 	{
@@ -398,42 +249,12 @@ void SceneExperiment::Render(ID3D11DeviceContext* dc)
 	GameObjectManager::Instance().Draw(dc);
 
 	RootsLib::Depth::SetState(DepthState::TEST_ON, DepthState::WRITE_ON);
-	RootsLib::Raster::SetState(static_cast<RasterState>(rasterState_));
+	RootsLib::Raster::SetState(RasterState::CULL_BACK);
 
-	//instancedMesh_->Begin(dc);
-
-	//for (size_t i = 0; i < 10; i++)
-	//{
-	//	for (size_t j = 0; j < 10; j++)
-	//	{
-	//		Matrix T;
-	//		Vector3 translation = modelData_.translation_;
-	//		translation.x += static_cast<float>(i * 3.0f);
-	//		translation.z += static_cast<float>(j * 3.0f);
-	//		T.MakeTranslation(translation);
-
-	//		Vector3 scaling = modelData_.scaling_;
-	//		scaling *= 0.001f;
-
-	//		Matrix S;
-	//		S.MakeScaling(scaling);
-
-	//		Quaternion rot;
-	//		rot.SetRotationDegFromVector(modelData_.rotation_);
-	//		Matrix R;
-	//		R.MakeRotationFromQuaternion(rot);
-
-	//		Matrix W = S * R * T;
-
-	//		instancedMesh_->Draw(dc, W, { i / 10.0f + 0.5f, i / 10.0f + 0.5f, i / 10.0f + 0.5f, 1.0f });
-	//	}
-	//}
-
-	//instancedMesh_->End(dc);
-
-	//RootsLib::Blender::SetState(BlendState::ADD);
-
-	//RootsLib::Blender::SetState(BlendState::NONE);
+	for (auto& mesh : ModelManager::Instance().GetInstancedMeshes())
+	{
+		mesh.second->Draw(RootsLib::DX11::GetDeviceContext());
+	}
 
 
 	// --- デバッグの描画 ---

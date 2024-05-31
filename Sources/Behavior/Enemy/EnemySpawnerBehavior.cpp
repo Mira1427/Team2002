@@ -61,7 +61,8 @@ void EnemySpawnerBehavior::AddEnemy(GameObject* obj)
 		BehaviorManager::Instance().GetBehavior("BaseEnemy")
 	);
 
-	enemy->name_ = u8"敵";
+	static int count = 0;
+	enemy->name_ = u8"敵##" + std::to_string(count++);
 	enemy->type_ = ObjectType::ENEMY;
 	enemy->eraser_ = EraserManager::Instance().GetEraser("Scene");
 
@@ -82,11 +83,16 @@ void EnemySpawnerBehavior::AddEnemy(GameObject* obj)
 	//renderer->model_ = ModelManager::Instance().GetModel("./Data/Model/plantune.fbx");
 	//renderer->color_ = colors[colorIndex];
 
+#if 0
 	InstancedMeshComponent* renderer = enemy->AddComponent<InstancedMeshComponent>();
 	static const char* grayFileName = ((rand() % 2) == 0) ? "./Data/Model/InstancedMesh/Enemy/enemy2_gray.fbx" : "./Data/Model/InstancedMesh/Enemy/enemy3_gray.fbx";
 	static const char* fileNames[3] = { "./Data/Model/InstancedMesh/Enemy/enemy4_white.fbx", "./Data/Model/InstancedMesh/Enemy/enemy1_black.fbx" , grayFileName };
 	renderer->model_ = ModelManager::Instance().GetInstancedMesh(fileNames[colorIndex], 1000);
 	//renderer->color_ = colors[colorIndex];
+#else 
+	MeshRendererComponent* renderer = enemy->AddComponent<MeshRendererComponent>();
+	renderer->model_ = ModelManager::Instance().GetModel("./Data/Model/SkeletalMesh/Enemy/enemy_1walk.fbx");
+#endif
 
 
 	// --- アニメーションコンポーネント追加 ---

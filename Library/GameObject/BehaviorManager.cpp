@@ -14,6 +14,7 @@
 #include "../../Sources/Behavior/Enemy/EnemySpawnerBehavior.h"
 
 #include "../../Sources/Behavior/UI/PauseBehavior.h"
+#include "../../Sources/Behavior/UI/LifeGaugeBehavior.h"
 
 #include "../../Sources/Behavior/GameCamera.h"
 
@@ -32,11 +33,13 @@ BehaviorManager::BehaviorManager()
 	behaviors_.insert(std::make_pair("BulletExplosion",		std::make_shared<BulletExplosionBehavior>()));
 	behaviors_.insert(std::make_pair("AttackGauge",			std::make_shared<AttackGaugeBehavior>()));
 	behaviors_.insert(std::make_pair("RangeGauge",			std::make_shared<RangeGaugeBehavior>()));
+	behaviors_.insert(std::make_pair("AttackGaugeBar",		std::make_shared<AttackGaugeBarBehavior>()));
 
 	behaviors_.insert(std::make_pair("BaseEnemy",			std::make_shared<BaseEnemyBehavior>()));
 	behaviors_.insert(std::make_pair("EnemySpawner",		std::make_shared<EnemySpawnerBehavior>()));
 
 	behaviors_.insert(std::make_pair("PauseOverlay",		std::make_shared<PauseOverlayBehavior>()));
+	behaviors_.insert(std::make_pair("LifeGauge",			std::make_shared<LifeGaugeBehavior>()));
 }
 
 

@@ -3,7 +3,6 @@
 #include "../../Library/GameObject/GameObject.h"
 
 
-// --- ステージの処理 ---
 class StageBehavior : public Behavior
 {
 public:
