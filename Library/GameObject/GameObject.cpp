@@ -63,6 +63,7 @@ void Transform::MakeTransform()
 	Matrix rotation;
 	Quaternion orientation;
 	orientation.SetRotationDegFromVector(rotation_);
+	orientation *= orientation_;
 	rotation.MakeRotationFromQuaternion(orientation);
 
 	world_ = CoordinateSystems_[coordinateSystem_] * scaling * rotation * translation;
@@ -1138,7 +1139,7 @@ void ParticleComponent::Draw(ID3D11DeviceContext* dc)
 	RootsLib::Raster::SetState(RasterState::CULL_BACK);
 	RootsLib::Depth::SetState(DepthState::TEST_ON, DepthState::WRITE_ON);
 
-	particle_->Draw(dc);
+	particle_->Draw(dc, srv_.GetAddressOf());
 
 }
 
@@ -1155,6 +1156,9 @@ void ParticleComponent::UpdateDebugGui(float elapsedTime)
 		ImGui::Spacing();
 
 		ImGui::BulletText(u8"時間 : %f", particle_->particleData_.time_);
+		ImGui::BulletText(srv_ ? u8"テクスチャ割り当て済み" : u8"テクスチャなし");
+		if (srv_)
+			ImGui::Image(srv_.Get(), ImVec2(200.0f, 200.0f));
 
 		if (ImGui::Button(u8"再生", ImVec2(35.0f, 20.0f)))
 			isPlay_ = true;

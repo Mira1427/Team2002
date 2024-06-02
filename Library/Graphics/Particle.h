@@ -30,14 +30,14 @@ public:
 
 	void Initialize(ID3D11DeviceContext* dc, float deltaTime, const Vector3& position);
 	void Update(ID3D11DeviceContext* dc, float deltaTime, const Vector3& position);
-	void Draw(ID3D11DeviceContext* dc);
+	void Draw(ID3D11DeviceContext* dc, ID3D11ShaderResourceView** srv);
 
 	const size_t maxParticleCount_;
 
 	struct Constants
 	{
 		Vector3 emitterPosition_;
-		float particleSize_{ 0.02f };
+		float particleSize_{ 0.05f };
 		float time_{};
 		float deltaTime_{};
 		float pad_[2];

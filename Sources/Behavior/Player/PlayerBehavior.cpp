@@ -15,7 +15,7 @@
 
 #include "../../EventManager.h"
 
-
+GameObject* obj[2];
 // ===== プレイヤーの基本の行動処理 ======================================================================================================================================================
 void BasePlayerBehavior::Execute(GameObject* obj, float elapsedTime)
 {
@@ -80,6 +80,18 @@ void BasePlayerBehavior::Shot(GameObject* obj, PlayerComponent* player, PlayerCo
 
 	size_t playerIndex = player->playerNum_;
 
+
+	// --- TODO : タイプの反転 ---
+	if (input.down(0) & Input::UP)
+	{
+		player->type_ = (player->type_ == CharacterType::BLACK) ? CharacterType::WHITE : CharacterType::BLACK;
+		static const char* fileNames[2] = { "./Data/Model/InstancedMesh/Player/White_Train.fbx", "./Data/Model/InstancedMesh/Player/Black_Train.fbx" };
+		MeshRendererComponent* renderer = obj->GetComponent<MeshRendererComponent>();
+		renderer->model_ = ModelManager::Instance().GetModel(fileNames[static_cast<size_t>(player->type_)]);
+	}
+
+
+
 	// --- 左右のキーを押してなかったら ---
 	switch (input.state(0) & (Input::LEFT | Input::RIGHT))
 	{
@@ -104,9 +116,7 @@ void BasePlayerBehavior::Shot(GameObject* obj, PlayerComponent* player, PlayerCo
 			controller->bullet_[playerIndex] -= controller->bulletCost_;
 			controller->bullet_[playerIndex] = (std::max)(controller->bullet_[playerIndex], 0.0f);
 		}
-
 	}
-
 }
 
 
@@ -200,7 +210,7 @@ void PlayerControllerBehavior::Rotate(GameObject* obj, PlayerControllerComponent
 	}
 
 
-	// --- ゲージの反転 ---
+	// --- TODO : ゲージの反転 ---
 	//if (input.down(0) & Input::UP)
 	//{
 	//	controller->attackGauge_ *= -1.0f;

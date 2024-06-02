@@ -312,7 +312,9 @@
     <ClInclude Include="Sources\Behavior\UI\PauseBehavior.h">
       <Filter>Sources\Behavior\UI</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\Behavior\UI\LifeGaugeBehavior.h" />
+    <ClInclude Include="Sources\Behavior\UI\LifeGaugeBehavior.h">
+      <Filter>Sources\Behavior\UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="External\ImGui\imgui.cpp">
@@ -504,7 +506,9 @@
     <ClCompile Include="Sources\Behavior\UI\PauseBehavior.cpp">
       <Filter>Sources\Behavior\UI</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\Behavior\UI\LifeGaugeBehavior.cpp" />
+    <ClCompile Include="Sources\Behavior\UI\LifeGaugeBehavior.cpp">
+      <Filter>Sources\Behavior\UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="HLSL\Primitive.hlsli">

@@ -80,13 +80,15 @@ class EnemySpawnerComponent final : public Component
 {
 public:
 	EnemySpawnerComponent() :
-		spawnSpeed_()
+		spawnSpeed_(),
+		spawnCount_()
 	{}
 
 	void Draw(ID3D11DeviceContext* dc) override {};
 	void UpdateDebugGui(float elapsedTime) override;
 
 	float spawnSpeed_;
+	int spawnCount_;
 };
 
 // --- 敵のコンポーネント ---

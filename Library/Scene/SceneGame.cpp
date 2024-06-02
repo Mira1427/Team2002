@@ -51,7 +51,7 @@ void SceneGame::Initialize()
 
 
 	// --- レール ---
-	ModelManager::Instance().LoadInstancedMesh(RootsLib::DX11::GetDevice(), "./Data/Model/InstancedMesh/re-ru.fbx", 5, true);
+	ModelManager::Instance().LoadInstancedMesh(RootsLib::DX11::GetDevice(), "./Data/Model/InstancedMesh/Stage/Rail.fbx", 5, true);
 	AddRail();
 
 
@@ -598,11 +598,9 @@ GameObject* SceneGame::AddPlayer(std::string name, GameObject* parent, float rot
 
 	// --- モデル描画コンポーネント追加 ---
 	MeshRendererComponent* renderer = obj->AddComponent<MeshRendererComponent>();
-	renderer->model_ = ModelManager::Instance().LoadModel(RootsLib::DX11::GetDevice(), "./Data/Model/InstancedMesh/Player/dennsya2.fbx", true, false, nullptr);
+	static const char* fileNames[2] = { "./Data/Model/InstancedMesh/Player/White_Train.fbx", "./Data/Model/InstancedMesh/Player/Black_Train.fbx" };
+	renderer->model_ = ModelManager::Instance().LoadModel(RootsLib::DX11::GetDevice(), fileNames[playerNum], true, false, nullptr);
 	
-	Vector4 colors[2] = { {1.0f, 1.0f, 1.0f, 1.0f}, {0.0f, 0.0f, 0.0f, 1.0f} };
-	renderer->color_ = colors[static_cast<size_t>(playerNum)];
-
 	// --- アニメーションコンポーネントの追加 ---
 	AnimatorComponent* animator = obj->AddComponent<AnimatorComponent>();
 	animator->isPlay_ = true;
@@ -682,7 +680,7 @@ void SceneGame::AddRail()
 	obj->transform_->scaling_ *= 0.3f;
 
 	InstancedMeshComponent* renderer = obj->AddComponent<InstancedMeshComponent>();
-	renderer->model_ = ModelManager::Instance().GetInstancedMesh("./Data/Model/InstancedMesh/re-ru.fbx", 5);
+	renderer->model_ = ModelManager::Instance().GetInstancedMesh("./Data/Model/InstancedMesh/Stage/Rail.fbx", 5);
 }
 
 

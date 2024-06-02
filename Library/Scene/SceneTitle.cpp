@@ -39,6 +39,7 @@ void SceneTitle::Update(float elapsedTime)
 	//	created = true;
 	//}
 	//video->Update(elapsedTime);
+
 	EventManager::Instance().Update(elapsedTime);
 	EventManager::Instance().UpdateButton();
 

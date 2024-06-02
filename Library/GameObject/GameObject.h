@@ -48,7 +48,8 @@ public:
 		position_(),
 		scaling_(Vector3::Unit_),
 		rotation_(),
-		coordinateSystem_(1/*左手系 Y軸アップ*/)
+		coordinateSystem_(1/*左手系 Y軸アップ*/),
+		orientation_()
 	{}
 
 	// --- 姿勢行列の作成 ---
@@ -65,6 +66,7 @@ public:
 	Vector3 rotation_;
 	float rotateSpeed_ = 1.0f;
 	int coordinateSystem_;
+	Quaternion orientation_;
 
 	static const Matrix CoordinateSystems_[4];
 };
@@ -518,6 +520,7 @@ class ParticleComponent final : public Component
 public:
 	ParticleComponent() :
 		particle_(nullptr),
+		srv_(),
 		timeScale_(1.0f),
 		isPlay_(true),
 		isVisible_(true)
@@ -530,6 +533,7 @@ public:
 	void UpdateDebugGui(float elapsedTime) override;
 
 	std::unique_ptr<Particle> particle_;
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> srv_;
 	float timeScale_;
 	bool isPlay_;
 	bool isVisible_;

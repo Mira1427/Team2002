@@ -31,11 +31,11 @@ void AttackGaugeBehavior::Execute(GameObject* obj, float elapsedTime)
 
 #if 1
 		// --- ゲージを変動させない ---
-		renderer->size_.y = -controller->maxAttackGaugeHeight_;
+		renderer->size_.y = controller->maxAttackGaugeHeight_;
 #else
 		// --- ゲージを変動させる ---
-		//renderer->size_.y = RootsLib::Math::Lerp(0.0f, controller->maxAttackGaugeHeight_, controller->attackGauge_);
-		//renderer->size_.y = (std::max)(renderer->size_.y, 0.0f);
+		renderer->size_.y = RootsLib::Math::Lerp(0.0f, controller->maxAttackGaugeHeight_, controller->attackGauge_);
+		renderer->size_.y = (std::max)(renderer->size_.y, 0.0f);
 #endif
 
 		obj->transform_->position_ = obj->parent_->transform_->position_;	// 親の座標の合わせる
@@ -70,7 +70,7 @@ void RangeGaugeBehavior::Execute(GameObject* obj, float elapsedTime)
 		PrimitiveRendererComponent* renderer = obj->GetComponent<PrimitiveRendererComponent>();
 
 #if 1
-		renderer->size_.y = controller->maxAttackGaugeHeight_;
+		renderer->size_.y = -controller->maxAttackGaugeHeight_;
 #else
 		renderer->size_.y = RootsLib::Math::Lerp(0.0f, controller->maxAttackGaugeHeight_, controller->attackGauge_);
 		renderer->size_.y = (std::min)(renderer->size_.y, 0.0f);

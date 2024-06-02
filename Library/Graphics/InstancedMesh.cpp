@@ -188,7 +188,7 @@ void InstancedMesh::FetchMeshes(fbxsdk::FbxScene* fbxScene, std::vector<Mesh>& m
 			continue;
 		}
 
-#if 0
+#if 1
 		// --- –¼‘O‚©‚çŽæ“¾ ---
 		fbxsdk::FbxNode* fbxNode = fbxScene->FindNodeByName(node.name.c_str());
 #else

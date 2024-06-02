@@ -60,6 +60,21 @@ void BaseEnemyBehavior::Execute(GameObject* obj, float elapsedTime)
 		}
 
 
+		// --- ‰ñ“]ˆ— ---
+		Matrix R;
+		R.MakeRotationFromQuaternion(obj->transform_->orientation_);
+		Vector3 front = R.v_[2].xyz();
+
+		Vector3 moveVec = Vector3::Normalize(rigidBody->velocity_);
+		Vector3 cross = front.Cross(moveVec);
+		float dot = front.Dot(moveVec);
+		float angle = acosf(dot);
+		Quaternion rot;
+		rot.SetRotation(cross, angle);
+		if (angle > 1e-8f)
+			DirectX::XMStoreFloat4(&obj->transform_->orientation_.vec_, DirectX::XMQuaternionSlerp(obj->transform_->orientation_, obj->transform_->orientation_ * rot, 0.3f));
+
+
 		// --- ˆÚ“®ˆ— ---
 		obj->transform_->position_ += rigidBody->velocity_ * elapsedTime;
 

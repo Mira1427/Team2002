@@ -59,6 +59,7 @@ void EnemySpawnerComponent::UpdateDebugGui(float elapsedTime)
 		ImGui::Spacing();
 
 		ImGui::DragFloat(u8"•¦‚«‘¬“x", &spawnSpeed_, 0.1f);
+		ImGui::InputInt(u8"“G‚Ì¶¬”", &spawnCount_);
 
 		ImGui::TreePop();
 	}

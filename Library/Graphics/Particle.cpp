@@ -103,13 +103,16 @@ void Particle::Update(ID3D11DeviceContext* dc, float deltaTime, const Vector3& p
 }
 
 
-void Particle::Draw(ID3D11DeviceContext* dc)
+void Particle::Draw(ID3D11DeviceContext* dc, ID3D11ShaderResourceView** srv)
 {
+	ID3D11ShaderResourceView* nullSRV{};
+
 	// --- シェーダーのバインド ---
 	dc->VSSetShader(vs_.Get(), nullptr, 0);
 	dc->PSSetShader(ps_.Get(), nullptr, 0);
 	dc->GSSetShader(gs_.Get(), nullptr, 0);
 	dc->GSSetShaderResources(0, 1, bufferSRV_.GetAddressOf());
+	dc->PSSetShaderResources(0, 1, srv ? srv : &nullSRV);
 
 
 	// --- 定数バッファの更新とバインド ---
@@ -125,8 +128,8 @@ void Particle::Draw(ID3D11DeviceContext* dc)
 	dc->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
 	dc->Draw(static_cast<UINT>(maxParticleCount_), 0);
 
-	ID3D11ShaderResourceView* nullSRV{};
 	dc->GSSetShaderResources(0, 1, &nullSRV);
+	dc->PSSetShaderResources(0, 1, &nullSRV);
 	dc->VSSetShader(nullptr, nullptr, 0);
 	dc->PSSetShader(nullptr, nullptr, 0);
 	dc->GSSetShader(nullptr, nullptr, 0);

@@ -19,23 +19,57 @@ void EnemySpawnerBehavior::Execute(GameObject* obj, float elapsedTime)
 	if (EventManager::Instance().paused_)
 		return;
 
+	EnemySpawnerComponent* spawner = obj->GetComponent<EnemySpawnerComponent>();	// スポナーのコンポーネントの取得
+
 	switch (obj->state_)
 	{
-	case 0:
+	case 0:	// Wave1_set
 
-		obj->timer_ = 10.0f;
+		obj->timer_ = 5.0f;
+
+		// 敵の数
+		spawner->spawnCount_ = 10;
 
 		obj->state_++;
 		break;
 
-	case 1:
+	case 1:	// Wave1
 
 		// --- タイマーがゼロになったら ---
 		if (obj->timer_ < 0.0f)
 		{
 			// --- 敵の追加 ---
 			AddEnemy(obj);
+			spawner->spawnCount_--;
 		}
+
+		if (spawner->spawnCount_ <= 0.0f) obj->state_++;
+
+		// --- タイマーの減算 ---
+		obj->timer_ -= elapsedTime;
+
+		break;
+
+	case 2:	// Wave2_set
+
+		obj->timer_ = 5.0f;
+
+		// 敵の数
+		spawner->spawnCount_ = 15;
+
+		obj->state_++;
+
+		break;
+
+	case 3:	// Wave2
+
+		if (obj->timer_ < 0.0f)
+		{
+			AddEnemy(obj);
+			spawner->spawnCount_--;
+		}
+
+		if (spawner->spawnCount_ <= 0) obj->state_++;
 
 		// --- タイマーの減算 ---
 		obj->timer_ -= elapsedTime;
@@ -79,20 +113,36 @@ void EnemySpawnerBehavior::AddEnemy(GameObject* obj)
 
 
 	// --- 描画コンポーネント追加 ---
-	//MeshRendererComponent* renderer = enemy->AddComponent<MeshRendererComponent>();
-	//renderer->model_ = ModelManager::Instance().GetModel("./Data/Model/plantune.fbx");
-	//renderer->color_ = colors[colorIndex];
+	// --- モデルの決定 ---
+	if (colorIndex == 0/*白*/)
+	{
+		InstancedMeshComponent* renderer = enemy->AddComponent<InstancedMeshComponent>();
+		renderer->model_ = ModelManager::Instance().GetInstancedMesh("./Data/Model/InstancedMesh/Enemy/enemy4_white.fbx", 100);
+	}
 
-#if 0
-	InstancedMeshComponent* renderer = enemy->AddComponent<InstancedMeshComponent>();
-	static const char* grayFileName = ((rand() % 2) == 0) ? "./Data/Model/InstancedMesh/Enemy/enemy2_gray.fbx" : "./Data/Model/InstancedMesh/Enemy/enemy3_gray.fbx";
-	static const char* fileNames[3] = { "./Data/Model/InstancedMesh/Enemy/enemy4_white.fbx", "./Data/Model/InstancedMesh/Enemy/enemy1_black.fbx" , grayFileName };
-	renderer->model_ = ModelManager::Instance().GetInstancedMesh(fileNames[colorIndex], 1000);
-	//renderer->color_ = colors[colorIndex];
-#else 
-	MeshRendererComponent* renderer = enemy->AddComponent<MeshRendererComponent>();
-	renderer->model_ = ModelManager::Instance().GetModel("./Data/Model/SkeletalMesh/Enemy/enemy_1walk.fbx");
-#endif
+	else if (colorIndex == 1/*黒*/)
+	{
+		MeshRendererComponent* renderer = enemy->AddComponent<MeshRendererComponent>();
+		renderer->model_ = ModelManager::Instance().GetModel("./Data/Model/SkeletalMesh/Enemy/enemy_1walk.fbx");
+	}
+
+	else /*グレー*/
+	{
+		size_t index = rand() % 2;
+		static const char* fileNames[2] = { "./Data/Model/SkeletalMesh/Enemy/enemy_2walk.fbx", "./Data/Model/InstancedMesh/Enemy/enemy3_gray.fbx" };
+		
+		if (index == 0)
+		{
+			MeshRendererComponent* renderer = enemy->AddComponent<MeshRendererComponent>();
+			renderer->model_ = ModelManager::Instance().GetModel(fileNames[index]);
+		}
+
+		else
+		{
+			InstancedMeshComponent* renderer = enemy->AddComponent<InstancedMeshComponent>();
+			renderer->model_ = ModelManager::Instance().GetInstancedMesh(fileNames[index], 100);
+		}
+	}
 
 
 	// --- アニメーションコンポーネント追加 ---
