@@ -14,7 +14,7 @@ public:
 private:
 	void Rotate(GameObject* obj, PlayerComponent* player, PlayerControllerComponent* controller, float angleOffset);	// ‰ñ“]ˆ—
 	void Shot(GameObject* obj, PlayerComponent* player, PlayerControllerComponent* controller);	// ËŒ‚ˆ—
-	void AddBullet(GameObject* parent, const float scaling, const float attackAmount, const float radius);	// ’eŠÛ‚Ì’Ç‰Á
+	void AddBullet(GameObject* parent, const float scaling, const float attackAmount, const float radius, const float speed);	// ’eŠÛ‚Ì’Ç‰Á
 };
 
 
@@ -27,6 +27,7 @@ public:
 
 private:
 	void Rotate(GameObject* obj, PlayerControllerComponent* controller, float elapsedTime) const;
+	void AddLaser(GameObject* parent, const float attackAmount, const Vector3& size);
 };
 
 

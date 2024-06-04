@@ -15,7 +15,7 @@
 
 #include "../../EventManager.h"
 
-GameObject* obj[2];
+
 // ===== プレイヤーの基本の行動処理 ======================================================================================================================================================
 void BasePlayerBehavior::Execute(GameObject* obj, float elapsedTime)
 {
@@ -25,9 +25,7 @@ void BasePlayerBehavior::Execute(GameObject* obj, float elapsedTime)
 	switch (obj->state_)
 	{
 	case 0:
-
 		obj->state_++;
-		break;
 
 	case 1:
 
@@ -42,7 +40,8 @@ void BasePlayerBehavior::Execute(GameObject* obj, float elapsedTime)
 
 
 		// --- 射撃処理 ---
-		Shot(obj, player, controller);
+		if (!controller->shotLaser_)
+			Shot(obj, player, controller);
 
 
 		// --- アニメーションの更新 ---
@@ -88,6 +87,9 @@ void BasePlayerBehavior::Shot(GameObject* obj, PlayerComponent* player, PlayerCo
 		static const char* fileNames[2] = { "./Data/Model/InstancedMesh/Player/White_Train.fbx", "./Data/Model/InstancedMesh/Player/Black_Train.fbx" };
 		MeshRendererComponent* renderer = obj->GetComponent<MeshRendererComponent>();
 		renderer->model_ = ModelManager::Instance().GetModel(fileNames[static_cast<size_t>(player->type_)]);
+		float bullet = controller->bullet_[0];
+		controller->bullet_[0] = controller->bullet_[1];
+		controller->bullet_[1] = bullet;
 	}
 
 
@@ -110,7 +112,7 @@ void BasePlayerBehavior::Shot(GameObject* obj, PlayerComponent* player, PlayerCo
 			float r = RootsLib::Math::Lerp(controller->minRangeAmount_, controller->maxRangeAmount_, g);
 
 			// --- 弾丸の追加 ---
-			AddBullet(obj, 0.02f, a, r);
+			AddBullet(obj, 0.02f, a, r, 125.0f);
 
 			// --- 弾薬の減算 ---
 			controller->bullet_[playerIndex] -= controller->bulletCost_;
@@ -121,7 +123,7 @@ void BasePlayerBehavior::Shot(GameObject* obj, PlayerComponent* player, PlayerCo
 
 
 // --- 弾丸の追加 ---
-void BasePlayerBehavior::AddBullet(GameObject* parent, const float scaling, const float attackAmount, const float radius)
+void BasePlayerBehavior::AddBullet(GameObject* parent, const float scaling, const float attackAmount, const float radius, const float speed)
 {
 	GameObject* bullet = GameObjectManager::Instance().Add(
 		std::make_shared<GameObject>(),
@@ -135,7 +137,7 @@ void BasePlayerBehavior::AddBullet(GameObject* parent, const float scaling, cons
 	bullet->transform_->scaling_ *= scaling;
 
 	RigidBodyComponent* rigidBody = bullet->AddComponent<RigidBodyComponent>();
-	rigidBody->velocity_ = Vector3::Zero_ - bullet->transform_->position_;
+	rigidBody->velocity_ = Vector3::Normalize(Vector3::Zero_ - bullet->transform_->position_) * speed;
 
 	InstancedMeshComponent* renderer = bullet->AddComponent<InstancedMeshComponent>();
 	renderer->model_ = ModelManager::Instance().GetInstancedMesh("./Data/Model/InstancedMesh/Bullet.fbx", 1000, nullptr, true);
@@ -147,7 +149,6 @@ void BasePlayerBehavior::AddBullet(GameObject* parent, const float scaling, cons
 
 	SphereCollider* collider = bullet->AddCollider<SphereCollider>();
 	collider->radius_ = 1.0f;
-
 }
 
 
@@ -171,6 +172,27 @@ void PlayerControllerBehavior::Execute(GameObject* obj, float elapsedTime)
 		InputManager& input = InputManager::Instance();
 
 		PlayerControllerComponent* controller = obj->GetComponent<PlayerControllerComponent>();	// コントローラーコンポーネントの取得
+
+
+		controller->shotLaser_ = false;
+
+		if (
+			(((input.state(0) & Input::LMB) && (input.down(0) & Input::RMB)) ||
+				((input.state(0) & Input::RMB) && (input.down(0) & Input::LMB))) &&
+			(controller->bullet_[0] > controller->maxBulletValue_ * 0.5f) &&
+			(controller->bullet_[1] > controller->maxBulletValue_ * 0.5f)
+			)
+		{
+			controller->bullet_[0] -= controller->maxBulletValue_ * 0.5f;
+			controller->bullet_[1] -= controller->maxBulletValue_ * 0.5f;
+			controller->bullet_[0] = (std::max)(controller->bullet_[0], 0.0f);
+			controller->bullet_[1] = (std::max)(controller->bullet_[1], 0.0f);
+
+			controller->shotLaser_ = true;
+
+
+			AddLaser(obj->child_[0], controller->laserAttackAmount_, controller->laserSize_);	// レーザー追加
+		}
 
 		Rotate(obj, controller, elapsedTime);	// 回転処理
 	}
@@ -224,6 +246,25 @@ void PlayerControllerBehavior::Rotate(GameObject* obj, PlayerControllerComponent
 }
 
 
+void PlayerControllerBehavior::AddLaser(GameObject* parent, const float attackAmount, const Vector3& size)
+{
+	GameObject* laser = GameObjectManager::Instance().Add(
+		std::make_shared<GameObject>(),
+		Vector3::Zero_,
+		BehaviorManager::Instance().GetBehavior("Laser")
+	);
+
+	laser->name_ = u8"レーザー";
+	laser->eraser_ = EraserManager::Instance().GetEraser("Scene");
+	laser->parent_ = parent;
+
+	BoxCollider* collider = laser->AddCollider<BoxCollider>();
+	collider->isVisible_ = true;
+	collider->size_ = size;
+}
+
+
+
 // --- プレイヤーの弾薬ゲージの処理 ---
 void PlayerBulletGaugeBehavior::Execute(GameObject* obj, float elapsedTime)
 {
@@ -241,7 +282,6 @@ void PlayerBulletGaugeBehavior::Execute(GameObject* obj, float elapsedTime)
 		PrimitiveRendererComponent* renderer = obj->GetComponent<PrimitiveRendererComponent>();						// 描画コンポーネント取得
 		PlayerControllerComponent*	controller = obj->parent_->parent_->GetComponent<PlayerControllerComponent>();	// コントローラーコンポーネント取得
 		PlayerComponent*			player = obj->parent_->GetComponent<PlayerComponent>();							// プレイヤーコンポーネント取得
-
 
 
 		controller->bullet_[player->playerNum_] = (std::min)(controller->bullet_[player->playerNum_], controller->maxBulletValue_);	// 値の制限

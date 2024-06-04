@@ -55,10 +55,10 @@ public:
 	);
 
 
-	// --- ‹…‚ÆAABB‚ÌÕ“Ë”»’è ---
-	static bool IntersectSphereAndAABB(
-		Vector3 positionA, float radius,
-		Vector3 positionB, Vector3 sizeB
+	// --- ‹…‚Æ—§•û‘Ì‚ÌÕ“Ë”»’è ---
+	static bool IntersectSphereBox(
+		const Vector3& positionA, const float radius,
+		const Vector3& positionB, const Vector3& sizeB, const Vector3& rotation
 	);
 
 

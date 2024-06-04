@@ -17,6 +17,7 @@
 
 #include "../../Sources/EventManager.h"
 
+
 void SceneGame::Initialize()
 {
 	LightingManager* lightingManager = Graphics::Instance().GetLightingManager();
@@ -68,6 +69,8 @@ void SceneGame::Initialize()
 	// --- キャラの追加 ---
 	GameObject* player1 = AddPlayer(u8"キャラ１", controller, 0.0f, 20.0f, 0);
 	GameObject* player2 = AddPlayer(u8"キャラ２", controller, 180.0f, 20.0f, 1);
+	controller->child_.emplace_back(player1);
+	controller->child_.emplace_back(player2);
 
 	// --- ステージの追加 ---
 	AddStage();
@@ -85,34 +88,18 @@ void SceneGame::Initialize()
 	// --- ライフゲージの追加 ---
 	AddLifeGauge();
 
+
 	// --- 攻撃ゲージのコントローラー ---
 	GameObject* attackGaugeController = AddAttackGaugeController(controller, { 80.0f, 360.0f, 0.0f });
-
 
 	// --- 攻撃ゲージ ---
 	AddAttackGauge(attackGaugeController, 50.0f);
 
-
 	// --- 範囲ゲージ ---
 	AddRangeGauge(attackGaugeController, 50.0f);
 
-
 	// --- 攻撃ゲージのバー ---
 	AddAttackGaugeBar(attackGaugeController);
-
-	//{
-	//	auto* obj = GameObjectManager::Instance().Add(
-	//		std::make_shared<GameObject>(),
-	//		Vector3(),
-	//		BehaviorManager::Instance().GetBehavior("Particle")
-	//	);
-
-	//	obj->name_ = u8"パーティクル";
-
-	//	auto* particle = obj->AddComponent<ParticleComponent>();
-	//	particle->particle_ = std::make_unique<Particle>(RootsLib::DX11::GetDevice(), 1000);
-	//	particle->Initialize(RootsLib::DX11::GetDeviceContext());
-	//}
 }
 
 
@@ -644,6 +631,9 @@ GameObject* SceneGame::AddPlayerController(float rotateSpeed, float range)
 	controller->maxRangeAmount_ = 10.0f;	// 最大範囲
 	controller->minRangeAmount_ = 1.0f;		// 最小範囲
 	controller->maxAttackGaugeHeight_ = 330.0f;
+
+	controller->laserAttackAmount_ = 5.0f;
+	controller->laserSize_ = { 10.0f, 10.0f, 200.0f };
 
 	return obj;
 }

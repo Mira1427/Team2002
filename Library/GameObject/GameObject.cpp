@@ -890,8 +890,8 @@ void BoxCollider::Draw(ID3D11DeviceContext* dc)
 	Graphics::Instance().GetDebugRenderer()->DrawCube(
 		object_->transform_->position_ + offset_,
 		size_,
-		Vector3::Zero_,
-		Vector4::White_
+		object_->transform_->rotation_,
+		{ 1.0f, 0.0f, 0.0f, 1.0f }
 	);
 }
 
@@ -1426,15 +1426,15 @@ void GameObjectManager::JudgeCollision(float elapsedTime)
 							}
 						}
 
-						// --- ‹…‚ÆAABB‚ÌÕ“Ë”»’è ---
+						// --- ‹…‚Æ—§•û‘Ì‚ÌÕ“Ë”»’è ---
 						else if (collider2->collisionType_ == ColliderComponent::CollisionType::SPHERE)
 						{
 							BoxCollider* box = obj->GetComponent<BoxCollider>();
 							SphereCollider* sphere = obj2->GetComponent<SphereCollider>();
 
-							if (Collision::IntersectSphereAndAABB(
+							if (Collision::IntersectSphereBox(
 								obj2->transform_->position_ + sphere->offset_, sphere->radius_,
-								obj->transform_->position_ + box->offset_, box->size_))
+								obj->transform_->position_ + box->offset_, box->size_, obj->transform_->rotation_))
 							{
 								obj->behavior_->Hit(obj.get(), obj2.get(), elapsedTime);
 							}
@@ -1478,15 +1478,15 @@ void GameObjectManager::JudgeCollision(float elapsedTime)
 							}
 						}
 
-						// --- ‹…‚ÆAABB‚ÌÕ“Ë”»’è ---
+						// --- ‹…‚Æ—§•û‘Ì‚ÌÕ“Ë”»’è ---
 						else if (collider2->collisionType_ == ColliderComponent::CollisionType::BOX)
 						{
 							BoxCollider* box = obj2->GetComponent<BoxCollider>();
 							SphereCollider* sphere = obj->GetComponent<SphereCollider>();
 
-							if (Collision::IntersectSphereAndAABB(
+							if (Collision::IntersectSphereBox(
 								obj->transform_->position_ + sphere->offset_, sphere->radius_,
-								obj2->transform_->position_ + box->offset_, box->size_))
+								obj2->transform_->position_ + box->offset_, box->size_, obj2->transform_->rotation_))
 							{
 								obj->behavior_->Hit(obj.get(), obj2.get(), elapsedTime);
 							}

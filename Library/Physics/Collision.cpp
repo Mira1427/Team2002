@@ -102,19 +102,29 @@ bool Collision::IntersectCapsules(
 }
 
 
-// --- ãÖÇ∆AABBÇÃè’ìÀîªíË ---
-bool Collision::IntersectSphereAndAABB(Vector3 positionA, float radius, Vector3 positionB, Vector3 sizeB)
+// --- ãÖÇ∆óßï˚ëÃÇÃè’ìÀîªíË ---
+bool Collision::IntersectSphereBox(
+    const Vector3& positionA, const float radius,
+    const Vector3& positionB, const Vector3& sizeB, const Vector3& rotation
+)
 {
     Vector3 nearPoint;
 
-    nearPoint.x = (std::max)(positionB.x - sizeB.x * 0.5f, (std::min)(positionA.x, positionB.x + sizeB.x * 0.5f));
-    nearPoint.y = (std::max)(positionB.y - sizeB.y * 0.5f, (std::min)(positionA.y, positionB.y + sizeB.y * 0.5f));
-    nearPoint.z = (std::max)(positionB.z - sizeB.z * 0.5f, (std::min)(positionA.z, positionB.z + sizeB.z * 0.5f));
+    Matrix T;
+    T.MakeTranslation(positionB);
+    Matrix R;
+    R.MakeRotation(rotation);
+    Vector3 spherePosition = positionA;
+    spherePosition.TransformCoord(positionA, Matrix::Inverse(R * T));    // óßï˚ëÃÇÃÉçÅ[ÉJÉããÛä‘Ç÷ïœä∑
+
+    nearPoint.x = (std::max)(positionB.x - sizeB.x * 0.5f, (std::min)(spherePosition.x, positionB.x + sizeB.x * 0.5f));
+    nearPoint.y = (std::max)(positionB.y - sizeB.y * 0.5f, (std::min)(spherePosition.y, positionB.y + sizeB.y * 0.5f));
+    nearPoint.z = (std::max)(positionB.z - sizeB.z * 0.5f, (std::min)(spherePosition.z, positionB.z + sizeB.z * 0.5f));
 
     const float distance = sqrtf(
-        (nearPoint.x - positionA.x) * (nearPoint.x - positionA.x) +
-        (nearPoint.y - positionA.y) * (nearPoint.y - positionA.y) +
-        (nearPoint.z - positionA.z) * (nearPoint.z - positionA.z)
+        (nearPoint.x - spherePosition.x) * (nearPoint.x - spherePosition.x) +
+        (nearPoint.y - spherePosition.y) * (nearPoint.y - spherePosition.y) +
+        (nearPoint.z - spherePosition.z) * (nearPoint.z - spherePosition.z)
     );
 
     return distance < radius;

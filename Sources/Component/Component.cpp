@@ -44,6 +44,9 @@ void PlayerControllerComponent::UpdateDebugGui(float elapsedTime)
 		ImGui::DragFloat(u8"最大範囲", &maxRangeAmount_);
 		ImGui::DragFloat(u8"最小範囲", &minRangeAmount_);
 		ImGui::DragFloat(u8"攻撃ゲージの高さ", &maxAttackGaugeHeight_);
+		ImGui::Separator();
+		ImGui::DragFloat(u8"レーザーの攻撃力", &laserAttackAmount_, 0.1f);
+		ImGui::DragFloat3(u8"レーザーのサイズ", &laserSize_.x, 0.1f);
 
 		ImGui::TreePop();
 	}

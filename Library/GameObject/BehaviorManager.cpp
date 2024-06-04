@@ -8,6 +8,7 @@
 
 #include "../../Sources/Behavior/Player/PlayerBehavior.h"
 #include "../../Sources/Behavior/Player/BulletBehavior.h"
+#include "../../Sources/Behavior/Player/LaserBehavior.h"
 #include "../../Sources/Behavior/Player/AttackGaugeBehavior.h"
 
 #include "../../Sources/Behavior/Enemy/EnemyBehavior.h"
@@ -31,6 +32,7 @@ BehaviorManager::BehaviorManager()
 	behaviors_.insert(std::make_pair("BulletGauge",			std::make_shared<PlayerBulletGaugeBehavior>()));
 	behaviors_.insert(std::make_pair("Bullet",				std::make_shared<BaseBulletBehavior>()));
 	behaviors_.insert(std::make_pair("BulletExplosion",		std::make_shared<BulletExplosionBehavior>()));
+	behaviors_.insert(std::make_pair("Laser",				std::make_shared<LaserBehavior>()));
 	behaviors_.insert(std::make_pair("AttackGauge",			std::make_shared<AttackGaugeBehavior>()));
 	behaviors_.insert(std::make_pair("RangeGauge",			std::make_shared<RangeGaugeBehavior>()));
 	behaviors_.insert(std::make_pair("AttackGaugeBar",		std::make_shared<AttackGaugeBarBehavior>()));

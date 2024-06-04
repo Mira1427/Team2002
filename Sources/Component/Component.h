@@ -48,7 +48,10 @@ public:
 		minAttackAmount_(),
 		maxRangeAmount_(),
 		minRangeAmount_(),
-		maxAttackGaugeHeight_()
+		maxAttackGaugeHeight_(),
+		shotLaser_(),
+		laserAttackAmount_(),
+		laserSize_()
 	{}
 
 	void Draw(ID3D11DeviceContext* dc) override {};
@@ -72,6 +75,10 @@ public:
 	float maxRangeAmount_;	// ”ÍˆÍ‚ÌÅ‘å’l
 	float minRangeAmount_;	// ”ÍˆÍ‚ÌÅ¬’l
 	float maxAttackGaugeHeight_;
+
+	bool  shotLaser_;
+	float laserAttackAmount_;
+	Vector3 laserSize_;
 };
 
 
