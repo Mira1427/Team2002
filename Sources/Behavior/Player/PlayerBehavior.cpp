@@ -14,6 +14,7 @@
 #include "../../Component/Component.h"
 
 #include "../../EventManager.h"
+#include "../../ParameterManager.h"
 
 
 // ===== プレイヤーの基本の行動処理 ======================================================================================================================================================
@@ -87,6 +88,8 @@ void BasePlayerBehavior::Shot(GameObject* obj, PlayerComponent* player, PlayerCo
 		static const char* fileNames[2] = { "./Data/Model/InstancedMesh/Player/White_Train.fbx", "./Data/Model/InstancedMesh/Player/Black_Train.fbx" };
 		MeshRendererComponent* renderer = obj->GetComponent<MeshRendererComponent>();
 		renderer->model_ = ModelManager::Instance().GetModel(fileNames[static_cast<size_t>(player->type_)]);
+
+		// --- TODO : 弾薬の反転 ---
 		float bullet = controller->bullet_[0];
 		controller->bullet_[0] = controller->bullet_[1];
 		controller->bullet_[1] = bullet;
@@ -173,26 +176,7 @@ void PlayerControllerBehavior::Execute(GameObject* obj, float elapsedTime)
 
 		PlayerControllerComponent* controller = obj->GetComponent<PlayerControllerComponent>();	// コントローラーコンポーネントの取得
 
-
-		controller->shotLaser_ = false;
-
-		if (
-			(((input.state(0) & Input::LMB) && (input.down(0) & Input::RMB)) ||
-				((input.state(0) & Input::RMB) && (input.down(0) & Input::LMB))) &&
-			(controller->bullet_[0] > controller->maxBulletValue_ * 0.5f) &&
-			(controller->bullet_[1] > controller->maxBulletValue_ * 0.5f)
-			)
-		{
-			controller->bullet_[0] -= controller->maxBulletValue_ * 0.5f;
-			controller->bullet_[1] -= controller->maxBulletValue_ * 0.5f;
-			controller->bullet_[0] = (std::max)(controller->bullet_[0], 0.0f);
-			controller->bullet_[1] = (std::max)(controller->bullet_[1], 0.0f);
-
-			controller->shotLaser_ = true;
-
-
-			AddLaser(obj->child_[0], controller->laserAttackAmount_, controller->laserSize_);	// レーザー追加
-		}
+		ShotLaser(obj, controller);
 
 		Rotate(obj, controller, elapsedTime);	// 回転処理
 	}
@@ -242,6 +226,48 @@ void PlayerControllerBehavior::Rotate(GameObject* obj, PlayerControllerComponent
 	// --- 角度を 0 ~ 360 に制限 ---
 	if (obj->transform_->rotation_.y > 360.0f) obj->transform_->rotation_.y -= 360.0f;
 	if (obj->transform_->rotation_.y < 0.0f) obj->transform_->rotation_.y += 360.0f;
+
+}
+
+
+void PlayerControllerBehavior::ShotLaser(GameObject* obj, PlayerControllerComponent* controller)
+{
+	InputManager& input = InputManager::Instance();
+
+	controller->shotLaser_ = false;
+
+	switch (input.state(0) & (Input::LEFT | Input::RIGHT))
+	{
+	case Input::LEFT:
+	case Input::RIGHT: break;
+
+	default:
+
+		// --- レーザーの追加 ---
+		if (
+			(((input.state(0) & Input::LMB) && (input.down(0) & Input::RMB)) ||
+				((input.state(0) & Input::RMB) && (input.down(0) & Input::LMB))) &&
+			(controller->bullet_[0] > controller->maxBulletValue_ * 0.5f) &&
+			(controller->bullet_[1] > controller->maxBulletValue_ * 0.5f)
+			)
+		{
+			controller->bullet_[0] -= controller->maxBulletValue_ * 0.5f;
+			controller->bullet_[1] -= controller->maxBulletValue_ * 0.5f;
+			controller->bullet_[0] = (std::max)(controller->bullet_[0], 0.0f);
+			controller->bullet_[1] = (std::max)(controller->bullet_[1], 0.0f);
+
+			controller->shotLaser_ = true;
+
+
+			AddLaser(obj->child_[0], controller->laserAttackAmount_, controller->laserSize_);	// レーザー追加
+
+
+			float atan = atan2(0.0f - obj->child_[0]->transform_->position_.z, 0.0f - obj->child_[0]->transform_->position_.x);
+			ParameterManager::Instance().laserEffect_->play(obj->child_[0]->transform_->position_, { 1.0f, 1.0f, 5.0f }, { 0.0f, -atan + DirectX::XMConvertToRadians(-90.0f), 0.0f });
+			atan = atan2(0.0f - obj->child_[1]->transform_->position_.z, 0.0f - obj->child_[1]->transform_->position_.x);
+			ParameterManager::Instance().laserEffect_->play(obj->child_[1]->transform_->position_, { 1.0f, 1.0f, 5.0f }, { 0.0f, -atan + DirectX::XMConvertToRadians(-90.0f), 0.0f });
+		}
+	}
 
 }
 

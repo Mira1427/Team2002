@@ -21,6 +21,7 @@ float4 main(VSOutput pin) : SV_TARGET
     
     // --- アルベドカラー ( 拡散反射光 ) ---
     float4 albedoColor = textureMaps[ALBEDO_MAP].Sample(samplerStates[ANISOTROPIC], pin.texcoord);
+    float alpha = albedoColor.a;
     
     // --- スペキュラーカラーはアルベドカラーと同じに ---
     float3 specColor = albedoColor;
@@ -145,6 +146,7 @@ float4 main(VSOutput pin) : SV_TARGET
     shadowFactor = lerp(0.4, 1.0, shadowFactor);
     
     finalColor.xyz *= shadowFactor;
+    finalColor.a = alpha;
 
 
     return finalColor * pin.color;

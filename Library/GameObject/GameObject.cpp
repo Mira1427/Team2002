@@ -1286,8 +1286,9 @@ void VideoComponent::UpdateDebugGui(float elapsedTime)
 GameObject::GameObject() :
 	state_(),
 	timer_(),
-	isChoose_(),
+	layer_(),
 	type_(ObjectType::NONE),
+	isChoose_(),
 	transform_(std::make_shared<Transform>())
 {
 	transform_->SetObject(this);
@@ -1333,13 +1334,10 @@ void GameObjectManager::Update(float elapsedTime)
 void GameObjectManager::Draw(ID3D11DeviceContext* dc)
 {
 	// --- リストのソート ---
-	if (isSort_)
-	{
-		objectList_.sort(
-			[](const std::shared_ptr<GameObject>& obj1, const std::shared_ptr<GameObject>& obj2)
-			{ return obj1->transform_->position_.z > obj2->transform_->position_.z; }
-		);
-	}
+	objectList_.sort(
+		[](const std::shared_ptr<GameObject>& obj1, const std::shared_ptr<GameObject>& obj2)
+		{ return obj1->layer_ > obj2->layer_; }
+	);
 
 	for (const auto& obj : objectList_)
 	{
@@ -1544,8 +1542,9 @@ void GameObjectManager::UpdateDebugGui(float elapsedTime)
 			ImGui::Text(obj->name_.c_str());
 
 			ImGui::Spacing();
-			ImGui::InputInt(u8"ステート", &obj->state_);
-			ImGui::DragFloat(u8"タイマー", &obj->timer_);
+			ImGui::InputInt(u8"ステート",	&obj->state_);
+			ImGui::DragFloat(u8"タイマー",	&obj->timer_);
+			ImGui::InputInt(u8"レイヤー",	&obj->layer_);
 
 			for (auto& component : obj->components_)
 			{

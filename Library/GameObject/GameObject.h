@@ -655,8 +655,9 @@ public:
 	std::string	name_;
 	int			state_;
 	float		timer_;
-	bool		isChoose_;
+	int			layer_;
 	ObjectType	type_;
+	bool		isChoose_;
 
 	Behavior* behavior_ = nullptr;
 	Eraser* eraser_ = nullptr;
@@ -707,7 +708,6 @@ public:
 	std::set<GameObject*> discardList_;					// 削除予定のオブジェクトのリスト
 
 
-	bool isSort_ = false;
 	bool castShadow_ = false;
 	bool showCollision_ = false;
 };

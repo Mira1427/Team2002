@@ -119,15 +119,15 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions);USE_IMGUI</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>.\External\cereal-master\include;.\External\FBX SDK\2020.3.4\include;.\External\DirectXTK-main\Inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\External\cereal-master\include;.\External\FBX SDK\2020.3.4\include;.\External\DirectXTK-main\Inc;.\External\Effekseer\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>.\External\DirectXTK-main\Bin\Desktop_2022\x64\Debug;.\External\FBX SDK\2020.3.4\lib\vs2019\x64\debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>d3d11.lib;dxgi.lib;DirectXTK.lib;zlib-md.lib;libxml2-md.lib;libfbxsdk-md.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>.\External\DirectXTK-main\Bin\Desktop_2022\x64\Debug;.\External\FBX SDK\2020.3.4\lib\vs2019\x64\debug;.\External\Effekseer\x64\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>d3d11.lib;dxgi.lib;DirectXTK.lib;zlib-md.lib;libxml2-md.lib;libfbxsdk-md.lib;Effekseer.lib;EffekseerRendererDX11.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <FxCompile>
       <ShaderModel>5.0</ShaderModel>
@@ -175,7 +175,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>.\External\DirectXTK-main\Inc;.\External\FBX SDK\2020.3.4\include;.\External\cereal-master\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\External\DirectXTK-main\Inc;.\External\FBX SDK\2020.3.4\include;.\External\cereal-master\include;.\External\Effekseer\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -185,8 +185,8 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>.\External\DirectXTK-main\Bin\Desktop_2022\x64\Release;.\External\FBX SDK\2020.3.4\lib\vs2019\x64\release;.\External\Effekseer\x64\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>d3d11.lib;dxgi.lib;DirectXTK.lib;%(AdditionalDependencies);zlib-mt.lib;libxml2-mt.lib;libfbxsdk-mt.lib;Effekseer.lib;EffekseerRendererDX11.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>.\External\DirectXTK-main\Bin\Desktop_2022\x64\Release;.\External\Effekseer\x64\Release;.\External\FBX SDK\2020.3.4\lib\vs2019\x64\release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>d3d11.lib;dxgi.lib;DirectXTK.lib;zlib-mt.lib;libxml2-mt.lib;libfbxsdk-mt.lib;Effekseer.lib;EffekseerRendererDX11.lib</AdditionalDependencies>
     </Link>
     <FxCompile>
       <ShaderModel>5.0</ShaderModel>
@@ -216,6 +216,8 @@
     <ClInclude Include="Library\GameObject\ParticleBehavior.h" />
     <ClInclude Include="Library\Graphics\DebugLineRenderer.h" />
     <ClInclude Include="Library\Graphics\DebugRenderer.h" />
+    <ClInclude Include="Library\Graphics\Effect.h" />
+    <ClInclude Include="Library\Graphics\EffectManager.h" />
     <ClInclude Include="Library\Graphics\FrameBuffer.h" />
     <ClInclude Include="Library\Graphics\GeometricPrimitiveBatch.h" />
     <ClInclude Include="Library\Graphics\Graphics.h" />
@@ -285,6 +287,8 @@
     <ClCompile Include="Library\GameObject\ParticleBehavior.cpp" />
     <ClCompile Include="Library\Graphics\DebugLineRenderer.cpp" />
     <ClCompile Include="Library\Graphics\DebugRenderer.cpp" />
+    <ClCompile Include="Library\Graphics\Effect.cpp" />
+    <ClCompile Include="Library\Graphics\EffectManager.cpp" />
     <ClCompile Include="Library\Graphics\FrameBuffer.cpp" />
     <ClCompile Include="Library\Graphics\GeometricPrimitiveBatch.cpp" />
     <ClCompile Include="Library\Graphics\Graphics.cpp" />

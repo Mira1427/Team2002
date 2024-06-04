@@ -8,6 +8,7 @@
 #include "../Graphics/Shader.h"
 #include "../Graphics/LightingManager.h"
 #include "../Graphics/VideoTexture.h"
+#include "../Graphics/EffectManager.h"
 
 #include "../Scene/SceneManager.h"
 #include "../Scene/SceneExperiment.h"
@@ -21,6 +22,8 @@
 
 #include "../GameObject/GameObject.h"
 #include "../GameObject/BehaviorManager.h"
+
+#include "../../Sources/ParameterManager.h"
 
 #include "Library.h"
 #include "Camera.h"
@@ -66,6 +69,10 @@ bool Framework::Initialize()
 	Graphics::Instance().InitializeRenderer();
 
 	Graphics::Instance().InitializeManager();
+
+	EffectManager::instance().initialize();
+
+	ParameterManager::Instance().InitializeEffects();
 
 	VideoTexture::CreateAPI();
 

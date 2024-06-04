@@ -27,6 +27,7 @@ public:
 
 private:
 	void Rotate(GameObject* obj, PlayerControllerComponent* controller, float elapsedTime) const;
+	void ShotLaser(GameObject* obj, PlayerControllerComponent* controller);
 	void AddLaser(GameObject* parent, const float attackAmount, const Vector3& size);
 };
 

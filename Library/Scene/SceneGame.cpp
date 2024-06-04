@@ -1,5 +1,7 @@
 #include "SceneGame.h"
 
+#include "../../External/ImGui/imgui.h"
+
 #include "../GameObject/GameObject.h"
 #include "../GameObject/BehaviorManager.h"
 #include "../GameObject/EraserManager.h"
@@ -7,6 +9,8 @@
 #include "../Graphics/Graphics.h"
 #include "../Graphics/Shader.h"
 #include "../Graphics/ModelManager.h"
+#include "../Graphics/Effect.h"
+#include "../Graphics/EffectManager.h"
 
 #include "../Input/InputManager.h"
 
@@ -16,6 +20,7 @@
 #include "../../Sources/Component/Component.h"
 
 #include "../../Sources/EventManager.h"
+#include "../../Sources/ParameterManager.h"
 
 
 void SceneGame::Initialize()
@@ -113,6 +118,21 @@ void SceneGame::Update(float elapsedTime)
 	EventManager::Instance().Update(elapsedTime);
 	EventManager::Instance().UpdateButton();
 
+	static Vector3 pos;
+	static Vector3 size = Vector3::Unit_;
+	static Vector3 rotation = Vector3::Zero_;
+	ImGui::DragFloat3("pos", &pos.x);
+	ImGui::DragFloat3("size", &size.x);
+	ImGui::DragFloat3("rotation", &rotation.x, DirectX::XMConvertToRadians(5.0f));
+
+
+	if (ImGui::Button("Effect", { 200.0f, 50.0f }))
+	{
+		ParameterManager::Instance().smokeEffect_->play(pos, size, rotation.ToRadian());
+	}
+
+	EffectManager::instance().update(elapsedTime);
+
 	GameObjectManager::Instance().Update(elapsedTime);			// オブジェクトの更新
 	GameObjectManager::Instance().ShowDebugList();				// デバッグリストの表示
 	GameObjectManager::Instance().UpdateDebugGui(elapsedTime);	// デバッグGuiの表示
@@ -199,6 +219,12 @@ void SceneGame::Render(ID3D11DeviceContext* dc)
 		mesh.second->Draw(RootsLib::DX11::GetDeviceContext(), &nullPS, false);
 	}
 
+	// --- エフェクト描画 ---
+	{
+		CameraComponent* camera = CameraManager::Instance().currentCamera_->GetComponent<CameraComponent>();
+		EffectManager::instance().render(camera->view_, camera->projection_);
+	}
+
 	GameObjectManager::Instance().castShadow_ = true;
 	GameObjectManager::Instance().Draw(dc);
 
@@ -239,6 +265,12 @@ void SceneGame::Render(ID3D11DeviceContext* dc)
 	for (auto& mesh : ModelManager::Instance().GetInstancedMeshes())
 	{
 		mesh.second->Draw(RootsLib::DX11::GetDeviceContext());
+	}
+
+	// --- エフェクト描画 ---
+	{
+		CameraComponent* camera = CameraManager::Instance().currentCamera_->GetComponent<CameraComponent>();
+		EffectManager::instance().render(camera->view_, camera->projection_);
 	}
 
 	// --- オブジェクトの描画 ---
@@ -649,10 +681,12 @@ void SceneGame::AddStage()
 	obj->name_ = u8"地面";
 	obj->eraser_ = EraserManager::Instance().GetEraser("Scene");
 
-	obj->transform_->scaling_.y = 0.02f;
+	obj->transform_->position_.y = -0.56f;
+	obj->transform_->scaling_.x = 7.24f;
+	obj->transform_->scaling_.z = 7.24f;
 
 	InstancedMeshComponent* renderer = obj->AddComponent<InstancedMeshComponent>();
-	renderer->model_ = ModelManager::Instance().LoadInstancedMesh(RootsLib::DX11::GetDevice(), "./Data/Model/InstancedMesh/Stage/Stage.fbx", 5, true);
+	renderer->model_ = ModelManager::Instance().LoadInstancedMesh(RootsLib::DX11::GetDevice(), "./Data/Model/InstancedMesh/Stage/ground.fbx", 5, true);
 }
 
 
@@ -712,6 +746,9 @@ void SceneGame::AddEnemySpawner()
 
 	EnemySpawnerComponent* spawner = obj->AddComponent<EnemySpawnerComponent>();
 	spawner->spawnSpeed_ = 7.0f;
+
+	//InstancedMeshComponent* renderer = obj->AddComponent<InstancedMeshComponent>();
+	//renderer->model_ = ModelManager::Instance().LoadInstancedMesh(RootsLib::DX11::GetDevice(), "./Data/Model/InstancedMesh/Stage/Spawner.fbx", 5, true);
 }
 
 

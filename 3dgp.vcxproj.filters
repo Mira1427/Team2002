@@ -291,9 +291,6 @@
     <ClInclude Include="Sources\EventManager.h">
       <Filter>Sources</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\ParameterManager.h">
-      <Filter>Sources</Filter>
-    </ClInclude>
     <ClInclude Include="Library\Scene\SceneOver.h">
       <Filter>Library\Scene</Filter>
     </ClInclude>
@@ -315,7 +312,18 @@
     <ClInclude Include="Sources\Behavior\UI\LifeGaugeBehavior.h">
       <Filter>Sources\Behavior\UI</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\Behavior\Player\LaserBehavior.h" />
+    <ClInclude Include="Sources\Behavior\Player\LaserBehavior.h">
+      <Filter>Sources\Behavior\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Library\Graphics\Effect.h">
+      <Filter>Library\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Library\Graphics\EffectManager.h">
+      <Filter>Library\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\ParameterManager.h">
+      <Filter>Sources</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="External\ImGui\imgui.cpp">
@@ -486,9 +494,6 @@
     <ClCompile Include="Sources\EventManager.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\ParameterManager.cpp">
-      <Filter>Sources</Filter>
-    </ClCompile>
     <ClCompile Include="Library\Scene\SceneOver.cpp">
       <Filter>Library\Scene</Filter>
     </ClCompile>
@@ -510,7 +515,18 @@
     <ClCompile Include="Sources\Behavior\UI\LifeGaugeBehavior.cpp">
       <Filter>Sources\Behavior\UI</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\Behavior\Player\LaserBehavior.cpp" />
+    <ClCompile Include="Sources\Behavior\Player\LaserBehavior.cpp">
+      <Filter>Sources\Behavior\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Library\Graphics\Effect.cpp">
+      <Filter>Library\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Library\Graphics\EffectManager.cpp">
+      <Filter>Library\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\ParameterManager.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="HLSL\Primitive.hlsli">

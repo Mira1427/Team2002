@@ -8,7 +8,7 @@ LightingManager::LightingManager()
 	ambientLight_.color_ = { 0.3f, 0.3f, 0.3f };
 
 	//directionLight_.direction_	= { 0.0f, -0.5f, 1.0f };
-	directionLight_.direction_	= { -0.113f, -0.556f, 1.0f };
+	directionLight_.direction_	= { -0.113f, -1.0f, 1.0f };
 	directionLight_.intensity_	= 3.0f;
 	directionLight_.color_		= { 1.0f, 1.0f, 1.0f };
 
