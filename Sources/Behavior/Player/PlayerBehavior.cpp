@@ -81,21 +81,6 @@ void BasePlayerBehavior::Shot(GameObject* obj, PlayerComponent* player, PlayerCo
 	size_t playerIndex = player->playerNum_;
 
 
-	// --- TODO : タイプの反転 ---
-	if (input.down(0) & Input::UP)
-	{
-		player->type_ = (player->type_ == CharacterType::BLACK) ? CharacterType::WHITE : CharacterType::BLACK;
-		static const char* fileNames[2] = { "./Data/Model/InstancedMesh/Player/White_Train.fbx", "./Data/Model/InstancedMesh/Player/Black_Train.fbx" };
-		MeshRendererComponent* renderer = obj->GetComponent<MeshRendererComponent>();
-		renderer->model_ = ModelManager::Instance().GetModel(fileNames[static_cast<size_t>(player->type_)]);
-
-		// --- TODO : 弾薬の反転 ---
-		float bullet = controller->bullet_[0];
-		controller->bullet_[0] = controller->bullet_[1];
-		controller->bullet_[1] = bullet;
-	}
-
-
 
 	// --- 左右のキーを押してなかったら ---
 	switch (input.state(0) & (Input::LEFT | Input::RIGHT))
@@ -175,6 +160,25 @@ void PlayerControllerBehavior::Execute(GameObject* obj, float elapsedTime)
 		InputManager& input = InputManager::Instance();
 
 		PlayerControllerComponent* controller = obj->GetComponent<PlayerControllerComponent>();	// コントローラーコンポーネントの取得
+
+
+		// --- TODO : タイプの反転 ---
+		if (input.down(0) & Input::UP)
+		{
+			PlayerComponent* player1 = obj->child_[0]->GetComponent<PlayerComponent>();
+			PlayerComponent* player2 = obj->child_[1]->GetComponent<PlayerComponent>();
+			std::swap(player1->type_, player2->type_);
+			static const char* fileNames[2] = { "./Data/Model/InstancedMesh/Player/White_Train.fbx", "./Data/Model/InstancedMesh/Player/Black_Train.fbx" };
+			MeshRendererComponent* renderer = obj->child_[0]->GetComponent<MeshRendererComponent>();
+			renderer->model_ = ModelManager::Instance().GetModel(fileNames[static_cast<size_t>(player1->type_)]);
+			renderer = obj->child_[1]->GetComponent<MeshRendererComponent>();
+			renderer->model_ = ModelManager::Instance().GetModel(fileNames[static_cast<size_t>(player2->type_)]);
+
+			// --- TODO : 弾薬の反転 ---
+			float bullet = controller->bullet_[0];
+			controller->bullet_[0] = controller->bullet_[1];
+			controller->bullet_[1] = bullet;
+		}
 
 		ShotLaser(obj, controller);
 
