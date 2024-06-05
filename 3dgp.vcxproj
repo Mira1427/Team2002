@@ -244,6 +244,7 @@
     <ClInclude Include="Library\Library\HighResolutionTimer.h" />
     <ClInclude Include="Library\Library\Library.h" />
     <ClInclude Include="Library\Library\Misc.h" />
+    <ClInclude Include="Library\Math\Easing.h" />
     <ClInclude Include="Library\Math\Matrix.h" />
     <ClInclude Include="Library\Math\Vector.h" />
     <ClInclude Include="Library\Physics\Collision.h" />
@@ -266,6 +267,7 @@
     <ClInclude Include="Sources\Behavior\Stage\StageBehavior.h" />
     <ClInclude Include="Sources\Behavior\UI\LifeGaugeBehavior.h" />
     <ClInclude Include="Sources\Behavior\UI\PauseBehavior.h" />
+    <ClInclude Include="Sources\Behavior\UI\WaveCutInBehavior.h" />
     <ClInclude Include="Sources\Component\Component.h" />
     <ClInclude Include="Sources\Eraser\SceneEraser.h" />
     <ClInclude Include="Sources\EventManager.h" />
@@ -314,6 +316,7 @@
     <ClCompile Include="Library\Library\Framework.cpp" />
     <ClCompile Include="Library\Library\Library.cpp" />
     <ClCompile Include="Library\Library\Main.cpp" />
+    <ClCompile Include="Library\Math\Easing.cpp" />
     <ClCompile Include="Library\Math\Matrix.cpp" />
     <ClCompile Include="Library\Math\Vector.cpp" />
     <ClCompile Include="Library\Physics\Collision.cpp" />
@@ -335,6 +338,7 @@
     <ClCompile Include="Sources\Behavior\Stage\StageBehavior.cpp" />
     <ClCompile Include="Sources\Behavior\UI\LifeGaugeBehavior.cpp" />
     <ClCompile Include="Sources\Behavior\UI\PauseBehavior.cpp" />
+    <ClCompile Include="Sources\Behavior\UI\WaveCutInBehavior.cpp" />
     <ClCompile Include="Sources\Component\Component.cpp" />
     <ClCompile Include="Sources\Eraser\SceneEraser.cpp" />
     <ClCompile Include="Sources\EventManager.cpp" />

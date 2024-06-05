@@ -167,17 +167,16 @@ void PlayerControllerBehavior::Execute(GameObject* obj, float elapsedTime)
 		{
 			PlayerComponent* player1 = obj->child_[0]->GetComponent<PlayerComponent>();
 			PlayerComponent* player2 = obj->child_[1]->GetComponent<PlayerComponent>();
-			std::swap(player1->type_, player2->type_);
+			std::swap(player1->type_, player2->type_);	// ƒ^ƒCƒv‚Ì“ü‚ê‘Ö‚¦
+
+			// --- ƒ‚ƒfƒ‹‚Ì·‚µ‘Ö‚¦ ---
 			static const char* fileNames[2] = { "./Data/Model/InstancedMesh/Player/White_Train.fbx", "./Data/Model/InstancedMesh/Player/Black_Train.fbx" };
 			MeshRendererComponent* renderer = obj->child_[0]->GetComponent<MeshRendererComponent>();
 			renderer->model_ = ModelManager::Instance().GetModel(fileNames[static_cast<size_t>(player1->type_)]);
 			renderer = obj->child_[1]->GetComponent<MeshRendererComponent>();
 			renderer->model_ = ModelManager::Instance().GetModel(fileNames[static_cast<size_t>(player2->type_)]);
 
-			// --- TODO : ’e–ò‚Ì”½“] ---
-			float bullet = controller->bullet_[0];
-			controller->bullet_[0] = controller->bullet_[1];
-			controller->bullet_[1] = bullet;
+			std::swap(controller->bullet_[0], controller->bullet_[1]);	// ’e–ò‚Ì“ü‚ê‘Ö‚¦
 		}
 
 		ShotLaser(obj, controller);
@@ -304,6 +303,17 @@ void PlayerBulletGaugeBehavior::Execute(GameObject* obj, float elapsedTime)
 	switch (obj->state_)
 	{
 	case 0:
+
+	{
+		obj->transform_->position_.y += 150.0f;
+		obj->transform_->scaling_.y *= -1.0f;
+
+		PrimitiveRendererComponent* renderer = obj->GetComponent<PrimitiveRendererComponent>();
+		renderer->size_.x = 30.0f;
+		renderer->writeDepth_ = true;
+		renderer->testDepth_ = true;
+	}
+
 		obj->state_++;
 		break;
 
@@ -316,7 +326,7 @@ void PlayerBulletGaugeBehavior::Execute(GameObject* obj, float elapsedTime)
 
 		controller->bullet_[player->playerNum_] = (std::min)(controller->bullet_[player->playerNum_], controller->maxBulletValue_);	// ’l‚Ì§ŒÀ
 
-		renderer->size_.x = controller->bullet_[player->playerNum_];
+		renderer->size_.y = controller->bullet_[player->playerNum_];
 
 		break;
 	}

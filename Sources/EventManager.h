@@ -77,6 +77,9 @@ public:
 	void UpdatePauseEvent();
 
 
+	void AddWaveCutIn();
+
+
 	std::list<EventMessage> messages_;
 
 	GameObject* stages_[static_cast<size_t>(StageDirection::MAX)];	// ŠX‚Ì4“™•ª‚³‚ê‚½”»’è—p

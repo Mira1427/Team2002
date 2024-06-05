@@ -2,6 +2,8 @@
 
 #include "../../Library/GameObject/GameObject.h"
 
+#include "../../Library/Library/Library.h"
+
 
 
 enum class CharacterType
@@ -145,4 +147,28 @@ public:
 	float attack_;
 	float radius_;
 	CharacterType type_;
+};
+
+
+
+class UIComponent final : public Component
+{
+public:
+	UIComponent() :
+		offset_(),
+		uniqueID_(-1),
+		basePosition_(),
+		easeScale_(),
+		easeData_(1.0f, false, nullptr)
+	{}
+
+
+	void Draw(ID3D11DeviceContext* dc) override {};
+	void UpdateDebugGui(float elapsedTime) override;
+
+	Vector3 offset_;
+	int uniqueID_;
+	Vector3 basePosition_;
+	float easeScale_;
+	RootsLib::Easing::Data easeData_;
 };

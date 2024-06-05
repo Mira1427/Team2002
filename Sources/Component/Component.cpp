@@ -112,3 +112,24 @@ void BulletComponent::UpdateDebugGui(float elapsedTime)
 		ImGui::TreePop();
 	}
 }
+
+void UIComponent::UpdateDebugGui(float elapsedTime)
+{
+	ImGui::Spacing();
+	ImGui::Separator();
+	if (ImGui::TreeNode("UIChild"))
+	{
+		ImGui::Spacing();
+
+		ImGui::InputInt(u8"ユニークID", &uniqueID_);
+		ImGui::DragFloat3(u8"オフセット", &offset_.x);
+		ImGui::DragFloat3(u8"初期位置", &basePosition_.x);
+
+		ImGui::DragFloat(u8"イージングのタイマー", &easeData_.timer_);
+		ImGui::DragFloat(u8"タイマーの上限", &easeData_.timerLimit_);
+		ImGui::Checkbox(u8"反転するか", &easeData_.isReverse_);
+		ImGui::DragFloat(u8"イージングの移動量", &easeScale_);
+
+		ImGui::TreePop();
+	}
+}

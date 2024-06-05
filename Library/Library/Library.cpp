@@ -10,6 +10,8 @@
 
 #include "../Input/InputManager.h"
 
+#include "../Math/Easing.h"
+
 #include "Application.h"
 
 
@@ -325,6 +327,88 @@ namespace RootsLib
 		int Clamp(const int value, const int min, const int max)
 		{
 			return (std::max)((std::min)(value, max), min);
+		}
+	}
+
+
+
+	namespace Easing
+	{
+		EasingFunction GetFunction(EasingFunctions function)
+		{
+			return GetEasingFunction(function);
+		}
+
+
+		//	実体ver
+		bool Calculate(Data& data, float elapsedTime, float& target, float increase, float timeScale)
+		{
+			// --- タイマーの割合で0.0 ~ 1.0 の値を得て関数に渡す ---
+			double progress = data.function_(data.timer_ / data.timerLimit_);
+			target = static_cast<float>(progress * increase);	// 0.0 ~ 1.0 の値を増加量分掛ける
+
+			// --- 反転中 ---
+			if (data.isReverse_)
+			{
+				data.timer_ -= elapsedTime * timeScale;
+
+				if (data.timer_ < 0.0f)
+				{
+					data.timer_ = 0.0f;
+
+					return true;
+				}
+			}
+
+			else
+			{
+				data.timer_ += elapsedTime * timeScale;
+
+				if (data.timer_ > data.timerLimit_)
+				{
+					data.timer_ = data.timerLimit_;
+
+					return true;
+				}
+			}
+
+			return false;	//	まだ進行中の場合は false を返す
+		}
+
+
+		//	ポインタver
+		bool Calculate(Data* data, float elapsedTime, float& target, float increase, float timeScale)
+		{
+			// --- タイマーの割合で0.0 ~ 1.0 の値を得て関数に渡す ---
+			double progress = data->function_(data->timer_ / data->timerLimit_);
+			target = static_cast<float>(progress * increase);	// 0.0 ~ 1.0 の値を増加量分掛ける
+
+			// --- 反転中 ---
+			if (data->isReverse_)
+			{
+				data->timer_ -= elapsedTime * timeScale;
+
+				if (data->timer_ < 0.0f)
+				{
+					data->timer_ = 0.0f;
+
+					return true;
+				}
+			}
+
+			else
+			{
+				data->timer_ += elapsedTime * timeScale;
+
+				if (data->timer_ > data->timerLimit_)
+				{
+					data->timer_ = data->timerLimit_;
+
+					return true;
+				}
+			}
+
+			return false;	//	まだ進行中の場合は false を返す
 		}
 	}
 }

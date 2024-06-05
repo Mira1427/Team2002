@@ -30,6 +30,9 @@ void EnemySpawnerBehavior::Execute(GameObject* obj, float elapsedTime)
 		// 敵の数
 		spawner->spawnCount_ = 10;
 
+		// --- カットインの追加 ---
+		EventManager::Instance().AddWaveCutIn();
+
 		obj->state_++;
 		break;
 
@@ -56,6 +59,9 @@ void EnemySpawnerBehavior::Execute(GameObject* obj, float elapsedTime)
 
 		// 敵の数
 		spawner->spawnCount_ = 15;
+
+		// --- カットインの追加 ---
+		EventManager::Instance().AddWaveCutIn();
 
 		obj->state_++;
 

@@ -324,6 +324,12 @@
     <ClInclude Include="Sources\ParameterManager.h">
       <Filter>Sources</Filter>
     </ClInclude>
+    <ClInclude Include="Library\Math\Easing.h">
+      <Filter>Library\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Behavior\UI\WaveCutInBehavior.h">
+      <Filter>Sources\Behavior\UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="External\ImGui\imgui.cpp">
@@ -526,6 +532,12 @@
     </ClCompile>
     <ClCompile Include="Sources\ParameterManager.cpp">
       <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Library\Math\Easing.cpp">
+      <Filter>Library\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Behavior\UI\WaveCutInBehavior.cpp">
+      <Filter>Sources\Behavior\UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

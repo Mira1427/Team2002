@@ -8,6 +8,7 @@
 #include "../../Library/Library/CameraManager.h"
 
 #include "../../Sources/EventManager.h"
+#include "../../Sources/ParameterManager.h"
 
 
 // --- 敵の基本処理 ---
@@ -31,33 +32,7 @@ void BaseEnemyBehavior::Execute(GameObject* obj, float elapsedTime)
 
 
 		// --- 範囲外に行った時の処理 ---
-		Vector3 vec = obj->transform_->position_ - Vector3(0.0f, 0.0f, 0.0f);
-		float length = vec.Length();
-
-		if (length > 100.0f)
-		{
-			// --- 敵を消去 ---
-			obj->Destroy();
-
-			// --- 角度から街のn番目のライフを減らす ---
-			float atan = atan2(vec.z, vec.x);
-			atan = DirectX::XMConvertToDegrees(atan) + 180.0f;
-			atan += 45.0f;	// 水平から45度回転させる
-			if (atan > 360.0f)
-				atan -= 360.0f;
-
-			size_t index = static_cast<size_t>(atan / 90.0f);	// インデックスの計算
-			StageComponent* stage = EventManager::Instance().stages_[index]->GetComponent<StageComponent>();
-			stage->life_ -= 1.0f;
-
-			if (stage->life_ <= 0.0f)
-			{
-				EventManager::Instance().TranslateMessage(EventMessage::TO_OVER_SCENE);
-				CameraManager::Instance().currentCamera_ = CameraManager::Instance().debugCamera_;
-			}
-
-			stage->life_ = (std::max)(stage->life_, 0.0f);
-		}
+		HitTown(obj, 100.0f);
 
 
 		// --- 回転処理 ---
@@ -85,4 +60,41 @@ void BaseEnemyBehavior::Execute(GameObject* obj, float elapsedTime)
 
 	break;
 	}
+}
+
+void BaseEnemyBehavior::HitTown(GameObject* obj, const float range)
+{
+	Vector3 vec = obj->transform_->position_ - Vector3(0.0f, 0.0f, 0.0f);
+	float length = vec.Length();
+
+	if (length > range)
+	{
+		// --- 敵を消去 ---
+		obj->Destroy();
+
+		// --- 角度から街のn番目のライフを減らす ---
+		float atan = atan2(vec.z, vec.x);
+		atan = DirectX::XMConvertToDegrees(atan) + 180.0f;
+		atan += 45.0f;	// 水平から45度回転させる
+		if (atan > 360.0f)
+			atan -= 360.0f;
+
+		size_t index = static_cast<size_t>(atan / 90.0f);	// インデックスの計算
+		StageComponent* stage = EventManager::Instance().stages_[index]->GetComponent<StageComponent>();
+		stage->life_ -= 1.0f;
+
+
+		// --- 煙エフェクトの再生 ---
+		ParameterManager::Instance().smokeEffect_->play(obj->transform_->position_, { 10.0f, 10.0f, 10.0f }, Vector3::Zero_);
+
+
+		if (stage->life_ <= 0.0f)
+		{
+			EventManager::Instance().TranslateMessage(EventMessage::TO_OVER_SCENE);
+			CameraManager::Instance().currentCamera_ = CameraManager::Instance().debugCamera_;
+		}
+
+		stage->life_ = (std::max)(stage->life_, 0.0f);
+	}
+
 }

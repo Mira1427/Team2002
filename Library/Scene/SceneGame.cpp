@@ -69,7 +69,8 @@ void SceneGame::Initialize()
 
 
 	// --- コントローラーの追加 ---
-	GameObject* controller = AddPlayerController(45.0f, 94.0f);
+	float range = 94.0f;
+	GameObject* controller = AddPlayerController(45.0f, range);
 
 	// --- キャラの追加 ---
 	GameObject* player1 = AddPlayer(u8"キャラ１", controller, 0.0f, 20.0f, 0);
@@ -88,7 +89,7 @@ void SceneGame::Initialize()
 	AddEnemySpawner();
 
 	// --- 街の4等分された判定用 ---
-	AddTownLife(5.0f);
+	AddTownLife(5.0f, range);
 
 	// --- ライフゲージの追加 ---
 	AddLifeGauge();
@@ -110,6 +111,7 @@ void SceneGame::Initialize()
 
 void SceneGame::Finalize()
 {
+	EffectManager::instance().getEffekseerManager()->StopAllEffects();
 }
 
 
@@ -131,7 +133,21 @@ void SceneGame::Update(float elapsedTime)
 		ParameterManager::Instance().smokeEffect_->play(pos, size, rotation.ToRadian());
 	}
 
-	EffectManager::instance().update(elapsedTime);
+
+	if (ImGui::Button("Wave", { 200.0f, 50.0f }))
+	{
+		auto* obj = GameObjectManager::Instance().Add(
+			std::make_shared<GameObject>(),
+			Vector3(),
+			BehaviorManager::Instance().GetBehavior("WaveCutIn")
+		);
+
+		obj->AddComponent<PrimitiveRendererComponent>();
+		obj->AddComponent<UIComponent>();
+	}
+
+	if (!EventManager::Instance().paused_)
+		EffectManager::instance().update(elapsedTime);
 
 	GameObjectManager::Instance().Update(elapsedTime);			// オブジェクトの更新
 	GameObjectManager::Instance().ShowDebugList();				// デバッグリストの表示
@@ -713,7 +729,7 @@ void SceneGame::AddBulletGauge(GameObject* parent, int i)
 {
 	GameObject* obj = GameObjectManager::Instance().Add(
 		std::make_shared<GameObject>(),
-		Vector3(900.0f, 60.0f * i + 60.0f * (i + 1), 0.0f),
+		Vector3(i == 0 ? 250.0f : 1030.0f, 360.0f, 0.0f),
 		BehaviorManager::Instance().GetBehavior("BulletGauge")
 	);
 
@@ -721,10 +737,7 @@ void SceneGame::AddBulletGauge(GameObject* parent, int i)
 	obj->parent_ = parent;
 	obj->eraser_ = EraserManager::Instance().GetEraser("Scene");
 
-	PrimitiveRendererComponent* renderer = obj->AddComponent<PrimitiveRendererComponent>();
-	renderer->size_.y = 60.0f;
-	renderer->writeDepth_ = true;
-	renderer->testDepth_ = true;
+	obj->AddComponent<PrimitiveRendererComponent>();
 }
 
 
@@ -752,7 +765,7 @@ void SceneGame::AddEnemySpawner()
 }
 
 
-void SceneGame::AddTownLife(const float life)
+void SceneGame::AddTownLife(const float life, const float range)
 {
 	for (size_t i = 0; i < 4; i++)
 	{
@@ -764,6 +777,10 @@ void SceneGame::AddTownLife(const float life)
 
 		obj->name_ = u8"街" + std::to_string(i);
 		obj->eraser_ = EraserManager::Instance().GetEraser("Scene");
+
+		float angle = DirectX::XMConvertToRadians(90.0f * i);
+		obj->transform_->position_.x = cosf(angle) * range;
+		obj->transform_->position_.z = sinf(angle) * range;
 
 		// --- ステージコンポーネントの追加 ---
 		StageComponent* stage = obj->AddComponent<StageComponent>();

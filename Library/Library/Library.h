@@ -12,6 +12,9 @@ enum class BlendState;
 enum class RasterState;
 enum class DepthState;
 
+typedef double(*EasingFunction)(double);
+enum EasingFunctions;
+
 
 namespace RootsLib
 {
@@ -178,5 +181,38 @@ namespace RootsLib
 
 		float Clampf(const float value, const float min, const float max);
 		int	  Clamp(const int value, const int min, const int max);
+	}
+
+
+
+	// ===== イージング関連 ========================================================================================================================================================================================================
+	namespace Easing
+	{
+		struct Data {
+
+			float timer_ = 0.0f;
+			float timerLimit_ = 0.0f;
+			bool  isReverse_ = false;
+			EasingFunction function_ = nullptr;
+
+			Data() {};
+
+			Data(float timerLimit, bool isReverse, EasingFunction function) :
+				timerLimit_(timerLimit),
+				isReverse_(isReverse),
+				function_(function)
+			{}
+
+			void clear() {
+
+				timer_ = 0.0f;
+			}
+		};
+
+
+		EasingFunction GetFunction(EasingFunctions function);
+
+		bool Calculate(Data& data, float elapsedTime, float& target, float increase = 1.0f, float timeScale = 1.0f);
+		bool Calculate(Data* data, float elapsedTime, float& target, float increase = 1.0f, float timeScale = 1.0f);
 	}
 }

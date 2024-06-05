@@ -17,6 +17,8 @@
 #include "../Library/Library/CameraManager.h"
 #include "../Library/Library/Library.h"
 
+#include "Component/Component.h"
+
 
 
 void EventManager::Initialize()
@@ -219,4 +221,18 @@ void EventManager::UpdatePauseEvent()
 
 		break;
 	}
+}
+
+
+// --- ウェーブ
+void EventManager::AddWaveCutIn()
+{
+	auto* obj = GameObjectManager::Instance().Add(
+		std::make_shared<GameObject>(),
+		Vector3(),
+		BehaviorManager::Instance().GetBehavior("WaveCutIn")
+	);
+
+	obj->AddComponent<PrimitiveRendererComponent>();
+	obj->AddComponent<UIComponent>();
 }

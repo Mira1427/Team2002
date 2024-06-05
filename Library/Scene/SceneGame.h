@@ -48,7 +48,7 @@ public:
 	void AddEnemySpawner();
 
 	// --- 街のライフ追加 ---
-	void AddTownLife(const float life);
+	void AddTownLife(const float life, const float range);
 
 	// --- ライフゲージの追加 ---
 	void AddLifeGauge();
