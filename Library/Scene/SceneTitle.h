@@ -18,5 +18,8 @@ public:
 
 	// --- •`‰æˆ— ---
 	void Render(ID3D11DeviceContext* dc) override;
+
+
+	void SetUpObjects();
 };
 

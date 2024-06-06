@@ -66,3 +66,10 @@ void Effect::setRotation(Effekseer::Handle handle, const Vector3& rotation)
 
 	effekseerManager->SetRotation(handle, Effekseer::Vector3D(Vector3::AxisY_.x, Vector3::AxisY_.y, Vector3::AxisY_.z ), rotation.y);
 }
+
+void Effect::SetFrame(Effekseer::Handle handle, const float frame)
+{
+	auto& effekseerManager = EffectManager::instance().getEffekseerManager();
+
+	effekseerManager->UpdateHandleToMoveToFrame(handle, frame);
+}

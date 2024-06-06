@@ -34,21 +34,11 @@ void BaseEnemyBehavior::Execute(GameObject* obj, float elapsedTime)
 		// --- 範囲外に行った時の処理 ---
 		HitTown(obj, 100.0f);
 
-
 		// --- 回転処理 ---
-		Matrix R;
-		R.MakeRotationFromQuaternion(obj->transform_->orientation_);
-		Vector3 front = R.v_[2].xyz();
+		Rotate(obj, rigidBody);
 
-		Vector3 moveVec = Vector3::Normalize(rigidBody->velocity_);
-		Vector3 cross = front.Cross(moveVec);
-		float dot = front.Dot(moveVec);
-		float angle = acosf(dot);
-		Quaternion rot;
-		rot.SetRotation(cross, angle);
-		if (angle > 1e-8f)
-			DirectX::XMStoreFloat4(&obj->transform_->orientation_.vec_, DirectX::XMQuaternionSlerp(obj->transform_->orientation_, obj->transform_->orientation_ * rot, 0.3f));
 
+		Update(obj, collider, elapsedTime);
 
 		// --- 移動処理 ---
 		obj->transform_->position_ += rigidBody->velocity_ * elapsedTime;
@@ -61,6 +51,7 @@ void BaseEnemyBehavior::Execute(GameObject* obj, float elapsedTime)
 	break;
 	}
 }
+
 
 void BaseEnemyBehavior::HitTown(GameObject* obj, const float range)
 {
@@ -80,21 +71,51 @@ void BaseEnemyBehavior::HitTown(GameObject* obj, const float range)
 			atan -= 360.0f;
 
 		size_t index = static_cast<size_t>(atan / 90.0f);	// インデックスの計算
+		index = index == 4 ? 0 : index;
 		StageComponent* stage = EventManager::Instance().stages_[index]->GetComponent<StageComponent>();
-		stage->life_ -= 1.0f;
+		stage->life_--;
 
 
 		// --- 煙エフェクトの再生 ---
 		ParameterManager::Instance().smokeEffect_->play(obj->transform_->position_, { 10.0f, 10.0f, 10.0f }, Vector3::Zero_);
 
+		CameraManager::Instance().currentCamera_->timer_ = 0.5f;
 
-		if (stage->life_ <= 0.0f)
+
+		if (stage->life_ <= 0)
 		{
 			EventManager::Instance().TranslateMessage(EventMessage::TO_OVER_SCENE);
 			CameraManager::Instance().currentCamera_ = CameraManager::Instance().debugCamera_;
 		}
 
-		stage->life_ = (std::max)(stage->life_, 0.0f);
+		stage->life_ = (std::max)(stage->life_, 0);
 	}
 
+}
+
+
+void BaseEnemyBehavior::Rotate(GameObject* obj, RigidBodyComponent* rigidBody)
+{
+	Matrix R;
+	R.MakeRotationFromQuaternion(obj->transform_->orientation_);
+	Vector3 front = R.v_[2].xyz();
+
+	Vector3 moveVec = Vector3::Normalize(rigidBody->velocity_);
+	Vector3 cross = front.Cross(moveVec);
+	float dot = front.Dot(moveVec);
+	float angle = acosf(dot);
+	Quaternion rot;
+	rot.SetRotation(cross, angle);
+	if (angle > 1e-8f)
+		DirectX::XMStoreFloat4(&obj->transform_->orientation_.vec_, DirectX::XMQuaternionSlerp(obj->transform_->orientation_, obj->transform_->orientation_ * rot, 0.3f));
+}
+
+
+void FlyEnemyBehavior::Update(GameObject* obj, SphereCollider* collider, float elapsedTime)
+{
+	obj->timer_ += elapsedTime;
+
+	collider->offset_.y = 3.0f - obj->transform_->position_.y;
+
+	obj->transform_->position_.y = 5.0f/*Offset*/ + sinf(obj->timer_) * 2.5f;
 }

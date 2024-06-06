@@ -339,7 +339,7 @@ void Graphics::InitializeRenderer()
 	spriteRenderer_		= std::make_unique<SpriteRenderer>(device_.Get());
 	debugLineRenderer_	= std::make_unique<DebugLineRenderer>(device_.Get(), 100);
 	debugRenderer_		= std::make_unique<DebugRenderer>(device_.Get());
-	skyMapRenderer_		= std::make_unique<SkyMap>(device_.Get(), L"./Data/Texture/Epic_BlueSunset_EquiRect_flat.png");
+	skyMapRenderer_		= std::make_unique<SkyMap>(device_.Get(), L"./Data/Texture/SkyMap/AllSky_Overcast4_Low.png");
 }
 
 

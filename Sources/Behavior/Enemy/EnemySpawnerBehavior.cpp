@@ -109,6 +109,11 @@ void EnemySpawnerBehavior::AddEnemy(GameObject* obj)
 	enemy->transform_->scaling_ *= 0.2f;
 
 
+	SphereCollider* collider = enemy->AddCollider<SphereCollider>();
+	collider->radius_ = 3.0f;
+	collider->offset_.y = 5.0f;
+
+
 	// --- 敵コンポーネントの追加 ---
 	EnemyComponent* enemyComp = enemy->AddComponent<EnemyComponent>();
 	enemyComp->life_ = 3.0f;	// ライフの設定
@@ -122,6 +127,10 @@ void EnemySpawnerBehavior::AddEnemy(GameObject* obj)
 	// --- モデルの決定 ---
 	if (colorIndex == 0/*白*/)
 	{
+		enemy->transform_->position_.y = 5.0f;
+		collider->offset_.y = 0.0f;
+		enemy->behavior_ = BehaviorManager::Instance().GetBehavior("FlyEnemy");
+
 		InstancedMeshComponent* renderer = enemy->AddComponent<InstancedMeshComponent>();
 		renderer->model_ = ModelManager::Instance().GetInstancedMesh("./Data/Model/InstancedMesh/Enemy/enemy4_white.fbx", 100);
 	}
@@ -145,6 +154,10 @@ void EnemySpawnerBehavior::AddEnemy(GameObject* obj)
 
 		else
 		{
+			enemy->transform_->position_.y = 5.0f;
+			collider->offset_.y = 0.0f;
+			enemy->behavior_ = BehaviorManager::Instance().GetBehavior("FlyEnemy");
+
 			InstancedMeshComponent* renderer = enemy->AddComponent<InstancedMeshComponent>();
 			renderer->model_ = ModelManager::Instance().GetInstancedMesh(fileNames[index], 100);
 		}
@@ -167,10 +180,6 @@ void EnemySpawnerBehavior::AddEnemy(GameObject* obj)
 	rigidBody->velocity_.x = cosf(theta);
 	rigidBody->velocity_.z = sinf(theta);
 	rigidBody->velocity_ *= 3.0f;
-
-
-	SphereCollider* collider = enemy->AddCollider<SphereCollider>();
-	collider->radius_ = 3.0f;
 
 	// --- タイマーをリセット ---
 	obj->timer_ = spawner->spawnSpeed_;

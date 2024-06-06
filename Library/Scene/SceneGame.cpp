@@ -44,6 +44,8 @@ void SceneGame::Initialize()
 
 		obj->AddComponent<CameraComponent>();
 
+		obj->AddComponent<CameraShakeComponent>();
+
 		CameraManager::Instance().currentCamera_ = obj;
 	}
 
@@ -89,7 +91,7 @@ void SceneGame::Initialize()
 	AddEnemySpawner();
 
 	// --- ŠX‚Ì4“™•ª‚³‚ê‚½”»’è—p ---
-	AddTownLife(5.0f, range);
+	AddTownLife(3.0f, range);
 
 	// --- ƒ‰ƒCƒtƒQ[ƒW‚Ì’Ç‰Á ---
 	AddLifeGauge();
@@ -98,11 +100,11 @@ void SceneGame::Initialize()
 	// --- UŒ‚ƒQ[ƒW‚ÌƒRƒ“ƒgƒ[ƒ‰[ ---
 	GameObject* attackGaugeController = AddAttackGaugeController(controller, { 80.0f, 360.0f, 0.0f });
 
-	// --- UŒ‚ƒQ[ƒW ---
-	AddAttackGauge(attackGaugeController, 50.0f);
+	//// --- UŒ‚ƒQ[ƒW ---
+	//AddAttackGauge(attackGaugeController, 50.0f);
 
-	// --- ”ÍˆÍƒQ[ƒW ---
-	AddRangeGauge(attackGaugeController, 50.0f);
+	//// --- ”ÍˆÍƒQ[ƒW ---
+	//AddRangeGauge(attackGaugeController, 50.0f);
 
 	// --- UŒ‚ƒQ[ƒW‚Ìƒo[ ---
 	AddAttackGaugeBar(attackGaugeController);
@@ -120,6 +122,7 @@ void SceneGame::Update(float elapsedTime)
 	EventManager::Instance().Update(elapsedTime);
 	EventManager::Instance().UpdateButton();
 
+#ifdef USE_IMGUI
 	static Vector3 pos;
 	static Vector3 size = Vector3::Unit_;
 	static Vector3 rotation = Vector3::Zero_;
@@ -130,7 +133,7 @@ void SceneGame::Update(float elapsedTime)
 
 	if (ImGui::Button("Effect", { 200.0f, 50.0f }))
 	{
-		ParameterManager::Instance().smokeEffect_->play(pos, size, rotation.ToRadian());
+		ParameterManager::Instance().spawnerSmokeEffect_->play(pos, size, rotation.ToRadian());
 	}
 
 
@@ -145,6 +148,7 @@ void SceneGame::Update(float elapsedTime)
 		obj->AddComponent<PrimitiveRendererComponent>();
 		obj->AddComponent<UIComponent>();
 	}
+#endif
 
 	if (!EventManager::Instance().paused_)
 		EffectManager::instance().update(elapsedTime);
@@ -765,7 +769,7 @@ void SceneGame::AddEnemySpawner()
 }
 
 
-void SceneGame::AddTownLife(const float life, const float range)
+void SceneGame::AddTownLife(const int life, const float range)
 {
 	for (size_t i = 0; i < 4; i++)
 	{
@@ -793,22 +797,52 @@ void SceneGame::AddLifeGauge()
 {
 	for (size_t i = 0; i < 4; i++)
 	{
-		GameObject* lifeGauge = GameObjectManager::Instance().Add(
-			std::make_shared<GameObject>(),
-			Vector3(),
-			BehaviorManager::Instance().GetBehavior("LifeGauge")
-		);
+		{
+			GameObject* gaugeBack = GameObjectManager::Instance().Add(
+				std::make_shared<GameObject>(),
+				Vector3(),
+				NULL
+			);
 
-		lifeGauge->state_ = static_cast<int>(i);
-		lifeGauge->name_ = u8"ƒ‰ƒCƒtƒQ[ƒW" + std::to_string(i);
-		lifeGauge->eraser_ = EraserManager::Instance().GetEraser("Scene");
+			gaugeBack->state_ = static_cast<int>(i);
+			gaugeBack->name_ = u8"ƒ‰ƒCƒtƒQ[ƒW‚Ì”wŒi" + std::to_string(i);
+			gaugeBack->eraser_ = EraserManager::Instance().GetEraser("Scene");
 
-		lifeGauge->transform_->position_ = { RootsLib::Window::GetWidth() - 100.0f, (RootsLib::Window::GetHeight() / 4.0f) * i, 0.0f };
+			gaugeBack->transform_->position_ = { 1120.0f, (RootsLib::Window::GetHeight() / 4.0f) * i, 0.0f };
+			gaugeBack->transform_->scaling_ *= 0.695f;
 
-		PrimitiveRendererComponent* renderer = lifeGauge->AddComponent<PrimitiveRendererComponent>();
-		renderer->size_.x = 100.0f;
-		float color = i / 4.0f;
-		renderer->color_ = { color, color, color, 1.0f };
+			SpriteRendererComponent* renderer = gaugeBack->AddComponent<SpriteRendererComponent>();
+			Texture* texture = TextureManager::Instance().GetTexture(L"./Data/Texture/UI/HP_base.png");
+			renderer->texture_ = texture;
+			renderer->texSize_ = { texture->width_, texture->height_ };
+		}
+
+
+		{
+			GameObject* lifeGauge = GameObjectManager::Instance().Add(
+				std::make_shared<GameObject>(),
+				Vector3(),
+				BehaviorManager::Instance().GetBehavior("LifeGauge")
+			);
+
+			lifeGauge->state_ = static_cast<int>(i);
+			lifeGauge->name_ = u8"ƒ‰ƒCƒtƒQ[ƒW" + std::to_string(i);
+			lifeGauge->eraser_ = EraserManager::Instance().GetEraser("Scene");
+
+			lifeGauge->transform_->position_ = { 1158.0f, (RootsLib::Window::GetHeight() / 4.0f) * i + 26.0f, 0.0f };
+			lifeGauge->transform_->scaling_ *= 0.69f;
+
+			//PrimitiveRendererComponent* renderer = lifeGauge->AddComponent<PrimitiveRendererComponent>();
+			//renderer->size_.x = 100.0f;
+			//float color = i / 4.0f;
+			//renderer->color_ = { color, color, color, 1.0f };
+			SpriteRendererComponent* renderer = lifeGauge->AddComponent<SpriteRendererComponent>();
+			Texture* texture = TextureManager::Instance().GetTexture(L"./Data/Texture/UI/HP_contents.png");
+			renderer->texture_ = texture;
+			renderer->texSize_ = { texture->width_ / 3.0f, texture->height_ / 4.0f };
+			renderer->texPos_.x = renderer->texSize_.x * 2.0f;
+			renderer->texPos_.y = renderer->texSize_.y * i;
+		}
 	}
 }
 
@@ -824,6 +858,14 @@ GameObject* SceneGame::AddAttackGaugeController(GameObject* parent, const Vector
 	attackGaugeController->name_ = u8"UŒ‚ƒQ[ƒW‚ÌƒRƒ“ƒgƒ[ƒ‰[";
 	attackGaugeController->eraser_ = EraserManager::Instance().GetEraser("Scene");
 	attackGaugeController->parent_ = parent;
+
+	attackGaugeController->transform_->scaling_ *= 0.67f;
+
+	SpriteRendererComponent* renderer = attackGaugeController->AddComponent<SpriteRendererComponent>();
+	Texture* texture = TextureManager::Instance().GetTexture(L"./Data/Texture/UI/Gage.png");
+	renderer->texture_ = texture;
+	renderer->texSize_ = { texture->width_, texture->height_ };
+	renderer->center_ = renderer->texSize_ * 0.5f;
 
 	return attackGaugeController;
 }
@@ -883,5 +925,9 @@ void SceneGame::AddAttackGaugeBar(GameObject* parent)
 	attackGaugeBar->parent_ = parent;
 	attackGaugeBar->eraser_ = EraserManager::Instance().GetEraser("Scene");
 
-	attackGaugeBar->AddComponent<PrimitiveRendererComponent>();
+	SpriteRendererComponent* renderer = attackGaugeBar->AddComponent<SpriteRendererComponent>();
+	Texture* texture = TextureManager::Instance().GetTexture(L"./Data/Texture/UI/Gage_bar.png");
+	renderer->texture_ = texture;
+	renderer->texSize_ = { texture->width_, texture->height_ };
+	renderer->center_ = renderer->texSize_ * 0.5f;
 }

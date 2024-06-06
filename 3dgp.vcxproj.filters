@@ -330,6 +330,9 @@
     <ClInclude Include="Sources\Behavior\UI\WaveCutInBehavior.h">
       <Filter>Sources\Behavior\UI</Filter>
     </ClInclude>
+    <ClInclude Include="Sources\Behavior\UI\ButtonBehavior.h">
+      <Filter>Sources\Behavior\UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="External\ImGui\imgui.cpp">
@@ -537,6 +540,9 @@
       <Filter>Library\Math</Filter>
     </ClCompile>
     <ClCompile Include="Sources\Behavior\UI\WaveCutInBehavior.cpp">
+      <Filter>Sources\Behavior\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Behavior\UI\ButtonBehavior.cpp">
       <Filter>Sources\Behavior\UI</Filter>
     </ClCompile>
   </ItemGroup>

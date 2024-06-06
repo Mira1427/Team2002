@@ -2,7 +2,10 @@
 
 #include "../../Library/Library/Library.h"
 
+#include "../../Library/Scene/SceneManager.h"
+
 #include "../../EventManager.h"
+
 
 void PauseOverlayBehavior::Execute(GameObject* obj, float elapsedTime)
 {
@@ -28,6 +31,13 @@ void PauseOverlayBehavior::Execute(GameObject* obj, float elapsedTime)
 
 void PauseEraser::Execute(GameObject* obj)
 {
+	Scene* currentScene = SceneManager::Instance().GetCurrentScene();
+	Scene* nextScene = SceneManager::Instance().GetNextScene();
+
+	if (currentScene != nextScene)
+		obj->Destroy();
+
+
 	if (!EventManager::Instance().paused_)
 		obj->Destroy();
 }

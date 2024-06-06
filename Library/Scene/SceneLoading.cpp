@@ -7,7 +7,7 @@
 
 void SceneLoading::Initialize()
 {
-    texture_ = TextureManager::Instance().GetTexture(L"./Data/Texture/Load.png");
+    texture_ = TextureManager::Instance().GetTexture(L"./Data/Texture/UI/Load.png");
 
 	CoInitialize(nullptr); // COM‰Šú‰»
 	std::thread loadThread([this]() { SceneLoading::LoadingThread(this); });

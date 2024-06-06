@@ -84,8 +84,8 @@ public:
 		color_(Vector4::White_),
 		blendState_(1/*Alpha*/),
 		rasterState_(0/*CullNone*/),
-		testDepth_(false),
-		writeDepth_(false),
+		testDepth_(true),
+		writeDepth_(true),
 		inWorld_(),
 		isVisible_(true),
 		useBillboard_()
@@ -287,8 +287,8 @@ public:
 		color_(Vector4::White_),
 		blendState_(1/*Alpha*/),
 		rasterState_(0/*CullNone*/),
-		testDepth_(false),
-		writeDepth_(false),
+		testDepth_(true),
+		writeDepth_(true),
 		isVisible_(true)
 	{}
 
@@ -561,6 +561,8 @@ public:
 
 	void Initialize(const char* fileName);
 	void Update(float elapsedTime);
+	void Pause();
+	void Resume();
 	void Draw(ID3D11DeviceContext* dc) override;
 	void UpdateDebugGui(float elapsedTime) override;
 

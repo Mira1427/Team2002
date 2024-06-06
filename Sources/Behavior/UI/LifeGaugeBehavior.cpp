@@ -9,8 +9,16 @@
 
 void LifeGaugeBehavior::Execute(GameObject* obj, float elapsedTime)
 {
-	float life = EventManager::Instance().stages_[static_cast<size_t>(obj->state_)]->GetComponent<StageComponent>()->life_;
+	int life = EventManager::Instance().stages_[static_cast<size_t>(obj->state_)]->GetComponent<StageComponent>()->life_;
 
-	PrimitiveRendererComponent* renderer = obj->GetComponent<PrimitiveRendererComponent>();
-	renderer->size_.y = RootsLib::Math::Lerp(0.0f, RootsLib::Window::GetHeight() / 4.0f, life / 5.0f/*Å‘åƒ‰ƒCƒt*/);
+	SpriteRendererComponent* renderer = obj->GetComponent<SpriteRendererComponent>();
+	if (life <= 0)
+	{
+		renderer->isVisible_ = false;
+	}
+
+	else
+	{
+		renderer->texPos_.x = renderer->texSize_.x * (life - 1);
+	}
 }

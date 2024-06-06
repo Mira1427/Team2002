@@ -23,6 +23,12 @@ float4 main(VSOutput pin) : SV_TARGET
     float4 albedoColor = textureMaps[ALBEDO_MAP].Sample(samplerStates[ANISOTROPIC], pin.texcoord);
     float alpha = albedoColor.a;
     
+#if 1
+	//	逆ガンマ補正
+    const float GAMMA = 2.2;
+    albedoColor.rgb = pow(albedoColor.rgb, GAMMA);
+#endif
+    
     // --- スペキュラーカラーはアルベドカラーと同じに ---
     float3 specColor = albedoColor;
     
@@ -120,7 +126,7 @@ float4 main(VSOutput pin) : SV_TARGET
     lig += diffPoint + specPoint;
   
     float4 finalColor = 1.0;
-    finalColor.xyz = lig; 
+    finalColor.xyz = lig;
     
     
     // --- エミッシブ ---

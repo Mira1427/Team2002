@@ -1203,6 +1203,18 @@ void VideoComponent::Update(float elapsedTime)
 		video_.Update(elapsedTime * timeScale_);
 }
 
+void VideoComponent::Pause()
+{
+	if (video_.internalData_)
+		video_.Pause();
+}
+
+void VideoComponent::Resume()
+{
+	if (video_.internalData_)
+		video_.Resume();
+}
+
 void VideoComponent::Draw(ID3D11DeviceContext* dc)
 {
 	if (!video_.internalData_)
@@ -1251,12 +1263,12 @@ void VideoComponent::UpdateDebugGui(float elapsedTime)
 		}
 
 		if (ImGui::Button(u8"再生", ImVec2(35.0f, 20.0f)))
-			video_.Resume();
+			Resume();
 
 		ImGui::SameLine();
 
 		if (ImGui::Button(u8"停止", ImVec2(35.0f, 20.0f)))
-			video_.Pause();
+			Pause();
 
 		ImGui::DragFloat(u8"タイムスケール", &timeScale_, 0.01f);
 

@@ -23,5 +23,7 @@ public:
 
 	std::unique_ptr<Effect> laserEffect_;
 	std::unique_ptr<Effect> smokeEffect_;
+	std::unique_ptr<Effect> spawnerSmokeEffect_;
+	std::unique_ptr<Effect> explosionEffect_;
 };
 

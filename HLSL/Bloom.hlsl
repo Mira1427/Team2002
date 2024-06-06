@@ -28,10 +28,10 @@ float4 main(VSOutput pin) : SV_TARGET
     
     
 #if 1
-    const float exposure = 1.0;
+    const float exposure = 1.2;
     scene.rgb = 1 - exp(-scene.rgb * exposure);
 
-    scene.rgb = pow(scene.rgb, 1.0 / 1.0);
+    scene.rgb = pow(scene.rgb, 1.0 / 2.2);
 #endif
 	
 	return scene;

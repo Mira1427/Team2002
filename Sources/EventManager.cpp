@@ -233,6 +233,9 @@ void EventManager::AddWaveCutIn()
 		BehaviorManager::Instance().GetBehavior("WaveCutIn")
 	);
 
+	obj->name_ = u8"ウェーブのカットイン";
+	obj->eraser_ = EraserManager::Instance().GetEraser("Scene");
+
 	obj->AddComponent<PrimitiveRendererComponent>();
 	obj->AddComponent<UIComponent>();
 }

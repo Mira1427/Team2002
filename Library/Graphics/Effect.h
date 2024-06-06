@@ -27,6 +27,8 @@ public:
 	// --- ‰ñ“]—Êİ’è ---
 	void setRotation(Effekseer::Handle handle, const Vector3& rotation);
 
+	void SetFrame(Effekseer::Handle handle, const float frame);
+
 private:
 	Effekseer::EffectRef effekseerEffect_;
 };

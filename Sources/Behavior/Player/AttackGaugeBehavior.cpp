@@ -92,12 +92,9 @@ void AttackGaugeBarBehavior::Execute(GameObject* obj, float elapsedTime)
 	case 0:
 
 	{
-		PrimitiveRendererComponent* renderer = obj->GetComponent<PrimitiveRendererComponent>();
-		renderer->size_.x = 60.0f;
-		renderer->size_.y = 20.0f;
-		renderer->center_ = renderer->size_ * 0.5f;
-
 		obj->transform_->position_ = obj->parent_->transform_->position_;
+		obj->transform_->position_.x = 68.0f/*Offset*/;
+		obj->transform_->scaling_ *= 0.67f;
 	}
 
 		obj->state_++;
@@ -107,7 +104,7 @@ void AttackGaugeBarBehavior::Execute(GameObject* obj, float elapsedTime)
 	{
 		PlayerControllerComponent* controller = obj->parent_->parent_->GetComponent<PlayerControllerComponent>();
 
-		obj->transform_->position_ = obj->parent_->transform_->position_;
+		obj->transform_->position_.y = obj->parent_->transform_->position_.y;
 
 		float gauge = (controller->attackGauge_ + 1.0f) * 0.5f;
 		float maxGauge = controller->maxAttackGaugeHeight_;

@@ -7,6 +7,7 @@
 #include "../../Library/Library/Library.h"
 
 #include "../../Sources/EventManager.h"
+#include "../../Sources/Component/Component.h"
 
 
 void GameCameraBehavior::Execute(GameObject* obj, float elapsedTime)
@@ -17,6 +18,12 @@ void GameCameraBehavior::Execute(GameObject* obj, float elapsedTime)
 	switch (obj->state_)
 	{
 	case 0:
+
+	{
+		CameraShakeComponent* shake = obj->GetComponent<CameraShakeComponent>();
+		shake->shakeIntensity_ = { 5.0f, 5.0f, 3.0f };
+	}
+
 		obj->state_++;
 
 	case 1:
@@ -51,8 +58,12 @@ void GameCameraBehavior::Execute(GameObject* obj, float elapsedTime)
 		obj->transform_->position_.z = s * range;
 
 
+		CameraShakeComponent* shake = obj->GetComponent<CameraShakeComponent>();
+		ShakeCamera(obj, camera, shake, elapsedTime);
+
+
 		// --- ビュー行列作成 ---
-		camera->view_.MakeLookAt(obj->transform_->position_, camera->target_);
+		camera->view_.MakeLookAt(obj->transform_->position_ + shake->offset_, camera->target_);
 		camera->invView_ = Matrix::Inverse(camera->view_);
 
 		// --- プロジェクション行列作成 ---
@@ -69,4 +80,23 @@ void GameCameraBehavior::Execute(GameObject* obj, float elapsedTime)
 
 		break;
 	}
+}
+
+
+void GameCameraBehavior::ShakeCamera(GameObject* obj, CameraComponent* camera, CameraShakeComponent* shake, float elapsedTime)
+{
+	obj->timer_ -= elapsedTime;
+	if (obj->timer_ > 0.0f)
+	{
+		shake->offset_ = camera->rightVec_ * (((rand() % 100) / 100.0f) - 0.5f) * shake->shakeIntensity_.x;
+		shake->offset_ += camera->upVec_ * (((rand() % 100) / 100.0f) - 0.5f) * shake->shakeIntensity_.y;
+		shake->offset_ += camera->frontVec_ * (((rand() % 100) / 100.0f) - 0.5f) * shake->shakeIntensity_.z;
+	}
+
+	else
+	{
+		obj->timer_ = 0.0f;
+		shake->offset_ = Vector3::Zero_;
+	}
+
 }

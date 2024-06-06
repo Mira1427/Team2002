@@ -4,6 +4,7 @@
 #include "../../Library/GameObject/EraserManager.h"
 
 #include "../../EventManager.h"
+#include "../../ParameterManager.h"
 
 
 // --- ’eŠÛ‚Ìˆ— ---
@@ -96,6 +97,11 @@ void BulletExplosionBehavior::Hit(GameObject* src, GameObject* dst, float elapse
 			if (bullet->type_ == enemy->type_ || enemy->type_ == CharacterType::GRAY)
 			{
 				enemy->life_ -= bullet->attack_;
+
+				SphereCollider* collider = src->GetComponent<SphereCollider>();
+
+				Effekseer::Handle handle = ParameterManager::Instance().explosionEffect_->play(dst->transform_->position_, Vector3::Unit_, Vector3::Zero_);
+				ParameterManager::Instance().explosionEffect_->SetFrame(handle, 130.0f);
 
 				// --- Ž€–Sˆ— ---
 				if (enemy->life_ <= 0.0f)

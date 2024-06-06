@@ -89,10 +89,10 @@ void StageComponent::UpdateDebugGui(float elapsedTime)
 {
 	ImGui::Spacing();
 	ImGui::Separator();
-	if (ImGui::TreeNode(u8"Enemy")) {
+	if (ImGui::TreeNode(u8"Stage")) {
 		ImGui::Spacing();
 
-		ImGui::DragFloat(u8"ライフ", &life_, 0.1f);
+		ImGui::InputInt(u8"ライフ", &life_);
 
 		ImGui::TreePop();
 	}
@@ -122,6 +122,7 @@ void UIComponent::UpdateDebugGui(float elapsedTime)
 		ImGui::Spacing();
 
 		ImGui::InputInt(u8"ユニークID", &uniqueID_);
+		ImGui::InputInt(u8"イベントID", &eventID_);
 		ImGui::DragFloat3(u8"オフセット", &offset_.x);
 		ImGui::DragFloat3(u8"初期位置", &basePosition_.x);
 
@@ -129,6 +130,22 @@ void UIComponent::UpdateDebugGui(float elapsedTime)
 		ImGui::DragFloat(u8"タイマーの上限", &easeData_.timerLimit_);
 		ImGui::Checkbox(u8"反転するか", &easeData_.isReverse_);
 		ImGui::DragFloat(u8"イージングの移動量", &easeScale_);
+
+		ImGui::TreePop();
+	}
+}
+
+
+void CameraShakeComponent::UpdateDebugGui(float elapsedTime)
+{
+	ImGui::Spacing();
+	ImGui::Separator();
+	if (ImGui::TreeNode("CameraShake"))
+	{
+		ImGui::Spacing();
+
+		ImGui::DragFloat3(u8"オフセット", &offset_.x);
+		ImGui::DragFloat3(u8"強度", &shakeIntensity_.x);
 
 		ImGui::TreePop();
 	}

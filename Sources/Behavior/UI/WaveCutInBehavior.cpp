@@ -4,11 +4,15 @@
 
 #include "../../Component/Component.h"
 
+#include "../../EventManager.h"
 #include "../../ParameterManager.h"
 
 
 void WaveCutInBehavior::Execute(GameObject* obj, float elapsedTime)
 {
+	if (EventManager::Instance().paused_)
+		return;
+
 	switch (obj->state_)
 	{
 	case 0:

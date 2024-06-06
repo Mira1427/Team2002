@@ -9,7 +9,12 @@ LightingManager::LightingManager()
 
 	//directionLight_.direction_	= { 0.0f, -0.5f, 1.0f };
 	directionLight_.direction_	= { -0.113f, -1.0f, 1.0f };
+#if 1
 	directionLight_.intensity_	= 3.0f;
+#else
+	directionLight_.intensity_	= 4.5f;
+#endif
+
 	directionLight_.color_		= { 1.0f, 1.0f, 1.0f };
 
 	directionLight_.viewFocus_		= Vector3::Zero_;

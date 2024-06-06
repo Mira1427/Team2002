@@ -127,7 +127,7 @@ public:
 	void Draw(ID3D11DeviceContext* dc) override {};
 	void UpdateDebugGui(float elapsedTime) override;
 
-	float life_;
+	int life_;
 };
 
 
@@ -157,6 +157,7 @@ public:
 	UIComponent() :
 		offset_(),
 		uniqueID_(-1),
+		eventID_(-1),
 		basePosition_(),
 		easeScale_(),
 		easeData_(1.0f, false, nullptr)
@@ -165,10 +166,29 @@ public:
 
 	void Draw(ID3D11DeviceContext* dc) override {};
 	void UpdateDebugGui(float elapsedTime) override;
-
+	
 	Vector3 offset_;
 	int uniqueID_;
+	int eventID_;
 	Vector3 basePosition_;
 	float easeScale_;
 	RootsLib::Easing::Data easeData_;
+};
+
+
+
+class CameraShakeComponent final : public Component
+{
+public:
+	CameraShakeComponent() :
+		offset_(),
+		shakeIntensity_()
+	{}
+
+
+	void Draw(ID3D11DeviceContext* dc) override {};
+	void UpdateDebugGui(float elapsedTime) override;
+
+	Vector3 offset_;
+	Vector3 shakeIntensity_;
 };

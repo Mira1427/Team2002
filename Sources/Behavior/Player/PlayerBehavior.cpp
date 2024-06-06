@@ -113,9 +113,12 @@ void BasePlayerBehavior::Shot(GameObject* obj, PlayerComponent* player, PlayerCo
 // --- ’eŠÛ‚Ì’Ç‰Á ---
 void BasePlayerBehavior::AddBullet(GameObject* parent, const float scaling, const float attackAmount, const float radius, const float speed)
 {
+	Vector3 position = parent->transform_->position_;
+	position.y += 7.5f;
+
 	GameObject* bullet = GameObjectManager::Instance().Add(
 		std::make_shared<GameObject>(),
-		parent->transform_->position_,
+		position,
 		BehaviorManager::Instance().GetBehavior("Bullet")
 	);
 
@@ -265,10 +268,11 @@ void PlayerControllerBehavior::ShotLaser(GameObject* obj, PlayerControllerCompon
 			AddLaser(obj->child_[0], controller->laserAttackAmount_, controller->laserSize_);	// ƒŒ[ƒU[’Ç‰Á
 
 
+			Vector3 offset = { 0.0f, 7.5f, 0.0f };
 			float atan = atan2(0.0f - obj->child_[0]->transform_->position_.z, 0.0f - obj->child_[0]->transform_->position_.x);
-			ParameterManager::Instance().laserEffect_->play(obj->child_[0]->transform_->position_, { 1.0f, 1.0f, 5.0f }, { 0.0f, -atan + DirectX::XMConvertToRadians(-90.0f), 0.0f });
+			ParameterManager::Instance().laserEffect_->play(obj->child_[0]->transform_->position_ + offset, { 1.0f, 1.0f, 5.0f }, { 0.0f, -atan + DirectX::XMConvertToRadians(-90.0f), 0.0f });
 			atan = atan2(0.0f - obj->child_[1]->transform_->position_.z, 0.0f - obj->child_[1]->transform_->position_.x);
-			ParameterManager::Instance().laserEffect_->play(obj->child_[1]->transform_->position_, { 1.0f, 1.0f, 5.0f }, { 0.0f, -atan + DirectX::XMConvertToRadians(-90.0f), 0.0f });
+			ParameterManager::Instance().laserEffect_->play(obj->child_[1]->transform_->position_ + offset, { 1.0f, 1.0f, 5.0f }, { 0.0f, -atan + DirectX::XMConvertToRadians(-90.0f), 0.0f });
 		}
 	}
 
@@ -288,7 +292,6 @@ void PlayerControllerBehavior::AddLaser(GameObject* parent, const float attackAm
 	laser->parent_ = parent;
 
 	BoxCollider* collider = laser->AddCollider<BoxCollider>();
-	collider->isVisible_ = true;
 	collider->size_ = size;
 }
 
