@@ -48,7 +48,10 @@ void BaseBulletBehavior::Hit(GameObject* src, GameObject* dst, float elapsedTime
 		BulletComponent* bullet = src->GetComponent<BulletComponent>();
 		EnemyComponent* enemy   = dst->GetComponent<EnemyComponent>();
 
-		AddExplosion(src->transform_->position_, bullet->type_, bullet->attack_, bullet->radius_);
+		if (bullet->type_ == enemy->type_ || enemy->type_ == CharacterType::GRAY)
+		{
+			AddExplosion(src->transform_->position_, bullet->type_, bullet->attack_, bullet->radius_);
+		}
 	}
 }
 
@@ -65,11 +68,21 @@ void BaseBulletBehavior::AddExplosion(const Vector3& position, CharacterType typ
 	explosion->eraser_ = EraserManager::Instance().GetEraser("Scene");
 
 	SphereCollider* collider = explosion->AddCollider<SphereCollider>();
-	collider->radius_ = radius;
+	collider->radius_ = RootsLib::Math::Lerp(1.0f, 30.0f, (radius - 1.0f) / (10.0f - 1.0f)/*MaxRadius*/);
 
 	BulletComponent* bulletComp = explosion->AddComponent<BulletComponent>();
 	bulletComp->attack_ = attack;
 	bulletComp->type_ = type;
+
+
+	// --- エフェクトのサイズを計算 ---
+	Vector3 scale = Vector3::Unit_;
+	float rate = RootsLib::Math::Lerp(0.7f, 0.3f, (collider->radius_ - 1.0f) / (30.0f - 1.0f)/*MaxRadius*/);
+	scale *= collider->radius_;
+	scale *= rate;
+
+	Effekseer::Handle handle = ParameterManager::Instance().explosionEffect_->play(position, scale, Vector3::Zero_);
+	ParameterManager::Instance().explosionEffect_->SetFrame(handle, 130.0f);
 }
 
 
@@ -94,19 +107,14 @@ void BulletExplosionBehavior::Hit(GameObject* src, GameObject* dst, float elapse
 			BulletComponent* bullet = src->GetComponent<BulletComponent>();
 			EnemyComponent* enemy = dst->GetComponent<EnemyComponent>();
 
-			if (bullet->type_ == enemy->type_ || enemy->type_ == CharacterType::GRAY)
-			{
+			//if (bullet->type_ == enemy->type_ || enemy->type_ == CharacterType::GRAY)
+			//{
 				enemy->life_ -= bullet->attack_;
-
-				SphereCollider* collider = src->GetComponent<SphereCollider>();
-
-				Effekseer::Handle handle = ParameterManager::Instance().explosionEffect_->play(dst->transform_->position_, Vector3::Unit_, Vector3::Zero_);
-				ParameterManager::Instance().explosionEffect_->SetFrame(handle, 130.0f);
 
 				// --- 死亡処理 ---
 				if (enemy->life_ <= 0.0f)
 					dst->Destroy();
-			}
+			//}
 		}
 	}
 }

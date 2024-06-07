@@ -2,7 +2,7 @@
 
 #include "Common.hlsli"
 
-SamplerState samplerStates[3] : register(s0);
+SamplerState samplerStates[4] : register(s0);
 Texture2D textureMaps[6] : register(t0);
 
 SamplerComparisonState comparisonSamplerState : register(s4);
@@ -76,7 +76,6 @@ float4 main(VSOutput pin) : SV_TARGET
     // --- ラフネスを使って拡散反射光と鏡面反射光を合成する ---
     lig += diffuse * (1.0 - roughness) + spec;
     
-    
     // ===== ポイントライトの処理 =============================================================================================================================
 
     float3 diffPoint = float3(0.0f, 0.0f, 0.0f);
@@ -122,12 +121,10 @@ float4 main(VSOutput pin) : SV_TARGET
    
     // --- 環境光による底上げ ---
     lig += scene_.ambientLight_.color_ * albedoColor.xyz;
-    
-    lig += diffPoint + specPoint;
+    //lig += diffPoint + specPoint; // これのせいで黒くなる
   
     float4 finalColor = 1.0;
     finalColor.xyz = lig;
-    
     
     // --- エミッシブ ---
     float4 emissiveColor = textureMaps[EMISSIVE_MAP].Sample(samplerStates[LINEAR], pin.texcoord);
@@ -153,7 +150,6 @@ float4 main(VSOutput pin) : SV_TARGET
     
     finalColor.xyz *= shadowFactor;
     finalColor.a = alpha;
-
 
     return finalColor * pin.color;
 }

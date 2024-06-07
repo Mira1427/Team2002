@@ -18,6 +18,7 @@
 #include "../../Sources/Behavior/UI/LifeGaugeBehavior.h"
 #include "../../Sources/Behavior/UI/WaveCutInBehavior.h"
 #include "../../Sources/Behavior/UI/ButtonBehavior.h"
+#include "../../Sources/Behavior/UI/ItemUIBehavior.h"
 
 #include "../../Sources/Behavior/GameCamera.h"
 
@@ -38,6 +39,8 @@ BehaviorManager::BehaviorManager()
 	behaviors_.insert(std::make_pair("AttackGauge",			std::make_shared<AttackGaugeBehavior>()));
 	behaviors_.insert(std::make_pair("RangeGauge",			std::make_shared<RangeGaugeBehavior>()));
 	behaviors_.insert(std::make_pair("AttackGaugeBar",		std::make_shared<AttackGaugeBarBehavior>()));
+	behaviors_.insert(std::make_pair("ColorItemUI",			std::make_shared<ColorItemUIBehavior>()));
+	behaviors_.insert(std::make_pair("GaugeItemUI",			std::make_shared<GaugeItemUIBehavior>()));
 
 	behaviors_.insert(std::make_pair("BaseEnemy",			std::make_shared<BaseEnemyBehavior>()));
 	behaviors_.insert(std::make_pair("FlyEnemy",			std::make_shared<FlyEnemyBehavior>()));

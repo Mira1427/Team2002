@@ -53,7 +53,9 @@ public:
 		maxAttackGaugeHeight_(),
 		shotLaser_(),
 		laserAttackAmount_(),
-		laserSize_()
+		laserSize_(),
+		hasSwapColor_(),
+		hasSwapGauge_()
 	{}
 
 	void Draw(ID3D11DeviceContext* dc) override {};
@@ -81,6 +83,9 @@ public:
 	bool  shotLaser_;
 	float laserAttackAmount_;
 	Vector3 laserSize_;
+
+	bool hasSwapColor_;
+	bool hasSwapGauge_;
 };
 
 

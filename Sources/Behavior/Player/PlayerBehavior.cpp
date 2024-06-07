@@ -74,8 +74,8 @@ void BasePlayerBehavior::Shot(GameObject* obj, PlayerComponent* player, PlayerCo
 	// --- ŽËŒ‚ƒtƒ‰ƒO ---
 	bool shootable[2] =
 	{
-		static_cast<bool>(input.down(0) & Input::LMB),
-		static_cast<bool>(input.down(0) & Input::RMB),
+		static_cast<bool>(input.down(0) & Input::LEFT_ATTACK),
+		static_cast<bool>(input.down(0) & Input::RIGHT_ATTACK),
 	};
 
 	size_t playerIndex = player->playerNum_;
@@ -166,7 +166,7 @@ void PlayerControllerBehavior::Execute(GameObject* obj, float elapsedTime)
 
 
 		// --- TODO : ƒ^ƒCƒv‚Ì”½“] ---
-		if (input.down(0) & Input::UP)
+		if (input.down(0) & Input::UP && controller->hasSwapColor_)
 		{
 			PlayerComponent* player1 = obj->child_[0]->GetComponent<PlayerComponent>();
 			PlayerComponent* player2 = obj->child_[1]->GetComponent<PlayerComponent>();
@@ -180,7 +180,18 @@ void PlayerControllerBehavior::Execute(GameObject* obj, float elapsedTime)
 			renderer->model_ = ModelManager::Instance().GetModel(fileNames[static_cast<size_t>(player2->type_)]);
 
 			std::swap(controller->bullet_[0], controller->bullet_[1]);	// ’e–ò‚Ì“ü‚ê‘Ö‚¦
+
+			controller->hasSwapColor_ = false;
 		}
+
+
+		// --- TODO : ƒQ[ƒW‚Ì”½“] ---
+		if (input.down(0) & Input::DOWN && controller->hasSwapGauge_)
+		{
+			controller->attackGauge_ *= -1.0f;
+			controller->hasSwapGauge_ = false;
+		}
+
 
 		ShotLaser(obj, controller);
 
@@ -222,13 +233,6 @@ void PlayerControllerBehavior::Rotate(GameObject* obj, PlayerControllerComponent
 	}
 
 
-	// --- TODO : ƒQ[ƒW‚Ì”½“] ---
-	//if (input.down(0) & Input::UP)
-	//{
-	//	controller->attackGauge_ *= -1.0f;
-	//}
-
-
 	// --- Šp“x‚ð 0 ~ 360 ‚É§ŒÀ ---
 	if (obj->transform_->rotation_.y > 360.0f) obj->transform_->rotation_.y -= 360.0f;
 	if (obj->transform_->rotation_.y < 0.0f) obj->transform_->rotation_.y += 360.0f;
@@ -251,8 +255,8 @@ void PlayerControllerBehavior::ShotLaser(GameObject* obj, PlayerControllerCompon
 
 		// --- ƒŒ[ƒU[‚Ì’Ç‰Á ---
 		if (
-			(((input.state(0) & Input::LMB) && (input.down(0) & Input::RMB)) ||
-				((input.state(0) & Input::RMB) && (input.down(0) & Input::LMB))) &&
+			(((input.state(0) & Input::LEFT_ATTACK) && (input.down(0) & Input::RIGHT_ATTACK)) ||
+				((input.state(0) & Input::RIGHT_ATTACK) && (input.down(0) & Input::LEFT_ATTACK))) &&
 			(controller->bullet_[0] > controller->maxBulletValue_ * 0.5f) &&
 			(controller->bullet_[1] > controller->maxBulletValue_ * 0.5f)
 			)
@@ -308,7 +312,6 @@ void PlayerBulletGaugeBehavior::Execute(GameObject* obj, float elapsedTime)
 	case 0:
 
 	{
-		obj->transform_->position_.y += 150.0f;
 		obj->transform_->scaling_.y *= -1.0f;
 
 		PrimitiveRendererComponent* renderer = obj->GetComponent<PrimitiveRendererComponent>();
@@ -330,6 +333,9 @@ void PlayerBulletGaugeBehavior::Execute(GameObject* obj, float elapsedTime)
 		controller->bullet_[player->playerNum_] = (std::min)(controller->bullet_[player->playerNum_], controller->maxBulletValue_);	// ’l‚Ì§ŒÀ
 
 		renderer->size_.y = controller->bullet_[player->playerNum_];
+
+		Vector4 colors[2] = { Vector4::White_, Vector4::Black_ };
+		renderer->color_ = colors[static_cast<size_t>(player->type_)];
 
 		break;
 	}

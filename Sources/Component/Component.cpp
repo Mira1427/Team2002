@@ -47,6 +47,9 @@ void PlayerControllerComponent::UpdateDebugGui(float elapsedTime)
 		ImGui::Separator();
 		ImGui::DragFloat(u8"レーザーの攻撃力", &laserAttackAmount_, 0.1f);
 		ImGui::DragFloat3(u8"レーザーのサイズ", &laserSize_.x, 0.1f);
+		ImGui::Separator();
+		ImGui::Checkbox(u8"色交換アイテム", &hasSwapColor_);
+		ImGui::Checkbox(u8"ゲージ交換アイテム", &hasSwapGauge_);
 
 		ImGui::TreePop();
 	}

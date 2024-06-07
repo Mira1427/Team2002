@@ -17,12 +17,25 @@ std::list<InputAssign> keyAssign = {
 	{"Escape",	Input::ESCAPE,	DirectX::Keyboard::Escape},
 	{"Space",	Input::CONFIRM, DirectX::Keyboard::Enter},
 	{"Escape",	Input::PAUSE,	DirectX::Keyboard::Escape},
+	{"LeftAttack",	Input::LEFT_ATTACK,	DirectX::Keyboard::J},
+	{"RightAttack",	Input::RIGHT_ATTACK,	DirectX::Keyboard::L},
 	{"---keyAssignEnd---", -1, -1}
 };
 
 
 //	ゲームパッドの割り当て
 std::list<InputAssign> padAssign = {
+	{"Up", Input::UP, Input::GamePad::LSTICK_UP},
+	{"Up", Input::UP, Input::GamePad::UP},
+	{"Down", Input::DOWN, Input::GamePad::LSTICK_DOWN},
+	{"Down", Input::DOWN, Input::GamePad::DOWN},
+	{"Left", Input::LEFT, Input::GamePad::L1},
+	{"Right", Input::RIGHT, Input::GamePad::R1},
+	{"LeftAttack", Input::LEFT_ATTACK, Input::GamePad::L2},
+	{"RightAttack", Input::RIGHT_ATTACK, Input::GamePad::R2},
+	{"Confirm", Input::CONFIRM, Input::GamePad::A},
+	{"Pause", Input::PAUSE, Input::GamePad::START},
+	{"Escape", Input::ESCAPE, Input::GamePad::B},
 	{"---PadAssignEnd---", -1, -1}
 };
 

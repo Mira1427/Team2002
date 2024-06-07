@@ -29,6 +29,8 @@ namespace Input {
 	inline static constexpr uint64_t ESCAPE  = 512;
 	inline static constexpr uint64_t CONFIRM = 1024;
 	inline static constexpr uint64_t PAUSE   = 2048;
+	inline static constexpr uint64_t LEFT_ATTACK   = 4096;
+	inline static constexpr uint64_t RIGHT_ATTACK   = 8192;
 
 
 	class GamePad {

@@ -36,8 +36,8 @@ void GameCameraBehavior::Execute(GameObject* obj, float elapsedTime)
 		const float rotateSpeed = DirectX::XMConvertToRadians(45.0f) * elapsedTime;
 
 #ifdef USE_IMGUI
-		ImGui::DragFloat(u8"‚‚³", &height);
-		ImGui::DragFloat(u8"‹——£", &range);
+		//ImGui::DragFloat(u8"‚‚³", &height);
+		//ImGui::DragFloat(u8"‹——£", &range);
 #endif
 
 		switch (InputManager::Instance().state(0) & (Input::LEFT | Input::RIGHT))

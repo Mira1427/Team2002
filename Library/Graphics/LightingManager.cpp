@@ -17,11 +17,11 @@ LightingManager::LightingManager()
 
 	directionLight_.color_		= { 1.0f, 1.0f, 1.0f };
 
-	directionLight_.viewFocus_		= Vector3::Zero_;
-	directionLight_.viewDistance_	= 10.0f;
-	directionLight_.viewSize_		= 210.0f;
-	directionLight_.viewNearZ_		= -90.0f;
-	directionLight_.viewFarZ_		= 185.0f;
+	directionLight_.viewFocus_		=  Vector3::Zero_;
+	directionLight_.viewDistance_	=  10.0f;
+	directionLight_.viewSize_		=  885.0f;
+	directionLight_.viewNearZ_		= -3000.0f;
+	directionLight_.viewFarZ_		=  560.0f;
 }
 
 

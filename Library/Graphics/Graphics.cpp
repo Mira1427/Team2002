@@ -58,7 +58,7 @@ void Graphics::Initialize(
 		swapChainDesc.Windowed = !fullScreen;							// ウィンドウモードかどうか
 
 		hr = D3D11CreateDeviceAndSwapChain(
-#if 1
+#if 0
 			adapter,							// アダプター
 			D3D_DRIVER_TYPE_UNKNOWN,			// ドライバータイプの設定
 #else

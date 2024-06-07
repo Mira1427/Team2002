@@ -26,9 +26,9 @@
 void SceneGame::Initialize()
 {
 	LightingManager* lightingManager = Graphics::Instance().GetLightingManager();
-	lightingManager->directionLight_.viewSize_ = 210.0f;
-	lightingManager->directionLight_.viewNearZ_ = -90.0f;
-	lightingManager->directionLight_.viewFarZ_ = 185.0f;
+	lightingManager->directionLight_.viewSize_ = 885.0f;
+	lightingManager->directionLight_.viewNearZ_ = -3000.0f;
+	lightingManager->directionLight_.viewFarZ_ = 560.0f;
 
 
 	// --- ƒJƒƒ‰‚Ìİ’è ---
@@ -89,9 +89,11 @@ void SceneGame::Initialize()
 
 	// --- ƒXƒ|ƒi[‚Ì’Ç‰Á ---
 	AddEnemySpawner();
+	ParameterManager::Instance().spawnerSmokeEffect_->play({0.0f, 10.0f, 0.0f}, Vector3::Unit_ * 5.0f, Vector3::Zero_);
+
 
 	// --- ŠX‚Ì4“™•ª‚³‚ê‚½”»’è—p ---
-	AddTownLife(3.0f, range);
+	AddTownLife(3, range);
 
 	// --- ƒ‰ƒCƒtƒQ[ƒW‚Ì’Ç‰Á ---
 	AddLifeGauge();
@@ -108,6 +110,61 @@ void SceneGame::Initialize()
 
 	// --- UŒ‚ƒQ[ƒW‚Ìƒo[ ---
 	AddAttackGaugeBar(attackGaugeController);
+
+
+	{
+		GameObject* obj = GameObjectManager::Instance().Add(
+			std::make_shared<GameObject>(),
+			Vector3(),
+			NULL
+		);
+
+		obj->name_ = u8"ŠX";
+		obj->eraser_ = EraserManager::Instance().GetEraser("Scene");
+
+		obj->transform_->scaling_ *= 1.55f;
+
+		InstancedMeshComponent* renderer = obj->AddComponent<InstancedMeshComponent>();
+		renderer->model_ = ModelManager::Instance().LoadInstancedMesh(RootsLib::DX11::GetDevice(), "./Data/Model/InstancedMesh/b.fbx", 3, true);
+	}
+
+	{
+		GameObject* obj = GameObjectManager::Instance().Add(
+			std::make_shared<GameObject>(),
+			Vector3(925.0f, 525.0f, 0.0f),
+			BehaviorManager::Instance().GetBehavior("ColorItemUI")
+		);
+
+		obj->name_ = u8"FŒğŠ·";
+		obj->eraser_ = EraserManager::Instance().GetEraser("Scene");
+		obj->parent_ = controller;
+
+		obj->transform_->scaling_ *= 0.75f;
+
+		SpriteRendererComponent* renderer = obj->AddComponent<SpriteRendererComponent>();
+		Texture* texture = TextureManager::Instance().GetTexture(L"./Data/Texture/UI/itemicon_change.png");
+		renderer->texture_ = texture;
+		renderer->texSize_ = { texture->width_, texture->height_ };
+	}
+
+	{
+		GameObject* obj = GameObjectManager::Instance().Add(
+			std::make_shared<GameObject>(),
+			Vector3(1010.0f, 600.0f, 0.0f),
+			BehaviorManager::Instance().GetBehavior("GaugeItemUI")
+		);
+
+		obj->name_ = u8"UŒ‚ŒğŠ·";
+		obj->eraser_ = EraserManager::Instance().GetEraser("Scene");
+		obj->parent_ = controller;
+
+		obj->transform_->scaling_ *= 0.75f;
+
+		SpriteRendererComponent* renderer = obj->AddComponent<SpriteRendererComponent>();
+		Texture* texture = TextureManager::Instance().GetTexture(L"./Data/Texture/UI/itemicon_P_R.png");
+		renderer->texture_ = texture;
+		renderer->texSize_ = { texture->width_, texture->height_ };
+	}
 }
 
 
@@ -672,7 +729,7 @@ GameObject* SceneGame::AddPlayerController(float rotateSpeed, float range)
 	controller->rotateSpeed_ = rotateSpeed;	// ‰ñ“]‘¬“x
 	controller->range_ = range;				// ’†S‚©‚ç‚Ì‹——£
 
-	controller->maxBulletValue_ = 350.0f;	// ’e–ò‚ÌÅ‘å”
+	controller->maxBulletValue_ = 180.0f;	// ’e–ò‚ÌÅ‘å”
 	controller->addBulletValue_ = 10.0f;	// ’e–ò‚Ì‘‰Á—Ê
 	controller->bulletCost_ = 10.0f;		// ’e–ò‚ÌƒRƒXƒg
 
@@ -731,17 +788,45 @@ void SceneGame::AddRail()
 // --- ’e–òƒQ[ƒW‚Ì’Ç‰Á ---
 void SceneGame::AddBulletGauge(GameObject* parent, int i)
 {
-	GameObject* obj = GameObjectManager::Instance().Add(
-		std::make_shared<GameObject>(),
-		Vector3(i == 0 ? 250.0f : 1030.0f, 360.0f, 0.0f),
-		BehaviorManager::Instance().GetBehavior("BulletGauge")
-	);
+	{
+		GameObject* obj = GameObjectManager::Instance().Add(
+			std::make_shared<GameObject>(),
+			Vector3(i == 0 ? 300.0f : 980.0f,  i == 0 ? 475.0f : 255.0f, 0.0f),
+			NULL
+		);
 
-	obj->name_ = u8"’e–òƒQ[ƒW" + std::to_string(i);
-	obj->parent_ = parent;
-	obj->eraser_ = EraserManager::Instance().GetEraser("Scene");
+		obj->name_ = u8"’e–òƒQ[ƒW”wŒi" + std::to_string(i);
+		obj->parent_ = parent;
+		obj->eraser_ = EraserManager::Instance().GetEraser("Scene");
 
-	obj->AddComponent<PrimitiveRendererComponent>();
+		obj->transform_->scaling_ *= 0.5f;
+		obj->transform_->scaling_.x = 0.35f;
+
+		if (i == 0/*¶‚È‚ç*/)
+			obj->transform_->scaling_ *= -1.0f;
+
+
+		SpriteRendererComponent* renderer = obj->AddComponent<SpriteRendererComponent>();
+		Texture* texture = TextureManager::Instance().GetTexture(L"./Data/Texture/UI/wakuwaku.png");
+		renderer->texture_ = texture;
+		renderer->texSize_ = { texture->width_, texture->height_ };
+	}
+
+	{
+		GameObject* obj = GameObjectManager::Instance().Add(
+			std::make_shared<GameObject>(),
+			Vector3(i == 0 ? 258.0f : 995.0f, 455.0f, 0.0f),
+			BehaviorManager::Instance().GetBehavior("BulletGauge")
+		);
+
+		obj->name_ = u8"’e–òƒQ[ƒW" + std::to_string(i);
+		obj->parent_ = parent;
+		obj->eraser_ = EraserManager::Instance().GetEraser("Scene");
+
+		obj->transform_->scaling_.x = 0.89f;
+
+		obj->AddComponent<PrimitiveRendererComponent>();
+	}
 }
 
 
