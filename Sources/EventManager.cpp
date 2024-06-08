@@ -6,6 +6,7 @@
 #include "../Library/Scene/SceneGame.h"
 #include "../Library/Scene/SceneClear.h"
 #include "../Library/Scene/SceneOver.h"
+#include "../Library/Scene/SceneResult.h"
 #include "../Library/Scene/SceneLoading.h"
 
 #include "../Library/Input/InputManager.h"
@@ -13,6 +14,8 @@
 #include "../Library/GameObject/GameObject.h"
 #include "../Library/GameObject/BehaviorManager.h"
 #include "../Library/GameObject/EraserManager.h"
+
+#include "../Library/Graphics/ModelManager.h"
 
 #include "../Library/Library/CameraManager.h"
 #include "../Library/Library/Library.h"
@@ -26,7 +29,9 @@ void EventManager::Initialize()
 	messages_.clear();
 
 	for (GameObject* obj : stages_)
-		obj = nullptr;
+		obj = NULL;
+
+	enemySpawner_ = NULL;
 
 	paused_ = false;
 
@@ -42,19 +47,19 @@ void EventManager::Update(float elapsedTime)
 		switch (msg)
 		{
 		case EventMessage::TO_TITLE_SCENE:
-			SceneManager::Instance().SetNextScene(std::make_shared<SceneLoading>(std::make_shared<SceneTitle>()));
+			SceneManager::Instance().SetNextScene(std::make_shared<SceneTitle>());
 			break;
 
 		case EventMessage::TO_GAME_SCENE:
-			SceneManager::Instance().SetNextScene(std::make_shared<SceneLoading>(std::make_shared<SceneGame>()));
+			SceneManager::Instance().SetNextScene(std::make_shared<SceneGame>());
 			break;
 
 		case EventMessage::TO_CLEAR_SCENE:
 			SceneManager::Instance().SetNextScene(std::make_shared<SceneLoading>(std::make_shared<SceneClear>()));
 			break;
 
-		case EventMessage::TO_OVER_SCENE:
-			SceneManager::Instance().SetNextScene(std::make_shared<SceneLoading>(std::make_shared<SceneOver>()));
+		case EventMessage::TO_RESULT_SCENE:
+			SceneManager::Instance().SetNextScene(std::make_shared<SceneResult>());
 			break;
 		}
 	}
@@ -132,6 +137,11 @@ void EventManager::UpdateDebugGui()
 void EventManager::UpdateTitleEvent()
 {
 	auto& input = InputManager::Instance();
+
+	// --- ウィンドウを閉じる ---
+	if (input.down(0) & Input::ESCAPE)
+		PostMessage(RootsLib::Window::GetHandle(), WM_CLOSE, 0, 0);
+
 
 	if (input.down(0) & Input::LEFT)
 		button_.subEventIndex_--;
@@ -345,7 +355,6 @@ void EventManager::UpdatePauseEvent()
 			TranslateMessage(EventMessage::TO_TITLE_SCENE);
 			button_.state_ = ButtonState::TITLE;
 			button_.eventIndex_ = 0;
-			CameraManager::Instance().currentCamera_ = CameraManager::Instance().debugCamera_;
 		}
 
 		break;
@@ -376,6 +385,168 @@ void EventManager::AddWaveCutIn()
 	obj->name_ = u8"ウェーブのカットイン";
 	obj->eraser_ = EraserManager::Instance().GetEraser("Scene");
 
-	obj->AddComponent<PrimitiveRendererComponent>();
+
+	int wave = enemySpawner_->state_ / 2;	// 現在のウェーブ
+
+	SpriteRendererComponent* renderer = obj->AddComponent<SpriteRendererComponent>();
+	Texture* texture = TextureManager::Instance().GetTexture(L"./Data/Texture/UI/wave.png");
+	renderer->texture_ = texture;
+	renderer->texSize_.x = (wave != 10) ? 330.0f : texture->width_;
+	renderer->texSize_.y = texture->height_ * 0.1f;
+	renderer->texPos_.y = renderer->texSize_.y * (wave - 1);
+	renderer->center_ = renderer->texSize_ * 0.5f;
+
 	obj->AddComponent<UIComponent>();
+}
+
+
+void EventManager::InitializeObjects()
+{
+	// --- モデルの読み込み ---
+	{
+		ModelManager::Instance().LoadInstancedMesh(RootsLib::DX11::GetDevice(), "./Data/Model/InstancedMesh/Bullet.fbx", 100, true);
+		ModelManager::Instance().LoadInstancedMesh(RootsLib::DX11::GetDevice(), "./Data/Model/InstancedMesh/Stage/Rail.fbx", 3, true);
+		ModelManager::Instance().LoadInstancedMesh(RootsLib::DX11::GetDevice(), "./Data/Model/InstancedMesh/b.fbx", 3, true);
+		ModelManager::Instance().LoadInstancedMesh(RootsLib::DX11::GetDevice(), "./Data/Model/InstancedMesh/Stage/ground.fbx", 3, true);
+
+		ModelManager::Instance().LoadModel(RootsLib::DX11::GetDevice(), "./Data/Model/SkeletalMesh/Enemy/enemy_1walk.fbx", true);
+		ModelManager::Instance().LoadModel(RootsLib::DX11::GetDevice(), "./Data/Model/SkeletalMesh/Enemy/enemy_2walk.fbx", true);
+		ModelManager::Instance().LoadInstancedMesh(RootsLib::DX11::GetDevice(), "./Data/Model/InstancedMesh/Enemy/enemy3_gray.fbx", 100, true);
+		ModelManager::Instance().LoadInstancedMesh(RootsLib::DX11::GetDevice(), "./Data/Model/InstancedMesh/Enemy/enemy4_white.fbx", 100, true);
+
+	}
+
+	
+	// --- カメラ ---
+	{
+		GameObject* obj = GameObjectManager::Instance().Add(
+			std::make_shared<GameObject>(),
+			Vector3(),
+			BehaviorManager::Instance().GetBehavior("GameCamera")
+		);
+
+		obj->name_ = u8"ゲームカメラ";
+
+		obj->AddComponent<CameraComponent>();
+
+		obj->AddComponent<CameraShakeComponent>();
+
+		CameraManager::Instance().currentCamera_ = obj;
+	}
+
+
+	// --- ステージ ---
+	{
+		GameObject* obj = GameObjectManager::Instance().Add(
+			std::make_shared<GameObject>()
+		);
+
+		obj->name_ = u8"地面";
+
+		obj->transform_->position_.y = -0.56f;
+		obj->transform_->scaling_.x = 7.24f;
+		obj->transform_->scaling_.z = 7.24f;
+
+		InstancedMeshComponent* renderer = obj->AddComponent<InstancedMeshComponent>();
+		renderer->model_ = ModelManager::Instance().GetInstancedMesh("./Data/Model/InstancedMesh/Stage/ground.fbx", 3);
+	}
+
+	// --- レール ---
+	{
+		GameObject* obj = GameObjectManager::Instance().Add(
+			std::make_shared<GameObject>()
+		);
+
+		obj->name_ = u8"レール";
+
+		obj->transform_->position_.y = 0.38f;
+		obj->transform_->scaling_ *= 0.3f;
+
+		InstancedMeshComponent* renderer = obj->AddComponent<InstancedMeshComponent>();
+		renderer->model_ = ModelManager::Instance().GetInstancedMesh("./Data/Model/InstancedMesh/Stage/Rail.fbx", 3);
+	}
+
+
+	// --- 街 ---
+	{
+		GameObject* obj = GameObjectManager::Instance().Add(
+			std::make_shared<GameObject>(),
+			Vector3(),
+			NULL
+		);
+
+		obj->name_ = u8"街";
+
+		obj->transform_->scaling_ *= 1.55f;
+
+		InstancedMeshComponent* renderer = obj->AddComponent<InstancedMeshComponent>();
+		renderer->model_ = ModelManager::Instance().GetInstancedMesh("./Data/Model/InstancedMesh/b.fbx", 3);
+	}
+
+
+	// --- コントローラー ---
+	{
+		GameObject* obj = GameObjectManager::Instance().Add(
+			std::make_shared<GameObject>(),
+			Vector3(),
+			BehaviorManager::Instance().GetBehavior("PlayerController")
+		);
+
+		controller_ = obj;
+
+		obj->name_ = u8"プレイヤーのコントローラー";
+
+		PlayerControllerComponent* controller = obj->AddComponent<PlayerControllerComponent>();
+
+		controller->rotateSpeed_ = 45.0f;	// 回転速度
+		controller->range_ = 94.0f;			// 中心からの距離
+
+		controller->maxBulletValue_ = 180.0f;	// 弾薬の最大数
+		controller->addBulletValue_ = 10.0f;	// 弾薬の増加量
+		controller->bulletCost_ = 10.0f;		// 弾薬のコスト
+
+		controller->addAttackGaugeValue_ = 0.5f;	// 攻撃ゲージの増加量
+
+		controller->maxAttackAmount_ = 5.0f;	// 最大攻撃力
+		controller->minAttackAmount_ = 1.0f;	// 最小攻撃力
+		controller->maxRangeAmount_ = 10.0f;	// 最大範囲
+		controller->minRangeAmount_ = 1.0f;		// 最小範囲
+		controller->maxAttackGaugeHeight_ = 330.0f;
+
+		controller->laserAttackAmount_ = 5.0f;
+		controller->laserSize_ = { 10.0f, 10.0f, 200.0f };
+	}
+
+
+	// --- 自機 ---
+	for(size_t i = 0; i < 2; i++)
+	{
+		GameObject* obj = GameObjectManager::Instance().Add(
+			std::make_shared<GameObject>(),
+			Vector3(),
+			BehaviorManager::Instance().GetBehavior("BasePlayer")
+		);
+
+		obj->name_ = u8"キャラ" + std::to_string(i);
+		obj->parent_ = controller_;
+		controller_->child_.emplace_back(obj);
+
+		obj->transform_->scaling_ *= 0.35f;
+
+		// --- モデル描画コンポーネント追加 ---
+		MeshRendererComponent* renderer = obj->AddComponent<MeshRendererComponent>();
+		static const char* fileNames[2] = { "./Data/Model/InstancedMesh/Player/White_Train.fbx", "./Data/Model/InstancedMesh/Player/Black_Train.fbx" };
+		renderer->model_ = ModelManager::Instance().LoadModel(RootsLib::DX11::GetDevice(), fileNames[i], true, false, nullptr);
+
+		// --- アニメーションコンポーネントの追加 ---
+		AnimatorComponent* animator = obj->AddComponent<AnimatorComponent>();
+		animator->isPlay_ = true;
+		animator->isLoop_ = true;
+		animator->timeScale_ = 30.0f;
+
+		PlayerComponent* player = obj->AddComponent<PlayerComponent>();
+		player->angleOffset_ = i * 180.0f;
+		player->playerNum_ = i;
+		player->type_ = static_cast<CharacterType>(i);
+	}
 }

@@ -248,6 +248,7 @@
     <ClInclude Include="Library\Math\Matrix.h" />
     <ClInclude Include="Library\Math\Vector.h" />
     <ClInclude Include="Library\Physics\Collision.h" />
+    <ClInclude Include="Library\Scene\SceneBegin.h" />
     <ClInclude Include="Library\Scene\SceneClear.h" />
     <ClInclude Include="Library\Scene\SceneExperiment.h" />
     <ClInclude Include="Library\Scene\SceneGame.h" />
@@ -255,6 +256,7 @@
     <ClInclude Include="Library\Scene\SceneManager.h" />
     <ClInclude Include="Library\Scene\SceneModelEditor.h" />
     <ClInclude Include="Library\Scene\SceneOver.h" />
+    <ClInclude Include="Library\Scene\SceneResult.h" />
     <ClInclude Include="Library\Scene\SceneTitle.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Sources\Behavior\Enemy\EnemyBehavior.h" />
@@ -269,7 +271,7 @@
     <ClInclude Include="Sources\Behavior\UI\ItemUIBehavior.h" />
     <ClInclude Include="Sources\Behavior\UI\LifeGaugeBehavior.h" />
     <ClInclude Include="Sources\Behavior\UI\PauseBehavior.h" />
-    <ClInclude Include="Sources\Behavior\UI\WaveCutInBehavior.h" />
+    <ClInclude Include="Sources\Behavior\UI\WaveUIBehavior.h" />
     <ClInclude Include="Sources\Component\Component.h" />
     <ClInclude Include="Sources\Eraser\SceneEraser.h" />
     <ClInclude Include="Sources\EventManager.h" />
@@ -322,6 +324,7 @@
     <ClCompile Include="Library\Math\Matrix.cpp" />
     <ClCompile Include="Library\Math\Vector.cpp" />
     <ClCompile Include="Library\Physics\Collision.cpp" />
+    <ClCompile Include="Library\Scene\SceneBegin.cpp" />
     <ClCompile Include="Library\Scene\SceneClear.cpp" />
     <ClCompile Include="Library\Scene\SceneExperiment.cpp" />
     <ClCompile Include="Library\Scene\SceneGame.cpp" />
@@ -329,6 +332,7 @@
     <ClCompile Include="Library\Scene\SceneManager.cpp" />
     <ClCompile Include="Library\Scene\SceneModelEditor.cpp" />
     <ClCompile Include="Library\Scene\SceneOver.cpp" />
+    <ClCompile Include="Library\Scene\SceneResult.cpp" />
     <ClCompile Include="Library\Scene\SceneTitle.cpp" />
     <ClCompile Include="Sources\Behavior\Enemy\EnemyBehavior.cpp" />
     <ClCompile Include="Sources\Behavior\Enemy\EnemySpawnerBehavior.cpp" />
@@ -342,7 +346,7 @@
     <ClCompile Include="Sources\Behavior\UI\ItemUIBehavior.cpp" />
     <ClCompile Include="Sources\Behavior\UI\LifeGaugeBehavior.cpp" />
     <ClCompile Include="Sources\Behavior\UI\PauseBehavior.cpp" />
-    <ClCompile Include="Sources\Behavior\UI\WaveCutInBehavior.cpp" />
+    <ClCompile Include="Sources\Behavior\UI\WaveUIBehavior.cpp" />
     <ClCompile Include="Sources\Component\Component.cpp" />
     <ClCompile Include="Sources\Eraser\SceneEraser.cpp" />
     <ClCompile Include="Sources\EventManager.cpp" />

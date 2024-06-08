@@ -200,7 +200,7 @@ void EnemySpawnerBehavior::Execute(GameObject* obj, float elapsedTime)
 	case 0:	// Wave1_set
 
 		// デバッグ用ステート
-		//obj->state_ = 3;
+		obj->state_ = 2;
 
 		obj->timer_ = 5.0f;
 
@@ -861,6 +861,8 @@ void EnemySpawnerBehavior::Enemy(GameObject* obj, EnemySpawnerComponent* spawner
 	{
 		MeshRendererComponent* renderer = enemy->AddComponent<MeshRendererComponent>();
 		renderer->model_ = ModelManager::Instance().GetModel("./Data/Model/SkeletalMesh/Enemy/enemy_1walk.fbx");
+
+		collider->radius_ = 7.0f;
 	}
 
 	else /*グレー*/
@@ -872,6 +874,8 @@ void EnemySpawnerBehavior::Enemy(GameObject* obj, EnemySpawnerComponent* spawner
 		{
 			MeshRendererComponent* renderer = enemy->AddComponent<MeshRendererComponent>();
 			renderer->model_ = ModelManager::Instance().GetModel(fileNames[index]);
+
+			collider->radius_ = 7.0f;
 		}
 
 		else

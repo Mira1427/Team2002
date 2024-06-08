@@ -15,6 +15,7 @@
 #include "../Scene/SceneLoading.h"
 #include "../Scene/SceneTitle.h"
 #include "../Scene/SceneGame.h"
+#include "../Scene/SceneBegin.h"
 
 #include "../GameObject/EraserManager.h"
 
@@ -87,8 +88,8 @@ bool Framework::Initialize()
 	RootsLib::Input::Initialize();
 
 	// --- 初期シーンの設定 ---
-	SceneManager::Instance().SetNextScene(std::make_shared<SceneTitle>());
-	//SceneManager::Instance().SetNextScene(std::make_shared<SceneLoading>(std::make_shared<SceneGame>()));
+	//SceneManager::Instance().SetNextScene(std::make_shared<SceneTitle>());
+	SceneManager::Instance().SetNextScene(std::make_shared<SceneLoading>(std::make_shared<SceneBegin>()));
 
 
 	// --- シーン定数バッファの作成 ---
@@ -172,7 +173,6 @@ bool Framework::Initialize()
 
 	//AudioManager::instance().LoadMusic("./Data/Music/bgm.wav", 0.05f);
 	//AudioManager::instance().PlayMusic(0);
-
 
 	return true;
 }

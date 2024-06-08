@@ -29,7 +29,16 @@ void BasePlayerBehavior::Execute(GameObject* obj, float elapsedTime)
 		obj->state_++;
 
 	case 1:
+	{
+		PlayerControllerComponent* controller = obj->parent_->GetComponent<PlayerControllerComponent>();	// 親のコントローラーコンポーネントの取得
+		PlayerComponent* player = obj->GetComponent<PlayerComponent>();										// プレイヤーコンポーネントの取得
 
+		Rotate(obj, player, controller, 90.0f);
+
+		break;
+	}
+
+	case 2:
 	{
 		AnimatorComponent* animator = obj->GetComponent<AnimatorComponent>();								// アニメーションコンポーネントの取得
 		PlayerControllerComponent* controller = obj->parent_->GetComponent<PlayerControllerComponent>();	// 親のコントローラーコンポーネントの取得
@@ -158,7 +167,16 @@ void PlayerControllerBehavior::Execute(GameObject* obj, float elapsedTime)
 		break;
 
 	case 1:
+	{
+		PlayerControllerComponent* controller = obj->GetComponent<PlayerControllerComponent>();	// コントローラーコンポーネントの取得
 
+		float rotateSpeed = 22.5f * elapsedTime;
+		obj->transform_->rotation_.y += rotateSpeed; // 回転
+
+		break;
+	}
+
+	case 2:
 	{
 		InputManager& input = InputManager::Instance();
 

@@ -65,11 +65,7 @@ void LaserBehavior::Hit(GameObject* src, GameObject* dst, float elapsedTime)
 		if (src->state_ == 3)
 		{
 			EnemyComponent* enemy = dst->GetComponent<EnemyComponent>();
-			enemy->life_ -= 3.0f;
-
-			// --- Ž€–Sˆ— ---
-			if (enemy->life_ <= 0.0f)
-				dst->Destroy();
+			dst->Destroy();
 		}
 	}
 }

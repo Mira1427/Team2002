@@ -324,7 +324,7 @@
     <ClInclude Include="Library\Math\Easing.h">
       <Filter>Library\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\Behavior\UI\WaveCutInBehavior.h">
+    <ClInclude Include="Sources\Behavior\UI\WaveUIBehavior.h">
       <Filter>Sources\Behavior\UI</Filter>
     </ClInclude>
     <ClInclude Include="Sources\Behavior\UI\ButtonBehavior.h">
@@ -336,6 +336,8 @@
     <ClInclude Include="Sources\Behavior\UI\ItemUIBehavior.h">
       <Filter>Sources\Behavior\UI</Filter>
     </ClInclude>
+    <ClInclude Include="Library\Scene\SceneBegin.h" />
+    <ClInclude Include="Library\Scene\SceneResult.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="External\ImGui\imgui.cpp">
@@ -542,7 +544,7 @@
     <ClCompile Include="Library\Math\Easing.cpp">
       <Filter>Library\Math</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\Behavior\UI\WaveCutInBehavior.cpp">
+    <ClCompile Include="Sources\Behavior\UI\WaveUIBehavior.cpp">
       <Filter>Sources\Behavior\UI</Filter>
     </ClCompile>
     <ClCompile Include="Sources\Behavior\UI\ButtonBehavior.cpp">
@@ -551,6 +553,8 @@
     <ClCompile Include="Sources\Behavior\UI\ItemUIBehavior.cpp">
       <Filter>Sources\Behavior\UI</Filter>
     </ClCompile>
+    <ClCompile Include="Library\Scene\SceneBegin.cpp" />
+    <ClCompile Include="Library\Scene\SceneResult.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="HLSL\Primitive.hlsli">

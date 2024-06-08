@@ -20,7 +20,7 @@ enum class EventMessage
 	TO_TITLE_SCENE,
 	TO_GAME_SCENE,
 	TO_CLEAR_SCENE,
-	TO_OVER_SCENE,
+	TO_RESULT_SCENE,
 };
 
 
@@ -88,10 +88,14 @@ public:
 
 	void AddWaveCutIn();
 
+	void InitializeObjects();
+
 
 	std::list<EventMessage> messages_;
 
 	GameObject* stages_[static_cast<size_t>(StageDirection::MAX)];	// ŠX‚Ì4“™•ª‚³‚ê‚½”»’è—p
+	GameObject* enemySpawner_;
+	GameObject* controller_;
 	bool paused_ = false;
 
 

@@ -1,5 +1,7 @@
 #include "BulletBehavior.h"
 
+#include "../../Library/Math/Easing.h"
+
 #include "../../Library/GameObject/BehaviorManager.h"
 #include "../../Library/GameObject/EraserManager.h"
 
@@ -77,7 +79,8 @@ void BaseBulletBehavior::AddExplosion(const Vector3& position, CharacterType typ
 
 	// --- エフェクトのサイズを計算 ---
 	Vector3 scale = Vector3::Unit_;
-	float rate = RootsLib::Math::Lerp(0.7f, 0.3f, (collider->radius_ - 1.0f) / (30.0f - 1.0f)/*MaxRadius*/);
+	auto func = RootsLib::Easing::GetFunction(EaseOutCubic);
+	float rate = RootsLib::Math::Lerp(1.0f, 0.2f, func((collider->radius_ - 1.0f) / (30.0f - 1.0f)/*MaxRadius*/));
 	scale *= collider->radius_;
 	scale *= rate;
 

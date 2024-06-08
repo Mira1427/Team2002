@@ -84,8 +84,7 @@ void BaseEnemyBehavior::HitTown(GameObject* obj, const float range)
 
 		if (stage->life_ <= 0)
 		{
-			EventManager::Instance().TranslateMessage(EventMessage::TO_OVER_SCENE);
-			CameraManager::Instance().currentCamera_ = CameraManager::Instance().debugCamera_;
+			EventManager::Instance().TranslateMessage(EventMessage::TO_RESULT_SCENE);
 		}
 
 		stage->life_ = (std::max)(stage->life_, 0);

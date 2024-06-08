@@ -27,7 +27,34 @@ void GameCameraBehavior::Execute(GameObject* obj, float elapsedTime)
 		obj->state_++;
 
 	case 1:
+	{
+		CameraComponent* camera = obj->GetComponent<CameraComponent>();
 
+
+		// --- カメラの位置を自機の斜め手前に固定 ---
+		auto* player = EventManager::Instance().controller_->child_[0];
+
+
+
+		// --- ビュー行列作成 ---
+		camera->view_.MakeLookAt(obj->transform_->position_, camera->target_);
+		camera->invView_ = Matrix::Inverse(camera->view_);
+
+		// --- プロジェクション行列作成 ---
+		float aspect = RootsLib::Window::GetWidth() / RootsLib::Window::GetHeight();
+		camera->projection_.MakePerspective(camera->fov_, aspect, camera->nearZ_, camera->farZ_);
+
+		// --- ビュープロジェクション行列作成 ---
+		camera->viewProjection_ = camera->view_ * camera->projection_;
+		camera->invViewProjection_ = Matrix::Inverse(camera->viewProjection_);
+		camera->frontVec_ = Vector3::Normalize(camera->invView_.v_[2].xyz());
+		camera->upVec_ = Vector3::Normalize(camera->invView_.v_[1].xyz());
+		camera->rightVec_ = Vector3::Normalize(camera->invView_.v_[0].xyz());
+	}
+
+		break;
+
+	case 2:
 	{
 		CameraComponent* camera = obj->GetComponent<CameraComponent>();
 

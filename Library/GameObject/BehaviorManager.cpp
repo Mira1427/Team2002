@@ -16,7 +16,7 @@
 
 #include "../../Sources/Behavior/UI/PauseBehavior.h"
 #include "../../Sources/Behavior/UI/LifeGaugeBehavior.h"
-#include "../../Sources/Behavior/UI/WaveCutInBehavior.h"
+#include "../../Sources/Behavior/UI/WaveUIBehavior.h"
 #include "../../Sources/Behavior/UI/ButtonBehavior.h"
 #include "../../Sources/Behavior/UI/ItemUIBehavior.h"
 
@@ -49,6 +49,7 @@ BehaviorManager::BehaviorManager()
 	behaviors_.insert(std::make_pair("PauseOverlay",		std::make_shared<PauseOverlayBehavior>()));
 	behaviors_.insert(std::make_pair("LifeGauge",			std::make_shared<LifeGaugeBehavior>()));
 	behaviors_.insert(std::make_pair("WaveCutIn",			std::make_shared<WaveCutInBehavior>()));
+	behaviors_.insert(std::make_pair("WaveUI",				std::make_shared<WaveUIBehavior>()));
 	behaviors_.insert(std::make_pair("BaseButton",			std::make_shared<BaseButtonBehavior>()));
 	behaviors_.insert(std::make_pair("SubButton",			std::make_shared<SubButtonBehavior>()));
 	behaviors_.insert(std::make_pair("PauseButton",			std::make_shared<PauseButtonBehavior>()));

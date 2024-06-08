@@ -1,6 +1,4 @@
-#include "SceneTitle.h"
-
-#include "../../External/ImGui/imgui.h"
+#include "SceneResult.h"
 
 #include "../GameObject/GameObject.h"
 #include "../GameObject/BehaviorManager.h"
@@ -23,25 +21,15 @@
 #include "../../Sources/Component/Component.h"
 
 
-void SceneTitle::Initialize()
+void SceneResult::Initialize()
 {
-	if (EventManager::Instance().button_.state_ != ButtonState::SCENE_BEGIN)
-		EventManager::Instance().button_.state_ = ButtonState::TITLE;
-
-	SetUpObjects();
 }
 
-void SceneTitle::Finalize()
+void SceneResult::Finalize()
 {
-	auto* controller = EventManager::Instance().controller_;
-	controller->state_++;
-	controller->child_[0]->state_++;
-	controller->child_[1]->state_++;
-
-	CameraManager::Instance().currentCamera_->state_++;
 }
 
-void SceneTitle::Update(float elapsedTime)
+void SceneResult::Update(float elapsedTime)
 {
 	EventManager::Instance().Update(elapsedTime);
 	EventManager::Instance().UpdateButton();
@@ -55,7 +43,7 @@ void SceneTitle::Update(float elapsedTime)
 	GameObjectManager::Instance().Remove();						// 消去処理
 }
 
-void SceneTitle::Render(ID3D11DeviceContext* dc)
+void SceneResult::Render(ID3D11DeviceContext* dc)
 {
 	SceneConstant data;
 
@@ -203,104 +191,12 @@ void SceneTitle::Render(ID3D11DeviceContext* dc)
 
 	// --- ブルームの適用 ---
 	ApplyBloom(dc);
+
 }
 
 
-void SceneTitle::SetUpObjects()
-{
-	//{
-	//	GameObject* obj = GameObjectManager::Instance().Add(
-	//		std::make_shared<GameObject>(),
-	//		Vector3(),
-	//		NULL
-	//	);
-
-	//	obj->name_ = u8"街";
-	//	obj->eraser_ = EraserManager::Instance().GetEraser("Scene");
-
-	//	InstancedMeshComponent* renderer = obj->AddComponent<InstancedMeshComponent>();
-	//	renderer->model_ = ModelManager::Instance().LoadInstancedMesh(RootsLib::DX11::GetDevice(), "./Data/Model/InstancedMesh/b.fbx", 3, true);
-	//}
-
-	//{
-	//	GameObject* obj = GameObjectManager::Instance().Add(
-	//		std::make_shared<GameObject>(),
-	//		Vector3(),
-	//		NULL
-	//	);
-
-	//	obj->name_ = u8"ビル";
-	//	obj->eraser_ = EraserManager::Instance().GetEraser("Scene");
-
-	//	InstancedMeshComponent* renderer = obj->AddComponent<InstancedMeshComponent>();
-	//	renderer->model_ = ModelManager::Instance().LoadInstancedMesh(RootsLib::DX11::GetDevice(), "./Data/Model/InstancedMesh/Stage/building_ontx.fbx", 100, true);
-	//}
-
-	{
-		GameObject* startButton = GameObjectManager::Instance().Add(
-			std::make_shared<GameObject>(),
-			Vector3(725.0f, 500.0f, 0.0f),
-			BehaviorManager::Instance().GetBehavior("BaseButton")
-		);
-		
-		startButton->state_ = static_cast<int>(ButtonState::TITLE);
-		startButton->name_ = u8"スタートボタン";
-		startButton->eraser_ = EraserManager::Instance().GetEraser("Scene");
-
-		startButton->transform_->scaling_ *= 0.67f;
-
-		SpriteRendererComponent* renderer = startButton->AddComponent<SpriteRendererComponent>();
-		Texture* texture = TextureManager::Instance().GetTexture(L"./Data/Texture/UI/gamestart.png");
-		renderer->texture_ = texture;
-		renderer->texSize_ = { texture->width_, texture->height_ * 0.5f };
-
-		UIComponent* ui = startButton->AddComponent<UIComponent>();
-		ui->eventID_ = static_cast<int>(TitleEvent::START);
-	}
-
-
-	{
-		GameObject* tutorial = GameObjectManager::Instance().Add(
-			std::make_shared<GameObject>(),
-			Vector3(770.0f, 630.0f, 0.0f),
-			BehaviorManager::Instance().GetBehavior("SubButton")
-		);
-		
-		tutorial->state_ = static_cast<int>(ButtonState::TITLE);
-		tutorial->name_ = u8"チュートリアルボタン";
-		tutorial->eraser_ = EraserManager::Instance().GetEraser("Scene");
-
-		tutorial->transform_->scaling_ *= 0.67f;
-
-		SpriteRendererComponent* renderer = tutorial->AddComponent<SpriteRendererComponent>();
-		Texture* texture = TextureManager::Instance().GetTexture(L"./Data/Texture/UI/tutorial.png");
-		renderer->texture_ = texture;
-		renderer->texSize_ = { texture->width_, texture->height_ * 0.5f };
-	}
-
-
-	{
-		GameObject* logo = GameObjectManager::Instance().Add(
-			std::make_shared<GameObject>(),
-			Vector3(50.0f, 50.0f, 0.0f)
-		);
-		
-		logo->name_ = u8"タイトルロゴ";
-		logo->eraser_ = EraserManager::Instance().GetEraser("Scene");
-
-		logo->transform_->scaling_ *= 0.7f;
-
-		SpriteRendererComponent* renderer = logo->AddComponent<SpriteRendererComponent>();
-		Texture* texture = TextureManager::Instance().GetTexture(L"./Data/Texture/UI/titlelogo.png");
-		renderer->texture_ = texture;
-		renderer->texSize_ = { texture->width_, texture->height_ };
-	}
-}
-
-
-void SceneTitle::ApplyBloom(ID3D11DeviceContext* dc)
-{	
-	// --- 輝度抽出 ---
+void SceneResult::ApplyBloom(ID3D11DeviceContext* dc)
+{	// --- 輝度抽出 ---
 	Shader::GetFrameBuffer(FrameBufferLabel::LUMINANCE_EXTRACTION)->Clear(dc);
 	Shader::GetFrameBuffer(FrameBufferLabel::LUMINANCE_EXTRACTION)->Active(dc);
 
@@ -601,4 +497,5 @@ void SceneTitle::ApplyBloom(ID3D11DeviceContext* dc)
 		0U,
 		5U
 	);
+
 }

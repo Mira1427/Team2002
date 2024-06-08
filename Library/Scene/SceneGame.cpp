@@ -30,62 +30,14 @@ void SceneGame::Initialize()
 	lightingManager->directionLight_.viewNearZ_ = -3000.0f;
 	lightingManager->directionLight_.viewFarZ_ = 560.0f;
 
-
-	// --- カメラの設定 ---
-	{
-		GameObject* obj = GameObjectManager::Instance().Add(
-			std::make_shared<GameObject>(),
-			Vector3(),
-			BehaviorManager::Instance().GetBehavior("GameCamera")
-		);
-
-		obj->name_ = u8"ゲームカメラ";
-		obj->eraser_ = EraserManager::Instance().GetEraser("Scene");
-
-		obj->AddComponent<CameraComponent>();
-
-		obj->AddComponent<CameraShakeComponent>();
-
-		CameraManager::Instance().currentCamera_ = obj;
-	}
-
-
 	EventManager::Instance().Initialize();
 	EventManager::Instance().button_.state_ = ButtonState::GAME;
 
 
-	// --- 弾丸のモデルの読み込み ---
-	ModelManager::Instance().LoadInstancedMesh(RootsLib::DX11::GetDevice(), "./Data/Model/InstancedMesh/Bullet.fbx", 100, true);
-
-
-	// --- レール ---
-	ModelManager::Instance().LoadInstancedMesh(RootsLib::DX11::GetDevice(), "./Data/Model/InstancedMesh/Stage/Rail.fbx", 5, true);
-	AddRail();
-
-
-	// --- キャラモデルの読み込み ---
-	ModelManager::Instance().LoadModel(RootsLib::DX11::GetDevice(), "./Data/Model/SkeletalMesh/Enemy/enemy_1walk.fbx", true);
-	ModelManager::Instance().LoadModel(RootsLib::DX11::GetDevice(), "./Data/Model/SkeletalMesh/Enemy/enemy_2walk.fbx", true);
-	ModelManager::Instance().LoadInstancedMesh(RootsLib::DX11::GetDevice(), "./Data/Model/InstancedMesh/Enemy/enemy3_gray.fbx", 100, true);
-	ModelManager::Instance().LoadInstancedMesh(RootsLib::DX11::GetDevice(), "./Data/Model/InstancedMesh/Enemy/enemy4_white.fbx", 100, true);
-
-
-	// --- コントローラーの追加 ---
-	float range = 94.0f;
-	GameObject* controller = AddPlayerController(45.0f, range);
-
-	// --- キャラの追加 ---
-	GameObject* player1 = AddPlayer(u8"キャラ１", controller, 0.0f, 20.0f, 0);
-	GameObject* player2 = AddPlayer(u8"キャラ２", controller, 180.0f, 20.0f, 1);
-	controller->child_.emplace_back(player1);
-	controller->child_.emplace_back(player2);
-
-	// --- ステージの追加 ---
-	AddStage();
-
 	// --- 弾薬ゲージの追加 ---
-	AddBulletGauge(player1, 0);
-	AddBulletGauge(player2, 1);
+	auto* controller = EventManager::Instance().controller_;
+	AddBulletGauge(controller->child_[0], 0);
+	AddBulletGauge(controller->child_[1], 1);
 
 	// --- スポナーの追加 ---
 	AddEnemySpawner();
@@ -93,7 +45,7 @@ void SceneGame::Initialize()
 
 
 	// --- 街の4等分された判定用 ---
-	AddTownLife(3, range);
+	AddTownLife(3, 94.0f);
 
 	// --- ライフゲージの追加 ---
 	AddLifeGauge();
@@ -102,32 +54,29 @@ void SceneGame::Initialize()
 	// --- 攻撃ゲージのコントローラー ---
 	GameObject* attackGaugeController = AddAttackGaugeController(controller, { 80.0f, 360.0f, 0.0f });
 
-	//// --- 攻撃ゲージ ---
-	//AddAttackGauge(attackGaugeController, 50.0f);
-
-	//// --- 範囲ゲージ ---
-	//AddRangeGauge(attackGaugeController, 50.0f);
-
 	// --- 攻撃ゲージのバー ---
 	AddAttackGaugeBar(attackGaugeController);
 
-
+	// --- ウェーブ ---
 	{
 		GameObject* obj = GameObjectManager::Instance().Add(
 			std::make_shared<GameObject>(),
-			Vector3(),
-			NULL
+			Vector3(160.0f, 50.0f, 0.0f),
+			BehaviorManager::Instance().GetBehavior("WaveUI")
 		);
 
-		obj->name_ = u8"街";
+		obj->name_ = u8"ウェーブのUI";
 		obj->eraser_ = EraserManager::Instance().GetEraser("Scene");
 
-		obj->transform_->scaling_ *= 1.55f;
+		obj->transform_->scaling_ *= 0.8f;
 
-		InstancedMeshComponent* renderer = obj->AddComponent<InstancedMeshComponent>();
-		renderer->model_ = ModelManager::Instance().LoadInstancedMesh(RootsLib::DX11::GetDevice(), "./Data/Model/InstancedMesh/b.fbx", 3, true);
+		SpriteRendererComponent* renderer = obj->AddComponent<SpriteRendererComponent>();
+		Texture* texture = TextureManager::Instance().GetTexture(L"./Data/Texture/UI/wave.png");
+		renderer->texture_ = texture;
+		renderer->texSize_ = { 330.0f, texture->height_ * 0.1f };
 	}
 
+	// --- 色交換 ---
 	{
 		GameObject* obj = GameObjectManager::Instance().Add(
 			std::make_shared<GameObject>(),
@@ -147,6 +96,7 @@ void SceneGame::Initialize()
 		renderer->texSize_ = { texture->width_, texture->height_ };
 	}
 
+	// --- ゲージ交換 ---
 	{
 		GameObject* obj = GameObjectManager::Instance().Add(
 			std::make_shared<GameObject>(),
@@ -171,6 +121,14 @@ void SceneGame::Initialize()
 void SceneGame::Finalize()
 {
 	EffectManager::instance().getEffekseerManager()->StopAllEffects();
+	EventManager::Instance().button_.state_ = ButtonState::OVER;
+
+	auto* controller = EventManager::Instance().controller_;
+	controller->state_--;
+	controller->child_[0]->state_--;
+	controller->child_[1]->state_--;
+
+	CameraManager::Instance().currentCamera_->state_--;
 }
 
 
@@ -196,14 +154,6 @@ void SceneGame::Update(float elapsedTime)
 
 	if (ImGui::Button("Wave", { 200.0f, 50.0f }))
 	{
-		auto* obj = GameObjectManager::Instance().Add(
-			std::make_shared<GameObject>(),
-			Vector3(),
-			BehaviorManager::Instance().GetBehavior("WaveCutIn")
-		);
-
-		obj->AddComponent<PrimitiveRendererComponent>();
-		obj->AddComponent<UIComponent>();
 	}
 #endif
 
@@ -839,6 +789,8 @@ void SceneGame::AddEnemySpawner()
 		BehaviorManager::Instance().GetBehavior("EnemySpawner")
 	);
 
+	EventManager::Instance().enemySpawner_ = obj;
+
 	obj->name_ = u8"スポナー";
 	obj->type_ = ObjectType::SPAWNER;
 	obj->eraser_ = EraserManager::Instance().GetEraser("Scene");
@@ -917,10 +869,6 @@ void SceneGame::AddLifeGauge()
 			lifeGauge->transform_->position_ = { 1158.0f, (RootsLib::Window::GetHeight() / 4.0f) * i + 26.0f, 0.0f };
 			lifeGauge->transform_->scaling_ *= 0.69f;
 
-			//PrimitiveRendererComponent* renderer = lifeGauge->AddComponent<PrimitiveRendererComponent>();
-			//renderer->size_.x = 100.0f;
-			//float color = i / 4.0f;
-			//renderer->color_ = { color, color, color, 1.0f };
 			SpriteRendererComponent* renderer = lifeGauge->AddComponent<SpriteRendererComponent>();
 			Texture* texture = TextureManager::Instance().GetTexture(L"./Data/Texture/UI/HP_contents.png");
 			renderer->texture_ = texture;

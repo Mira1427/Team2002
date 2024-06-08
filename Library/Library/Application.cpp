@@ -21,6 +21,7 @@
 #include "../Scene/SceneModelEditor.h"
 #include "../Scene/SceneTitle.h"
 #include "../Scene/SceneGame.h"
+#include "../Scene/SceneResult.h"
 
 #include "../../Sources/EventManager.h"
 
@@ -262,6 +263,11 @@ void Application::UpdateSystemGui()
 			if (ImGui::MenuItem(u8"ƒQ[ƒ€"))
 			{
 				SceneManager::Instance().SetNextScene(std::make_shared<SceneGame>());
+			}
+
+			if (ImGui::MenuItem(u8"ƒŠƒUƒ‹ƒg"))
+			{
+				SceneManager::Instance().SetNextScene(std::make_shared<SceneResult>());
 			}
 
 			ImGui::EndMenu();
