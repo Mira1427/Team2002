@@ -321,9 +321,6 @@
     <ClInclude Include="Library\Graphics\EffectManager.h">
       <Filter>Library\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\ParameterManager.h">
-      <Filter>Sources</Filter>
-    </ClInclude>
     <ClInclude Include="Library\Math\Easing.h">
       <Filter>Library\Math</Filter>
     </ClInclude>
@@ -333,7 +330,12 @@
     <ClInclude Include="Sources\Behavior\UI\ButtonBehavior.h">
       <Filter>Sources\Behavior\UI</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\Behavior\UI\ItemUIBehavior.h" />
+    <ClInclude Include="Sources\ParameterManager.h">
+      <Filter>Sources</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Behavior\UI\ItemUIBehavior.h">
+      <Filter>Sources\Behavior\UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="External\ImGui\imgui.cpp">
@@ -546,7 +548,9 @@
     <ClCompile Include="Sources\Behavior\UI\ButtonBehavior.cpp">
       <Filter>Sources\Behavior\UI</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\Behavior\UI\ItemUIBehavior.cpp" />
+    <ClCompile Include="Sources\Behavior\UI\ItemUIBehavior.cpp">
+      <Filter>Sources\Behavior\UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="HLSL\Primitive.hlsli">

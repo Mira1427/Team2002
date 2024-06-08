@@ -16,6 +16,8 @@
 #include "../Scene/SceneTitle.h"
 #include "../Scene/SceneGame.h"
 
+#include "../GameObject/EraserManager.h"
+
 #include "../Audio/Audio.h"
 
 #include "../Input/InputManager.h"
@@ -24,10 +26,12 @@
 #include "../GameObject/BehaviorManager.h"
 
 #include "../../Sources/ParameterManager.h"
+#include "../../Sources/EventManager.h"
 
 #include "Library.h"
 #include "Camera.h"
 #include "CameraManager.h"
+
 
 
 void Framework::Run()
@@ -144,6 +148,27 @@ bool Framework::Initialize()
 
 		camera->AddComponent<CameraComponent>();
 	}
+
+
+	{
+		GameObject* obj = GameObjectManager::Instance().Add(
+			std::make_shared<GameObject>(),
+			Vector3(640.0f, 600.0f, 0.0f)
+		);
+
+		obj->name_ = u8"PushEnter";
+		obj->eraser_ = EraserManager::Instance().GetEraser("SceneBegin");
+		obj->layer_ = -1;
+
+		SpriteRendererComponent* renderer = obj->AddComponent<SpriteRendererComponent>();
+		Texture* texture = TextureManager::Instance().GetTexture(L"./Data/Texture/UI/PushEnter.png");
+		renderer->texture_ = texture;
+		renderer->texSize_ = { texture->width_, texture->height_ };
+		renderer->center_ = renderer->texSize_ * 0.5f;
+	}
+
+
+	EventManager::Instance().button_.state_ = ButtonState::SCENE_BEGIN;
 
 	//AudioManager::instance().LoadMusic("./Data/Music/bgm.wav", 0.05f);
 	//AudioManager::instance().PlayMusic(0);

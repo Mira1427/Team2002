@@ -7,7 +7,7 @@
 
 int WINAPI WinMain(_In_ HINSTANCE instance, _In_opt_  HINSTANCE prevInstance, _In_ LPSTR cmd_line, _In_ int cmd_show)
 {
-	RootsLib::Initialize(instance, L" ", 1280L, 720L, false);
+	RootsLib::Initialize(instance, L" ", 1280L, 720L, true);
 
 	Framework framework;
 

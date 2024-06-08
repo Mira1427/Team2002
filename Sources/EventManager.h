@@ -31,14 +31,22 @@ enum class ButtonState
 	GAME,
 	PAUSE,
 	OVER,
-	CLEAR
+	CLEAR,
+	SCENE_BEGIN,
 };
 
 
 enum class TitleEvent
 {
 	START,
-	END,
+	MAX
+};
+
+
+enum class TutorialSelectEvent
+{
+	ON,
+	OFF,
 	MAX
 };
 
@@ -75,6 +83,7 @@ public:
 	void UpdateTitleEvent();
 	void UpdateGameEvent();
 	void UpdatePauseEvent();
+	void UpdateSceneBeginEvent();
 
 
 	void AddWaveCutIn();
@@ -90,6 +99,7 @@ public:
 	{
 		ButtonState state_;
 		int eventIndex_;
+		int subEventIndex_;
 	}button_;
 };
 

@@ -50,6 +50,8 @@ BehaviorManager::BehaviorManager()
 	behaviors_.insert(std::make_pair("LifeGauge",			std::make_shared<LifeGaugeBehavior>()));
 	behaviors_.insert(std::make_pair("WaveCutIn",			std::make_shared<WaveCutInBehavior>()));
 	behaviors_.insert(std::make_pair("BaseButton",			std::make_shared<BaseButtonBehavior>()));
+	behaviors_.insert(std::make_pair("SubButton",			std::make_shared<SubButtonBehavior>()));
+	behaviors_.insert(std::make_pair("PauseButton",			std::make_shared<PauseButtonBehavior>()));
 }
 
 

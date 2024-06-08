@@ -74,7 +74,7 @@ void EventManager::UpdateButton()
 		UpdateTitleEvent();
 		break;
 
-
+		
 	case ButtonState::GAME:
 		UpdateGameEvent();
 		break;
@@ -101,6 +101,14 @@ void EventManager::UpdateButton()
 			button_.state_ = ButtonState::TITLE;
 		}
 		break;
+
+	case ButtonState::SCENE_BEGIN:
+		if (input.down(0) & Input::CONFIRM)
+		{
+			button_.state_ = ButtonState::TITLE;
+		}
+		break;
+
 	}
 }
 
@@ -114,6 +122,7 @@ void EventManager::UpdateDebugGui()
 	button_.state_ = static_cast<ButtonState>(b);
 
 	ImGui::InputInt(u8"イベントのインデックス", &button_.eventIndex_);
+	ImGui::InputInt(u8"サブイベントのインデックス", &button_.subEventIndex_);
 
 #endif
 }
@@ -124,13 +133,14 @@ void EventManager::UpdateTitleEvent()
 {
 	auto& input = InputManager::Instance();
 
-	if (input.down(0) & Input::UP)
-		button_.eventIndex_--;
+	if (input.down(0) & Input::LEFT)
+		button_.subEventIndex_--;
 
-	else if (input.down(0) & Input::DOWN)
-		button_.eventIndex_++;
+	if (input.down(0) & Input::RIGHT)
+		button_.subEventIndex_++;
 
-	button_.eventIndex_ = RootsLib::Math::Clamp(button_.eventIndex_, 0, static_cast<int>(TitleEvent::MAX) - 1);
+	button_.subEventIndex_ = RootsLib::Math::Clamp(button_.subEventIndex_, 0, static_cast<int>(TutorialSelectEvent::MAX) - 1);
+
 
 	switch (button_.eventIndex_)
 	{
@@ -141,12 +151,10 @@ void EventManager::UpdateTitleEvent()
 			TranslateMessage(EventMessage::TO_GAME_SCENE);
 			button_.state_ = ButtonState::GAME;
 			button_.eventIndex_ = 0;
+			button_.subEventIndex_ = 0;
 		}
 		break;
 	}
-
-	case static_cast<int>(TitleEvent::END):
-		break;
 	}
 }
 
@@ -160,16 +168,137 @@ void EventManager::UpdateGameEvent()
 		paused_ = true;
 		button_.state_ = ButtonState::PAUSE;
 
-		GameObject* overlay = GameObjectManager::Instance().Add(
-			std::make_shared<GameObject>(),
-			Vector3(),
-			BehaviorManager::Instance().GetBehavior("PauseOverlay")
-		);
+		// --- ポーズ背景 ---
+		{
+			GameObject* overlay = GameObjectManager::Instance().Add(
+				std::make_shared<GameObject>(),
+				Vector3(),
+				BehaviorManager::Instance().GetBehavior("PauseOverlay")
+			);
 
-		overlay->name_ = u8"ポーズのオーバーレイ";
-		overlay->eraser_ = EraserManager::Instance().GetEraser("Pause");
+			overlay->name_ = u8"ポーズのオーバーレイ";
+			overlay->eraser_ = EraserManager::Instance().GetEraser("Pause");
 
-		overlay->AddComponent<PrimitiveRendererComponent>();
+			overlay->AddComponent<PrimitiveRendererComponent>();
+		}
+
+
+		// --- 動画の枠 ---
+		{
+			GameObject* obj = GameObjectManager::Instance().Add(
+				std::make_shared<GameObject>(),
+				Vector3(30.0f, 70.0f, 0.0f),
+				NULL
+			);
+
+			obj->state_ = static_cast<int>(ButtonState::PAUSE);
+			obj->name_ = u8"ポーズの動画の枠";
+			obj->eraser_ = EraserManager::Instance().GetEraser("Pause");
+
+			obj->transform_->scaling_ *= 0.67f;
+
+			UIComponent* ui = obj->AddComponent<UIComponent>();
+
+			SpriteRendererComponent* renderer = obj->AddComponent<SpriteRendererComponent>();
+			Texture* texture = TextureManager::Instance().GetTexture(L"./Data/Texture/UI/movieframe_con.png");
+			renderer->texture_ = texture;
+			renderer->texSize_ = { texture->width_, texture->height_ };
+		}
+
+
+		// --- 説明の枠 ---
+		{
+			GameObject* obj = GameObjectManager::Instance().Add(
+				std::make_shared<GameObject>(),
+				Vector3(41.0f, 500.5f, 0.0f),
+				NULL
+			);
+
+			obj->state_ = static_cast<int>(ButtonState::PAUSE);
+			obj->name_ = u8"ポーズの説明の枠";
+			obj->eraser_ = EraserManager::Instance().GetEraser("Pause");
+
+			obj->transform_->scaling_ *= 0.67f;
+
+			UIComponent* ui = obj->AddComponent<UIComponent>();
+
+			SpriteRendererComponent* renderer = obj->AddComponent<SpriteRendererComponent>();
+			Texture* texture = TextureManager::Instance().GetTexture(L"./Data/Texture/UI/textbox_large.png");
+			renderer->texture_ = texture;
+			renderer->texSize_ = { texture->width_, texture->height_ };
+		}
+
+
+		// --- テキスト ---
+		{
+			GameObject* obj = GameObjectManager::Instance().Add(
+				std::make_shared<GameObject>(),
+				Vector3(770.0f, 100.0f, 0.0f),
+				NULL
+			);
+
+			obj->state_ = static_cast<int>(ButtonState::PAUSE);
+			obj->name_ = u8"ポーズのテキスト";
+			obj->eraser_ = EraserManager::Instance().GetEraser("Pause");
+
+			obj->transform_->scaling_ *= 0.67f;
+
+			UIComponent* ui = obj->AddComponent<UIComponent>();
+			ui->eventID_ = static_cast<int>(PauseEvent::CONTINUE);
+
+			SpriteRendererComponent* renderer = obj->AddComponent<SpriteRendererComponent>();
+			Texture* texture = TextureManager::Instance().GetTexture(L"./Data/Texture/UI/pause.png");
+			renderer->texture_ = texture;
+			renderer->texSize_ = { texture->width_, texture->height_ };
+		}
+
+
+		// --- 続ける ---
+		{
+			GameObject* obj = GameObjectManager::Instance().Add(
+				std::make_shared<GameObject>(),
+				Vector3(790.0f, 325.0f, 0.0f),
+				BehaviorManager::Instance().GetBehavior("PauseButton")
+			);
+
+			obj->state_ = static_cast<int>(ButtonState::PAUSE);
+			obj->name_ = u8"ポーズの続けるボタン";
+			obj->eraser_ = EraserManager::Instance().GetEraser("Pause");
+
+			obj->transform_->scaling_ *= 0.67f;
+
+			UIComponent* ui = obj->AddComponent<UIComponent>();
+			ui->eventID_ = static_cast<int>(PauseEvent::CONTINUE);
+
+			SpriteRendererComponent* renderer = obj->AddComponent<SpriteRendererComponent>();
+			Texture* texture = TextureManager::Instance().GetTexture(L"./Data/Texture/UI/backgame.png");
+			renderer->texture_ = texture;
+			renderer->texSize_ = { texture->width_, texture->height_ * 0.5f };
+		}
+
+
+		// --- タイトル ---
+		{
+			GameObject* obj = GameObjectManager::Instance().Add(
+				std::make_shared<GameObject>(),
+				Vector3(939.0f, 445.0f, 0.0f),
+				BehaviorManager::Instance().GetBehavior("PauseButton")
+			);
+
+			obj->state_ = static_cast<int>(ButtonState::PAUSE);
+			obj->name_ = u8"ポーズのタイトルボタン";
+			obj->eraser_ = EraserManager::Instance().GetEraser("Pause");
+
+			obj->transform_->scaling_ *= 0.67f;
+
+			UIComponent* ui = obj->AddComponent<UIComponent>();
+			ui->eventID_ = static_cast<int>(PauseEvent::END);
+
+			SpriteRendererComponent* renderer = obj->AddComponent<SpriteRendererComponent>();
+			Texture* texture = TextureManager::Instance().GetTexture(L"./Data/Texture/UI/gotitle.png");
+			renderer->texture_ = texture;
+			renderer->texSize_ = { texture->width_, texture->height_ * 0.5f };
+		}
 	}
 }
 
@@ -220,6 +349,17 @@ void EventManager::UpdatePauseEvent()
 		}
 
 		break;
+	}
+}
+
+
+void EventManager::UpdateSceneBeginEvent()
+{
+	auto& input = InputManager::Instance();
+
+	if (input.down(0) & Input::CONFIRM)
+	{
+
 	}
 }
 

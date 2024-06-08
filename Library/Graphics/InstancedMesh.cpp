@@ -158,6 +158,9 @@ void InstancedMesh::Draw(
 			dc->PSSetShaderResources(0, 1, material.shaderResourceViews[0].GetAddressOf());
 			dc->PSSetShaderResources(1, 1, material.shaderResourceViews[1].GetAddressOf());
 			dc->PSSetShaderResources(2, 1, material.shaderResourceViews[2].GetAddressOf());
+			dc->PSSetShaderResources(3, 1, material.shaderResourceViews[3].GetAddressOf());
+			dc->PSSetShaderResources(4, 1, material.shaderResourceViews[4].GetAddressOf());
+			dc->PSSetShaderResources(5, 1, material.shaderResourceViews[5].GetAddressOf());
 
 			// --- インデックスで描画 ---
 			D3D11_BUFFER_DESC bufferDesc{};

@@ -128,7 +128,7 @@ float4 main(VSOutput pin) : SV_TARGET
     
     // --- エミッシブ ---
     float4 emissiveColor = textureMaps[EMISSIVE_MAP].Sample(samplerStates[LINEAR], pin.texcoord);
-    finalColor.xyz += emissiveColor * 3.0;
+    finalColor.xyz += emissiveColor.xyz * 3.0 * emissiveColor.a;
     
     	
 	
