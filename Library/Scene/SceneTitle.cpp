@@ -39,6 +39,7 @@ void SceneTitle::Finalize()
 	controller->child_[1]->state_++;
 
 	CameraManager::Instance().currentCamera_->state_++;
+	CameraManager::Instance().currentCamera_->GetComponent<CameraComponent>()->target_ = Vector3::Zero_;
 }
 
 void SceneTitle::Update(float elapsedTime)

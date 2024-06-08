@@ -352,6 +352,7 @@ void EventManager::UpdatePauseEvent()
 
 		if (input.down(0) & Input::CONFIRM)
 		{
+			paused_ = false;
 			TranslateMessage(EventMessage::TO_TITLE_SCENE);
 			button_.state_ = ButtonState::TITLE;
 			button_.eventIndex_ = 0;

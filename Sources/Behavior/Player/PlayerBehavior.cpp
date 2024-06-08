@@ -173,6 +173,9 @@ void PlayerControllerBehavior::Execute(GameObject* obj, float elapsedTime)
 		float rotateSpeed = 22.5f * elapsedTime;
 		obj->transform_->rotation_.y += rotateSpeed; // ‰ñ“]
 
+		if (obj->transform_->rotation_.y > 360.0f)
+			obj->transform_->rotation_.y = 0.0f;
+
 		break;
 	}
 

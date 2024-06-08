@@ -28,12 +28,35 @@ void GameCameraBehavior::Execute(GameObject* obj, float elapsedTime)
 
 	case 1:
 	{
+
+		obj->transform_->position_.y = 1.0f;
 		CameraComponent* camera = obj->GetComponent<CameraComponent>();
+
+
+#ifdef USE_IMGUI
+		static float dist = 26.0f;
+		static float offset = 11.0f;
+		static float height = 3.0f;
+		static float horizontalOffset = 8.0f;
+		ImGui::DragFloat(u8"距離", &dist);
+		ImGui::DragFloat(u8"オフセット", &offset);
+		ImGui::DragFloat(u8"高さ", &height);
+		ImGui::DragFloat(u8"横", &horizontalOffset);
+#endif
+
+		const float rotateSpeed = DirectX::XMConvertToRadians(22.5f) * elapsedTime;
+		obj->transform_->rotation_.y -= rotateSpeed;
 
 
 		// --- カメラの位置を自機の斜め手前に固定 ---
 		auto* player = EventManager::Instance().controller_->child_[0];
 
+		Matrix R;
+		R.MakeRotation(player->transform_->rotation_.ToRadian());
+		Vector3 offsetVec = Vector3::Normalize(-R.v_[2].xyz() + -R.v_[0].xyz()) * offset + Vector3::Up_ * height;
+
+		obj->transform_->position_ = Vector3::Normalize(-R.v_[2].xyz() + R.v_[0].xyz()) * dist + player->transform_->position_ + offsetVec + R.v_[0].xyz() * horizontalOffset;
+		camera->target_ = player->transform_->position_ + offsetVec;	// 自機の方を向く
 
 
 		// --- ビュー行列作成 ---

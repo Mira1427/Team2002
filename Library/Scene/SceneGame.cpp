@@ -128,7 +128,11 @@ void SceneGame::Finalize()
 	controller->child_[0]->state_--;
 	controller->child_[1]->state_--;
 
-	CameraManager::Instance().currentCamera_->state_--;
+	auto* camera = CameraManager::Instance().currentCamera_;
+	camera->state_--;
+	camera->timer_ = 0.0f;
+	auto* cameraShake = CameraManager::Instance().currentCamera_->GetComponent<CameraShakeComponent>();
+	cameraShake->offset_ = Vector3::Zero_;
 }
 
 

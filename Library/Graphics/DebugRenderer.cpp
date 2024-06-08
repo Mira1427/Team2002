@@ -308,11 +308,12 @@ void DebugRenderer::CreateLine(ID3D11Device* device)
 }
 
 // --- 描画 ---
-void DebugRenderer::DrawLine(const Vector3& src, const Vector3& dst)
+void DebugRenderer::DrawLine(const Vector3& src, const Vector3& dst, const Vector4& color)
 {
 	Line line;
 	line.src_ = src;
 	line.dst_ = dst;
+	line.color_ = color;
 	lines_.emplace_back(line);
 }
 
@@ -532,8 +533,7 @@ void DebugRenderer::Draw(ID3D11DeviceContext* dc)
 		// --- オブジェクト定数バッファ更新 ---
 		Constants3D cb;
 		cb.world_ = W;
-		cb.color_ = Vector4::White_;
-		cb.color_ = Vector4::Gray_;
+		cb.color_ = line.color_;
 		dc->UpdateSubresource(constantBuffer_.Get(), 0, 0, &cb, 0, 0);
 
 		dc->Draw(2, 0);

@@ -82,7 +82,7 @@ public:
 
 
 	// --- 線分の描画 ---
-	void DrawLine(const Vector3& src, const Vector3& dst);
+	void DrawLine(const Vector3& src, const Vector3& dst, const Vector4& color);
 
 
 	// --- 描画 ---
@@ -177,6 +177,7 @@ private:
 	{
 		Vector3 src_;
 		Vector3 dst_;
+		Vector4 color_;
 	};
 	std::list<Line> lines_;									// オブジェクトのリスト
 	Microsoft::WRL::ComPtr<ID3D11Buffer> lineVertexBuffer_;	// 頂点バッファ
