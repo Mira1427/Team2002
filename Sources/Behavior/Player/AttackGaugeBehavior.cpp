@@ -93,8 +93,7 @@ void AttackGaugeBarBehavior::Execute(GameObject* obj, float elapsedTime)
 
 	{
 		obj->transform_->position_ = obj->parent_->transform_->position_;
-		obj->transform_->position_.x = 68.0f/*Offset*/;
-		obj->transform_->scaling_ *= 0.67f;
+		obj->transform_->position_.x = 110.0f/*Offset*/;
 	}
 
 		obj->state_++;

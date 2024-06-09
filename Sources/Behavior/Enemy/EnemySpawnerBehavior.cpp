@@ -18,6 +18,9 @@ void EnemySpawnerBehavior::Execute(GameObject* obj, float elapsedTime)
 	if (EventManager::Instance().paused_)
 		return;
 
+	if (EventManager::Instance().button_.state_ == ButtonState::TITLE)
+		obj->Destroy();
+
 	EnemySpawnerComponent* spawner = obj->GetComponent<EnemySpawnerComponent>();	// スポナーのコンポーネントの取得
 
 	switch (obj->state_)
@@ -35,7 +38,7 @@ void EnemySpawnerBehavior::Execute(GameObject* obj, float elapsedTime)
 		// --- カットインの追加 ---
 		EventManager::Instance().AddWaveCutIn();
 
-		obj->state_++;
+		//obj->state_++;
 		break;
 
 	case 1:	// グレーの敵襲撃

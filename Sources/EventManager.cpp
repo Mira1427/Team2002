@@ -208,6 +208,8 @@ void EventManager::UpdateGameEvent()
 
 			overlay->name_ = u8"ポーズのオーバーレイ";
 			overlay->eraser_ = EraserManager::Instance().GetEraser("Pause");
+			overlay->layer_ = -5;
+
 
 			overlay->AddComponent<PrimitiveRendererComponent>();
 		}
@@ -217,15 +219,14 @@ void EventManager::UpdateGameEvent()
 		{
 			GameObject* obj = GameObjectManager::Instance().Add(
 				std::make_shared<GameObject>(),
-				Vector3(30.0f, 70.0f, 0.0f),
+				Vector3(70.0f, 70.0f, 0.0f),
 				NULL
 			);
 
 			obj->state_ = static_cast<int>(ButtonState::PAUSE);
 			obj->name_ = u8"ポーズの動画の枠";
 			obj->eraser_ = EraserManager::Instance().GetEraser("Pause");
-
-			obj->transform_->scaling_ *= 0.67f;
+			obj->layer_ = -5;
 
 			UIComponent* ui = obj->AddComponent<UIComponent>();
 
@@ -240,15 +241,14 @@ void EventManager::UpdateGameEvent()
 		{
 			GameObject* obj = GameObjectManager::Instance().Add(
 				std::make_shared<GameObject>(),
-				Vector3(41.0f, 500.5f, 0.0f),
+				Vector3(90.0f, 735.0f, 0.0f),
 				NULL
 			);
 
 			obj->state_ = static_cast<int>(ButtonState::PAUSE);
 			obj->name_ = u8"ポーズの説明の枠";
 			obj->eraser_ = EraserManager::Instance().GetEraser("Pause");
-
-			obj->transform_->scaling_ *= 0.67f;
+			obj->layer_ = -5;
 
 			UIComponent* ui = obj->AddComponent<UIComponent>();
 
@@ -263,15 +263,14 @@ void EventManager::UpdateGameEvent()
 		{
 			GameObject* obj = GameObjectManager::Instance().Add(
 				std::make_shared<GameObject>(),
-				Vector3(770.0f, 100.0f, 0.0f),
+				Vector3(1160.0f, 150.0f, 0.0f),
 				NULL
 			);
 
 			obj->state_ = static_cast<int>(ButtonState::PAUSE);
 			obj->name_ = u8"ポーズのテキスト";
 			obj->eraser_ = EraserManager::Instance().GetEraser("Pause");
-
-			obj->transform_->scaling_ *= 0.67f;
+			obj->layer_ = -5;
 
 			UIComponent* ui = obj->AddComponent<UIComponent>();
 			ui->eventID_ = static_cast<int>(PauseEvent::CONTINUE);
@@ -287,15 +286,14 @@ void EventManager::UpdateGameEvent()
 		{
 			GameObject* obj = GameObjectManager::Instance().Add(
 				std::make_shared<GameObject>(),
-				Vector3(790.0f, 325.0f, 0.0f),
+				Vector3(1190.0f, 495.0f, 0.0f),
 				BehaviorManager::Instance().GetBehavior("PauseButton")
 			);
 
 			obj->state_ = static_cast<int>(ButtonState::PAUSE);
 			obj->name_ = u8"ポーズの続けるボタン";
 			obj->eraser_ = EraserManager::Instance().GetEraser("Pause");
-
-			obj->transform_->scaling_ *= 0.67f;
+			obj->layer_ = -5;
 
 			UIComponent* ui = obj->AddComponent<UIComponent>();
 			ui->eventID_ = static_cast<int>(PauseEvent::CONTINUE);
@@ -311,15 +309,14 @@ void EventManager::UpdateGameEvent()
 		{
 			GameObject* obj = GameObjectManager::Instance().Add(
 				std::make_shared<GameObject>(),
-				Vector3(939.0f, 445.0f, 0.0f),
+				Vector3(1410.0f, 640.0f, 0.0f),
 				BehaviorManager::Instance().GetBehavior("PauseButton")
 			);
 
 			obj->state_ = static_cast<int>(ButtonState::PAUSE);
 			obj->name_ = u8"ポーズのタイトルボタン";
 			obj->eraser_ = EraserManager::Instance().GetEraser("Pause");
-
-			obj->transform_->scaling_ *= 0.67f;
+			obj->layer_ = -5;
 
 			UIComponent* ui = obj->AddComponent<UIComponent>();
 			ui->eventID_ = static_cast<int>(PauseEvent::END);
@@ -424,6 +421,7 @@ void EventManager::AddWaveCutIn()
 
 	obj->name_ = u8"ウェーブのカットイン";
 	obj->eraser_ = EraserManager::Instance().GetEraser("Scene");
+	obj->layer_ = -5;
 
 
 	int wave = enemySpawner_->state_ / 2;	// 現在のウェーブ
@@ -630,7 +628,7 @@ void EventManager::InitializeObjects()
 		controller->rotateSpeed_ = 45.0f;	// 回転速度
 		controller->range_ = 94.0f;			// 中心からの距離
 
-		controller->maxBulletValue_ = 180.0f;	// 弾薬の最大数
+		controller->maxBulletValue_ = 260.0f;	// 弾薬の最大数
 		controller->addBulletValue_ = 10.0f;	// 弾薬の増加量
 		controller->bulletCost_ = 10.0f;		// 弾薬のコスト
 
@@ -640,7 +638,7 @@ void EventManager::InitializeObjects()
 		controller->minAttackAmount_ = 1.0f;	// 最小攻撃力
 		controller->maxRangeAmount_ = 10.0f;	// 最大範囲
 		controller->minRangeAmount_ = 1.0f;		// 最小範囲
-		controller->maxAttackGaugeHeight_ = 330.0f;
+		controller->maxAttackGaugeHeight_ = 498.0f;
 
 		controller->laserAttackAmount_ = 5.0f;
 		controller->laserSize_ = { 10.0f, 10.0f, 200.0f };
@@ -687,4 +685,18 @@ void EventManager::InitializeObjects()
 	//	auto* renderer = obj->AddComponent<InstancedMeshComponent>();
 	//	renderer->model_ = ModelManager::Instance().LoadInstancedMesh(RootsLib::DX11::GetDevice(), "./Data/Model/building_ontx_ver2.fbx", 3, true);
 	//}
+
+
+	{
+		GameObject* obj = GameObjectManager::Instance().Add(
+			std::make_shared<GameObject>(),
+			Vector3(),
+			BehaviorManager::Instance().GetBehavior("Effect")
+		);
+
+		obj->name_ = u8"エフェクト";
+		obj->layer_ = -1;
+
+		obj->AddComponent<EffectComponent>();
+	}
 }

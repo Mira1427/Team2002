@@ -259,6 +259,7 @@
     <ClInclude Include="Library\Scene\SceneResult.h" />
     <ClInclude Include="Library\Scene\SceneTitle.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="Sources\Behavior\EffectBehavior.h" />
     <ClInclude Include="Sources\Behavior\Enemy\EnemyBehavior.h" />
     <ClInclude Include="Sources\Behavior\Enemy\EnemySpawnerBehavior.h" />
     <ClInclude Include="Sources\Behavior\GameCamera.h" />
@@ -271,6 +272,7 @@
     <ClInclude Include="Sources\Behavior\UI\ItemUIBehavior.h" />
     <ClInclude Include="Sources\Behavior\UI\LifeGaugeBehavior.h" />
     <ClInclude Include="Sources\Behavior\UI\PauseBehavior.h" />
+    <ClInclude Include="Sources\Behavior\UI\ResultUIBehavior.h" />
     <ClInclude Include="Sources\Behavior\UI\TitleUIBehavior.h" />
     <ClInclude Include="Sources\Behavior\UI\WaveUIBehavior.h" />
     <ClInclude Include="Sources\Component\Component.h" />
@@ -335,6 +337,7 @@
     <ClCompile Include="Library\Scene\SceneOver.cpp" />
     <ClCompile Include="Library\Scene\SceneResult.cpp" />
     <ClCompile Include="Library\Scene\SceneTitle.cpp" />
+    <ClCompile Include="Sources\Behavior\EffectBehavior.cpp" />
     <ClCompile Include="Sources\Behavior\Enemy\EnemyBehavior.cpp" />
     <ClCompile Include="Sources\Behavior\Enemy\EnemySpawnerBehavior.cpp" />
     <ClCompile Include="Sources\Behavior\GameCamera.cpp" />
@@ -347,6 +350,7 @@
     <ClCompile Include="Sources\Behavior\UI\ItemUIBehavior.cpp" />
     <ClCompile Include="Sources\Behavior\UI\LifeGaugeBehavior.cpp" />
     <ClCompile Include="Sources\Behavior\UI\PauseBehavior.cpp" />
+    <ClCompile Include="Sources\Behavior\UI\ResultUIBehavior.cpp" />
     <ClCompile Include="Sources\Behavior\UI\TitleUIBehavior.cpp" />
     <ClCompile Include="Sources\Behavior\UI\WaveUIBehavior.cpp" />
     <ClCompile Include="Sources\Component\Component.cpp" />

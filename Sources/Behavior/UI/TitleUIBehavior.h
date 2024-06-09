@@ -19,3 +19,10 @@ private:
 	void Update(GameObject* obj, SpriteRendererComponent* renderer, float elapsedTime) override;
 };
 
+
+class TitleLogoBehavior final : public Behavior
+{
+public:
+	void Execute(GameObject* obj, float elapsedTime) override;
+	void Hit(GameObject* src, GameObject* dst, float elapsedTime) override {}
+};

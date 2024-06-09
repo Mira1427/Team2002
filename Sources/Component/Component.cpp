@@ -2,6 +2,9 @@
 
 #include "../../External/ImGui/imgui.h"
 
+#include "../../Library/Graphics/EffectManager.h"
+#include "../../Library/Library/CameraManager.h"
+
 
 // --- プレイヤーコンポーネントのデバッグGui ---
 void PlayerComponent::UpdateDebugGui(float elapsedTime)
@@ -153,4 +156,12 @@ void CameraShakeComponent::UpdateDebugGui(float elapsedTime)
 
 		ImGui::TreePop();
 	}
+}
+
+
+
+void EffectComponent::Draw(ID3D11DeviceContext* dc)
+{
+	auto* camera = CameraManager::Instance().currentCamera_->GetComponent<CameraComponent>();
+	EffectManager::instance().render(camera->view_, camera->projection_);
 }

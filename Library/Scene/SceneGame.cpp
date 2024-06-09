@@ -16,6 +16,8 @@
 
 #include "../Audio/Audio.h"
 
+#include "../Math/Easing.h"
+
 #include "../Library/CameraManager.h"
 #include "../Library/Library.h"
 
@@ -54,7 +56,7 @@ void SceneGame::Initialize()
 
 
 	// --- 攻撃ゲージのコントローラー ---
-	GameObject* attackGaugeController = AddAttackGaugeController(controller, { 80.0f, 360.0f, 0.0f });
+	GameObject* attackGaugeController = AddAttackGaugeController(controller, { 123.76f, 540.0f, 0.0f });
 
 	// --- 攻撃ゲージのバー ---
 	AddAttackGaugeBar(attackGaugeController);
@@ -63,34 +65,36 @@ void SceneGame::Initialize()
 	{
 		GameObject* obj = GameObjectManager::Instance().Add(
 			std::make_shared<GameObject>(),
-			Vector3(160.0f, 50.0f, 0.0f),
+			Vector3(280.0f, 50.0f, 0.0f),
 			BehaviorManager::Instance().GetBehavior("WaveUI")
 		);
 
 		obj->name_ = u8"ウェーブのUI";
 		obj->eraser_ = EraserManager::Instance().GetEraser("Scene");
+		obj->layer_ = -5;
 
-		obj->transform_->scaling_ *= 0.8f;
 
 		SpriteRendererComponent* renderer = obj->AddComponent<SpriteRendererComponent>();
 		Texture* texture = TextureManager::Instance().GetTexture(L"./Data/Texture/UI/wave.png");
 		renderer->texture_ = texture;
 		renderer->texSize_ = { 330.0f, texture->height_ * 0.1f };
+
+		auto* ui = obj->AddComponent<UIComponent>();
+		ui->easeData_.function_ = RootsLib::Easing::GetFunction(EaseOutCubic);
 	}
 
 	// --- 色交換 ---
 	{
 		GameObject* obj = GameObjectManager::Instance().Add(
 			std::make_shared<GameObject>(),
-			Vector3(925.0f, 525.0f, 0.0f),
+			Vector3(1370.0f, 800.0f, 0.0f),
 			BehaviorManager::Instance().GetBehavior("ColorItemUI")
 		);
 
 		obj->name_ = u8"色交換UI";
 		obj->eraser_ = EraserManager::Instance().GetEraser("Scene");
 		obj->parent_ = controller;
-
-		obj->transform_->scaling_ *= 0.75f;
+		obj->layer_ = -5;
 
 		SpriteRendererComponent* renderer = obj->AddComponent<SpriteRendererComponent>();
 		Texture* texture = TextureManager::Instance().GetTexture(L"./Data/Texture/UI/itemicon_change.png");
@@ -102,15 +106,14 @@ void SceneGame::Initialize()
 	{
 		GameObject* obj = GameObjectManager::Instance().Add(
 			std::make_shared<GameObject>(),
-			Vector3(1010.0f, 600.0f, 0.0f),
+			Vector3(1500.0f, 900.0f, 0.0f),
 			BehaviorManager::Instance().GetBehavior("GaugeItemUI")
 		);
 
 		obj->name_ = u8"攻撃交換UI";
 		obj->eraser_ = EraserManager::Instance().GetEraser("Scene");
 		obj->parent_ = controller;
-
-		obj->transform_->scaling_ *= 0.75f;
+		obj->layer_ = -5;
 
 		SpriteRendererComponent* renderer = obj->AddComponent<SpriteRendererComponent>();
 		Texture* texture = TextureManager::Instance().GetTexture(L"./Data/Texture/UI/itemicon_P_R.png");
@@ -129,12 +132,12 @@ void SceneGame::Finalize()
 	EventManager::Instance().button_.state_ = ButtonState::OVER;
 
 	auto* controller = EventManager::Instance().controller_;
-	controller->state_--;
-	controller->child_[0]->state_--;
-	controller->child_[1]->state_--;
+	controller->state_++;
+	controller->child_[0]->state_++;
+	controller->child_[1]->state_++;
 
 	auto* camera = CameraManager::Instance().currentCamera_;
-	camera->state_--;
+	camera->state_ = 4;
 	camera->timer_ = 0.0f;
 	auto* cameraShake = CameraManager::Instance().currentCamera_->GetComponent<CameraShakeComponent>();
 	cameraShake->offset_ = Vector3::Zero_;
@@ -168,9 +171,6 @@ void SceneGame::Update(float elapsedTime)
 	{
 	}
 #endif
-
-	if (!EventManager::Instance().paused_)
-		EffectManager::instance().update(elapsedTime);
 
 	GameObjectManager::Instance().Update(elapsedTime);			// オブジェクトの更新
 	GameObjectManager::Instance().ShowDebugList();				// デバッグリストの表示
@@ -258,12 +258,6 @@ void SceneGame::Render(ID3D11DeviceContext* dc)
 		mesh.second->Draw(RootsLib::DX11::GetDeviceContext(), &nullPS, false);
 	}
 
-	// --- エフェクト描画 ---
-	{
-		CameraComponent* camera = CameraManager::Instance().currentCamera_->GetComponent<CameraComponent>();
-		EffectManager::instance().render(camera->view_, camera->projection_);
-	}
-
 	GameObjectManager::Instance().castShadow_ = true;
 	GameObjectManager::Instance().Draw(dc);
 
@@ -306,12 +300,6 @@ void SceneGame::Render(ID3D11DeviceContext* dc)
 		mesh.second->Draw(RootsLib::DX11::GetDeviceContext());
 	}
 
-	// --- エフェクト描画 ---
-	{
-		CameraComponent* camera = CameraManager::Instance().currentCamera_->GetComponent<CameraComponent>();
-		EffectManager::instance().render(camera->view_, camera->projection_);
-	}
-
 	// --- オブジェクトの描画 ---
 	GameObjectManager::Instance().castShadow_ = false;
 	GameObjectManager::Instance().Draw(dc);
@@ -334,6 +322,8 @@ void SceneGame::Render(ID3D11DeviceContext* dc)
 // --- ブルームの適用 ---
 void SceneGame::ApplyBloom(ID3D11DeviceContext* dc)
 {
+	Vector2 screenSize = { RootsLib::Window::GetWidth(), RootsLib::Window::GetHeight() };
+
 	// --- 輝度抽出 ---
 	Shader::GetFrameBuffer(FrameBufferLabel::LUMINANCE_EXTRACTION)->Clear(dc);
 	Shader::GetFrameBuffer(FrameBufferLabel::LUMINANCE_EXTRACTION)->Active(dc);
@@ -341,12 +331,12 @@ void SceneGame::ApplyBloom(ID3D11DeviceContext* dc)
 	Graphics::Instance().GetSpriteRenderer()->Draw(
 		dc,
 		Shader::GetFrameBuffer(FrameBufferLabel::SCENE)->shaderResourceViews_[0].GetAddressOf(),
-		1280.0f,
-		720.0f,
+		screenSize.x,
+		screenSize.y,
 		{ 0.0f, 0.0f, 0.0f },
 		{ 1.0f, 1.0f, 1.0f },
 		{ 0.0f, 0.0f },
-		{ 1280.0f, 720.0f },
+		screenSize,
 		Vector2::Zero_,
 		Vector3::Zero_,
 		Vector4::White_,
@@ -367,12 +357,12 @@ void SceneGame::ApplyBloom(ID3D11DeviceContext* dc)
 	Graphics::Instance().GetSpriteRenderer()->Draw(
 		dc,
 		Shader::GetFrameBuffer(FrameBufferLabel::LUMINANCE_EXTRACTION)->shaderResourceViews_[0].GetAddressOf(),
-		1280.0f,
-		720.0f,
+		screenSize.x,
+		screenSize.y,
 		{ 0.0f, 0.0f, 0.0f },
 		{ 1.0f, 1.0f, 1.0f },
 		{ 0.0f, 0.0f },
-		{ 1280.0f, 720.0f },
+		screenSize,
 		Vector2::Zero_,
 		Vector3::Zero_,
 		Vector4::White_,
@@ -392,12 +382,12 @@ void SceneGame::ApplyBloom(ID3D11DeviceContext* dc)
 	Graphics::Instance().GetSpriteRenderer()->Draw(
 		dc,
 		Shader::GetFrameBuffer(FrameBufferLabel::HORIZONTAL_BLUR)->shaderResourceViews_[0].GetAddressOf(),
-		1280.0f,
-		720.0f,
+		screenSize.x,
+		screenSize.y,
 		{ 0.0f, 0.0f, 0.0f },
 		{ 1.0f, 1.0f, 1.0f },
 		{ 0.0f, 0.0f },
-		{ 1280.0f, 720.0f },
+		screenSize,
 		Vector2::Zero_,
 		Vector3::Zero_,
 		Vector4::White_,
@@ -417,12 +407,12 @@ void SceneGame::ApplyBloom(ID3D11DeviceContext* dc)
 	Graphics::Instance().GetSpriteRenderer()->Draw(
 		dc,
 		Shader::GetFrameBuffer(FrameBufferLabel::HORIZONTAL_BLUR)->shaderResourceViews_[0].GetAddressOf(),
-		1280.0f,
-		720.0f,
+		screenSize.x,
+		screenSize.y,
 		{ 0.0f, 0.0f, 0.0f },
 		{ 1.0f, 1.0f, 1.0f },
 		{ 0.0f, 0.0f },
-		{ 1280.0f, 720.0f },
+		screenSize,
 		Vector2::Zero_,
 		Vector3::Zero_,
 		Vector4::White_,
@@ -448,12 +438,12 @@ void SceneGame::ApplyBloom(ID3D11DeviceContext* dc)
 	Graphics::Instance().GetSpriteRenderer()->Draw(
 		dc,
 		Shader::GetFrameBuffer(FrameBufferLabel::GAUSSIAN_BLUR00)->shaderResourceViews_[0].GetAddressOf(),
-		1280.0f,
-		720.0f,
+		screenSize.x,
+		screenSize.y,
 		{ 0.0f, 0.0f, 0.0f },
 		{ 1.0f, 1.0f, 1.0f },
 		{ 0.0f, 0.0f },
-		{ 1280.0f, 720.0f },
+		screenSize,
 		Vector2::Zero_,
 		Vector3::Zero_,
 		Vector4::White_,
@@ -474,12 +464,12 @@ void SceneGame::ApplyBloom(ID3D11DeviceContext* dc)
 	Graphics::Instance().GetSpriteRenderer()->Draw(
 		dc,
 		Shader::GetFrameBuffer(FrameBufferLabel::HORIZONTAL_BLUR)->shaderResourceViews_[0].GetAddressOf(),
-		1280.0f,
-		720.0f,
+		screenSize.x,
+		screenSize.y,
 		{ 0.0f, 0.0f, 0.0f },
 		{ 1.0f, 1.0f, 1.0f },
 		{ 0.0f, 0.0f },
-		{ 1280.0f, 720.0f },
+		screenSize,
 		Vector2::Zero_,
 		Vector3::Zero_,
 		Vector4::White_,
@@ -505,12 +495,12 @@ void SceneGame::ApplyBloom(ID3D11DeviceContext* dc)
 	Graphics::Instance().GetSpriteRenderer()->Draw(
 		dc,
 		Shader::GetFrameBuffer(FrameBufferLabel::GAUSSIAN_BLUR01)->shaderResourceViews_[0].GetAddressOf(),
-		1280.0f,
-		720.0f,
+		screenSize.x,
+		screenSize.y,
 		{ 0.0f, 0.0f, 0.0f },
 		{ 1.0f, 1.0f, 1.0f },
 		{ 0.0f, 0.0f },
-		{ 1280.0f, 720.0f },
+		screenSize,
 		Vector2::Zero_,
 		Vector3::Zero_,
 		Vector4::White_,
@@ -531,12 +521,12 @@ void SceneGame::ApplyBloom(ID3D11DeviceContext* dc)
 	Graphics::Instance().GetSpriteRenderer()->Draw(
 		dc,
 		Shader::GetFrameBuffer(FrameBufferLabel::HORIZONTAL_BLUR)->shaderResourceViews_[0].GetAddressOf(),
-		1280.0f,
-		720.0f,
+		screenSize.x,
+		screenSize.y,
 		{ 0.0f, 0.0f, 0.0f },
 		{ 1.0f, 1.0f, 1.0f },
 		{ 0.0f, 0.0f },
-		{ 1280.0f, 720.0f },
+		screenSize,
 		Vector2::Zero_,
 		Vector3::Zero_,
 		Vector4::White_,
@@ -562,12 +552,12 @@ void SceneGame::ApplyBloom(ID3D11DeviceContext* dc)
 	Graphics::Instance().GetSpriteRenderer()->Draw(
 		dc,
 		Shader::GetFrameBuffer(FrameBufferLabel::GAUSSIAN_BLUR02)->shaderResourceViews_[0].GetAddressOf(),
-		1280.0f,
-		720.0f,
+		screenSize.x,
+		screenSize.y,
 		{ 0.0f, 0.0f, 0.0f },
 		{ 1.0f, 1.0f, 1.0f },
 		{ 0.0f, 0.0f },
-		{ 1280.0f, 720.0f },
+		screenSize,
 		Vector2::Zero_,
 		Vector3::Zero_,
 		Vector4::White_,
@@ -588,12 +578,12 @@ void SceneGame::ApplyBloom(ID3D11DeviceContext* dc)
 	Graphics::Instance().GetSpriteRenderer()->Draw(
 		dc,
 		Shader::GetFrameBuffer(FrameBufferLabel::HORIZONTAL_BLUR)->shaderResourceViews_[0].GetAddressOf(),
-		1280.0f,
-		720.0f,
+		screenSize.x,
+		screenSize.y,
 		{ 0.0f, 0.0f, 0.0f },
 		{ 1.0f, 1.0f, 1.0f },
 		{ 0.0f, 0.0f },
-		{ 1280.0f, 720.0f },
+		screenSize,
 		Vector2::Zero_,
 		Vector3::Zero_,
 		Vector4::White_,
@@ -619,12 +609,12 @@ void SceneGame::ApplyBloom(ID3D11DeviceContext* dc)
 	Graphics::Instance().GetSpriteRenderer()->Draw(
 		dc,
 		srvs,
-		1280.0f,
-		720.0f,
+		screenSize.x,
+		screenSize.y,
 		{ 0.0f, 0.0f, 0.0f },
 		{ 1.0f, 1.0f, 1.0f },
 		{ 0.0f, 0.0f },
-		{ 1280.0f, 720.0f },
+		screenSize,
 		Vector2::Zero_,
 		Vector3::Zero_,
 		Vector4::White_,
@@ -753,15 +743,16 @@ void SceneGame::AddBulletGauge(GameObject* parent, int i)
 	{
 		GameObject* obj = GameObjectManager::Instance().Add(
 			std::make_shared<GameObject>(),
-			Vector3(i == 0 ? 300.0f : 980.0f,  i == 0 ? 475.0f : 255.0f, 0.0f),
+			Vector3(i == 0 ? 435.0f : 1485.0f,  i == 0 ? 665.0f : 360.0f, 0.0f),
 			NULL
 		);
 
 		obj->name_ = u8"弾薬ゲージ背景" + std::to_string(i);
 		obj->parent_ = parent;
 		obj->eraser_ = EraserManager::Instance().GetEraser("Scene");
+		obj->layer_ = -5;
 
-		obj->transform_->scaling_ *= 0.5f;
+		obj->transform_->scaling_ *= 0.7f;
 		obj->transform_->scaling_.x = 0.35f;
 
 		if (i == 0/*左なら*/)
@@ -777,7 +768,7 @@ void SceneGame::AddBulletGauge(GameObject* parent, int i)
 	{
 		GameObject* obj = GameObjectManager::Instance().Add(
 			std::make_shared<GameObject>(),
-			Vector3(i == 0 ? 258.0f : 995.0f, 455.0f, 0.0f),
+			Vector3(i == 0 ? 393.0f : 1500.0f, 647.0f, 0.0f),
 			BehaviorManager::Instance().GetBehavior("BulletGauge")
 		);
 
@@ -805,7 +796,6 @@ void SceneGame::AddEnemySpawner()
 
 	obj->name_ = u8"スポナー";
 	obj->type_ = ObjectType::SPAWNER;
-	obj->eraser_ = EraserManager::Instance().GetEraser("Scene");
 
 	SphereCollider* collider = obj->AddCollider<SphereCollider>();
 	collider->radius_ = 1.0f;
@@ -856,9 +846,9 @@ void SceneGame::AddLifeGauge()
 			gaugeBack->state_ = static_cast<int>(i);
 			gaugeBack->name_ = u8"ライフゲージの背景" + std::to_string(i);
 			gaugeBack->eraser_ = EraserManager::Instance().GetEraser("Scene");
+			gaugeBack->layer_ = -5;
 
-			gaugeBack->transform_->position_ = { 1120.0f, (RootsLib::Window::GetHeight() / 4.0f) * i, 0.0f };
-			gaugeBack->transform_->scaling_ *= 0.695f;
+			gaugeBack->transform_->position_ = { 1682.0f, (RootsLib::Window::GetHeight() / 4.0f) * i, 0.0f };
 
 			SpriteRendererComponent* renderer = gaugeBack->AddComponent<SpriteRendererComponent>();
 			Texture* texture = TextureManager::Instance().GetTexture(L"./Data/Texture/UI/HP_base.png");
@@ -878,8 +868,7 @@ void SceneGame::AddLifeGauge()
 			lifeGauge->name_ = u8"ライフゲージ" + std::to_string(i);
 			lifeGauge->eraser_ = EraserManager::Instance().GetEraser("Scene");
 			lifeGauge->parent_ = gaugeBack;
-
-			lifeGauge->transform_->scaling_ *= 0.69f;
+			lifeGauge->layer_ = -5;
 
 			SpriteRendererComponent* renderer = lifeGauge->AddComponent<SpriteRendererComponent>();
 			Texture* texture = TextureManager::Instance().GetTexture(L"./Data/Texture/UI/HP_contents.png");
@@ -903,8 +892,6 @@ GameObject* SceneGame::AddAttackGaugeController(GameObject* parent, const Vector
 	attackGaugeController->name_ = u8"攻撃ゲージのコントローラー";
 	attackGaugeController->eraser_ = EraserManager::Instance().GetEraser("Scene");
 	attackGaugeController->parent_ = parent;
-
-	attackGaugeController->transform_->scaling_ *= 0.67f;
 
 	SpriteRendererComponent* renderer = attackGaugeController->AddComponent<SpriteRendererComponent>();
 	Texture* texture = TextureManager::Instance().GetTexture(L"./Data/Texture/UI/Gage.png");
@@ -969,10 +956,13 @@ void SceneGame::AddAttackGaugeBar(GameObject* parent)
 	attackGaugeBar->name_ = u8"攻撃ゲージのバー";
 	attackGaugeBar->parent_ = parent;
 	attackGaugeBar->eraser_ = EraserManager::Instance().GetEraser("Scene");
+	attackGaugeBar->layer_ = -5;
+
 
 	SpriteRendererComponent* renderer = attackGaugeBar->AddComponent<SpriteRendererComponent>();
 	Texture* texture = TextureManager::Instance().GetTexture(L"./Data/Texture/UI/Gage_bar.png");
 	renderer->texture_ = texture;
 	renderer->texSize_ = { texture->width_, texture->height_ };
 	renderer->center_ = renderer->texSize_ * 0.5f;
+	renderer->center_.y = 5.0f;
 }

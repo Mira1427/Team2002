@@ -55,7 +55,7 @@ void Graphics::Initialize(
 		swapChainDesc.OutputWindow = hwnd;								// 描画されるウィンドウのハンドル
 		swapChainDesc.SampleDesc.Count = 1;								// マルチサンプリングのサンプル数
 		swapChainDesc.SampleDesc.Quality = 0;							// マルチサンプリングの品質
-		swapChainDesc.Windowed = !fullScreen;							// ウィンドウモードかどうか
+		swapChainDesc.Windowed = true;									// ウィンドウモードかどうか
 
 		hr = D3D11CreateDeviceAndSwapChain(
 #if 0
@@ -78,6 +78,13 @@ void Graphics::Initialize(
 		);
 
 		_ASSERT_EXPR(SUCCEEDED(hr), hrTrace(hr));
+
+
+		if(fullScreen)
+		{
+			hr = swapChain_->SetFullscreenState(TRUE, 0);
+			_ASSERT_EXPR(SUCCEEDED(hr), hrTrace(hr));
+		}
 	}
 
 

@@ -19,14 +19,19 @@
 #include "../../Sources/Behavior/UI/WaveUIBehavior.h"
 #include "../../Sources/Behavior/UI/ItemUIBehavior.h"
 #include "../../Sources/Behavior/UI/TitleUIBehavior.h"
+#include "../../Sources/Behavior/UI/ResultUIBehavior.h"
 
 #include "../../Sources/Behavior/GameCamera.h"
+
+#include "../../Sources/Behavior/EffectBehavior.h"
 
 
 BehaviorManager::BehaviorManager()
 {
 	behaviors_.insert(std::make_pair("DebugCamera",			std::make_shared<DebugCameraBehavior>()));
 	behaviors_.insert(std::make_pair("GameCamera",			std::make_shared<GameCameraBehavior>()));
+
+	behaviors_.insert(std::make_pair("Effect",				std::make_shared<EffectBehavior>()));
 
 	behaviors_.insert(std::make_pair("Particle",			std::make_shared<ParticleBehavior>()));
 
@@ -58,6 +63,9 @@ BehaviorManager::BehaviorManager()
 	// --- ƒ^ƒCƒgƒ‹‚Ìˆ— ---
 	behaviors_.insert(std::make_pair("TitleStartButton",	std::make_shared<TitleUIBehavior>()));
 	behaviors_.insert(std::make_pair("TitleTutorialButton",	std::make_shared<TutorialButtonBehavior>()));
+	behaviors_.insert(std::make_pair("TitleLogo",			std::make_shared<TitleLogoBehavior>()));
+
+	behaviors_.insert(std::make_pair("ResultUI",			std::make_shared<ResultUIBehavior>()));
 
 }
 

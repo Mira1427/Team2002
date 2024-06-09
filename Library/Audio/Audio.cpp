@@ -309,11 +309,17 @@ void AudioManager::UpdateAllVolume()
 {
 	// --- ‰¹Šy‚Ì‰¹—Ê‚ğİ’è‚µ‚È‚¨‚· ---
 	for (auto& music : soundTrack_)
-		music->SetVolume(music->GetVolume(), masterVolume_ * musicMasterVolume_);
+	{
+		if (music)
+			music->SetVolume(music->GetVolume(), masterVolume_ * musicMasterVolume_);
+	}
 
 	// --- Œø‰Ê‰¹‚Ì‰¹—Ê‚àİ’è‚µ‚È‚¨‚· ---
 	for (auto& sound : soundEffects_)
-		sound->SetVolume(sound->GetVolume(), masterVolume_ * soundMasterVolume_);
+	{
+		if (sound)
+			sound->SetVolume(sound->GetVolume(), masterVolume_ * soundMasterVolume_);
+	}
 }
 
 // --- “Ç‚İ‚İ ---

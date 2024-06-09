@@ -343,6 +343,10 @@
       <Filter>Library\Scene</Filter>
     </ClInclude>
     <ClInclude Include="Sources\Behavior\UI\TitleUIBehavior.h" />
+    <ClInclude Include="Sources\Behavior\EffectBehavior.h">
+      <Filter>Sources\Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Behavior\UI\ResultUIBehavior.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="External\ImGui\imgui.cpp">
@@ -565,6 +569,10 @@
       <Filter>Library\Scene</Filter>
     </ClCompile>
     <ClCompile Include="Sources\Behavior\UI\TitleUIBehavior.cpp" />
+    <ClCompile Include="Sources\Behavior\EffectBehavior.cpp">
+      <Filter>Sources\Behavior</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Behavior\UI\ResultUIBehavior.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="HLSL\Primitive.hlsli">

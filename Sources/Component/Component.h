@@ -199,3 +199,15 @@ public:
 	Vector3 offset_;
 	Vector3 shakeIntensity_;
 };
+
+
+
+class EffectComponent final : public Component
+{
+public:
+	EffectComponent() {}
+
+
+	void Draw(ID3D11DeviceContext* dc) override;
+	void UpdateDebugGui(float elapsedTime) override {};
+};

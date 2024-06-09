@@ -10,6 +10,8 @@
 
 #include "../Input/InputManager.h"
 
+#include "../Math/Easing.h"
+
 #include "../Library/CameraManager.h"
 #include "../Library/Library.h"
 
@@ -24,6 +26,17 @@
 void SceneResult::Initialize()
 {
 	SetUpObjects();
+
+	auto* controller = EventManager::Instance().controller_;
+	controller->state_++;
+	controller->child_[0]->state_++;
+	controller->child_[1]->state_++;
+
+	auto* camera = CameraManager::Instance().currentCamera_;
+	camera->state_ = 4;
+	camera->timer_ = 0.0f;
+	auto* cameraShake = CameraManager::Instance().currentCamera_->GetComponent<CameraShakeComponent>();
+	cameraShake->offset_ = Vector3::Zero_;
 }
 
 void SceneResult::Finalize()
@@ -197,19 +210,22 @@ void SceneResult::Render(ID3D11DeviceContext* dc)
 
 
 void SceneResult::ApplyBloom(ID3D11DeviceContext* dc)
-{	// --- 輝度抽出 ---
+{
+	Vector2 screenSize = { RootsLib::Window::GetWidth(), RootsLib::Window::GetHeight() };
+
+	// --- 輝度抽出 ---
 	Shader::GetFrameBuffer(FrameBufferLabel::LUMINANCE_EXTRACTION)->Clear(dc);
 	Shader::GetFrameBuffer(FrameBufferLabel::LUMINANCE_EXTRACTION)->Active(dc);
 
 	Graphics::Instance().GetSpriteRenderer()->Draw(
 		dc,
 		Shader::GetFrameBuffer(FrameBufferLabel::SCENE)->shaderResourceViews_[0].GetAddressOf(),
-		1280.0f,
-		720.0f,
+		screenSize.x,
+		screenSize.y,
 		{ 0.0f, 0.0f, 0.0f },
 		{ 1.0f, 1.0f, 1.0f },
 		{ 0.0f, 0.0f },
-		{ 1280.0f, 720.0f },
+		screenSize,
 		Vector2::Zero_,
 		Vector3::Zero_,
 		Vector4::White_,
@@ -230,12 +246,12 @@ void SceneResult::ApplyBloom(ID3D11DeviceContext* dc)
 	Graphics::Instance().GetSpriteRenderer()->Draw(
 		dc,
 		Shader::GetFrameBuffer(FrameBufferLabel::LUMINANCE_EXTRACTION)->shaderResourceViews_[0].GetAddressOf(),
-		1280.0f,
-		720.0f,
+		screenSize.x,
+		screenSize.y,
 		{ 0.0f, 0.0f, 0.0f },
 		{ 1.0f, 1.0f, 1.0f },
 		{ 0.0f, 0.0f },
-		{ 1280.0f, 720.0f },
+		screenSize,
 		Vector2::Zero_,
 		Vector3::Zero_,
 		Vector4::White_,
@@ -255,12 +271,12 @@ void SceneResult::ApplyBloom(ID3D11DeviceContext* dc)
 	Graphics::Instance().GetSpriteRenderer()->Draw(
 		dc,
 		Shader::GetFrameBuffer(FrameBufferLabel::HORIZONTAL_BLUR)->shaderResourceViews_[0].GetAddressOf(),
-		1280.0f,
-		720.0f,
+		screenSize.x,
+		screenSize.y,
 		{ 0.0f, 0.0f, 0.0f },
 		{ 1.0f, 1.0f, 1.0f },
 		{ 0.0f, 0.0f },
-		{ 1280.0f, 720.0f },
+		screenSize,
 		Vector2::Zero_,
 		Vector3::Zero_,
 		Vector4::White_,
@@ -280,12 +296,12 @@ void SceneResult::ApplyBloom(ID3D11DeviceContext* dc)
 	Graphics::Instance().GetSpriteRenderer()->Draw(
 		dc,
 		Shader::GetFrameBuffer(FrameBufferLabel::HORIZONTAL_BLUR)->shaderResourceViews_[0].GetAddressOf(),
-		1280.0f,
-		720.0f,
+		screenSize.x,
+		screenSize.y,
 		{ 0.0f, 0.0f, 0.0f },
 		{ 1.0f, 1.0f, 1.0f },
 		{ 0.0f, 0.0f },
-		{ 1280.0f, 720.0f },
+		screenSize,
 		Vector2::Zero_,
 		Vector3::Zero_,
 		Vector4::White_,
@@ -311,12 +327,12 @@ void SceneResult::ApplyBloom(ID3D11DeviceContext* dc)
 	Graphics::Instance().GetSpriteRenderer()->Draw(
 		dc,
 		Shader::GetFrameBuffer(FrameBufferLabel::GAUSSIAN_BLUR00)->shaderResourceViews_[0].GetAddressOf(),
-		1280.0f,
-		720.0f,
+		screenSize.x,
+		screenSize.y,
 		{ 0.0f, 0.0f, 0.0f },
 		{ 1.0f, 1.0f, 1.0f },
 		{ 0.0f, 0.0f },
-		{ 1280.0f, 720.0f },
+		screenSize,
 		Vector2::Zero_,
 		Vector3::Zero_,
 		Vector4::White_,
@@ -337,12 +353,12 @@ void SceneResult::ApplyBloom(ID3D11DeviceContext* dc)
 	Graphics::Instance().GetSpriteRenderer()->Draw(
 		dc,
 		Shader::GetFrameBuffer(FrameBufferLabel::HORIZONTAL_BLUR)->shaderResourceViews_[0].GetAddressOf(),
-		1280.0f,
-		720.0f,
+		screenSize.x,
+		screenSize.y,
 		{ 0.0f, 0.0f, 0.0f },
 		{ 1.0f, 1.0f, 1.0f },
 		{ 0.0f, 0.0f },
-		{ 1280.0f, 720.0f },
+		screenSize,
 		Vector2::Zero_,
 		Vector3::Zero_,
 		Vector4::White_,
@@ -368,12 +384,12 @@ void SceneResult::ApplyBloom(ID3D11DeviceContext* dc)
 	Graphics::Instance().GetSpriteRenderer()->Draw(
 		dc,
 		Shader::GetFrameBuffer(FrameBufferLabel::GAUSSIAN_BLUR01)->shaderResourceViews_[0].GetAddressOf(),
-		1280.0f,
-		720.0f,
+		screenSize.x,
+		screenSize.y,
 		{ 0.0f, 0.0f, 0.0f },
 		{ 1.0f, 1.0f, 1.0f },
 		{ 0.0f, 0.0f },
-		{ 1280.0f, 720.0f },
+		screenSize,
 		Vector2::Zero_,
 		Vector3::Zero_,
 		Vector4::White_,
@@ -394,12 +410,12 @@ void SceneResult::ApplyBloom(ID3D11DeviceContext* dc)
 	Graphics::Instance().GetSpriteRenderer()->Draw(
 		dc,
 		Shader::GetFrameBuffer(FrameBufferLabel::HORIZONTAL_BLUR)->shaderResourceViews_[0].GetAddressOf(),
-		1280.0f,
-		720.0f,
+		screenSize.x,
+		screenSize.y,
 		{ 0.0f, 0.0f, 0.0f },
 		{ 1.0f, 1.0f, 1.0f },
 		{ 0.0f, 0.0f },
-		{ 1280.0f, 720.0f },
+		screenSize,
 		Vector2::Zero_,
 		Vector3::Zero_,
 		Vector4::White_,
@@ -425,12 +441,12 @@ void SceneResult::ApplyBloom(ID3D11DeviceContext* dc)
 	Graphics::Instance().GetSpriteRenderer()->Draw(
 		dc,
 		Shader::GetFrameBuffer(FrameBufferLabel::GAUSSIAN_BLUR02)->shaderResourceViews_[0].GetAddressOf(),
-		1280.0f,
-		720.0f,
+		screenSize.x,
+		screenSize.y,
 		{ 0.0f, 0.0f, 0.0f },
 		{ 1.0f, 1.0f, 1.0f },
 		{ 0.0f, 0.0f },
-		{ 1280.0f, 720.0f },
+		screenSize,
 		Vector2::Zero_,
 		Vector3::Zero_,
 		Vector4::White_,
@@ -451,12 +467,12 @@ void SceneResult::ApplyBloom(ID3D11DeviceContext* dc)
 	Graphics::Instance().GetSpriteRenderer()->Draw(
 		dc,
 		Shader::GetFrameBuffer(FrameBufferLabel::HORIZONTAL_BLUR)->shaderResourceViews_[0].GetAddressOf(),
-		1280.0f,
-		720.0f,
+		screenSize.x,
+		screenSize.y,
 		{ 0.0f, 0.0f, 0.0f },
 		{ 1.0f, 1.0f, 1.0f },
 		{ 0.0f, 0.0f },
-		{ 1280.0f, 720.0f },
+		screenSize,
 		Vector2::Zero_,
 		Vector3::Zero_,
 		Vector4::White_,
@@ -482,12 +498,12 @@ void SceneResult::ApplyBloom(ID3D11DeviceContext* dc)
 	Graphics::Instance().GetSpriteRenderer()->Draw(
 		dc,
 		srvs,
-		1280.0f,
-		720.0f,
+		screenSize.x,
+		screenSize.y,
 		{ 0.0f, 0.0f, 0.0f },
 		{ 1.0f, 1.0f, 1.0f },
 		{ 0.0f, 0.0f },
-		{ 1280.0f, 720.0f },
+		screenSize,
 		Vector2::Zero_,
 		Vector3::Zero_,
 		Vector4::White_,
@@ -498,7 +514,6 @@ void SceneResult::ApplyBloom(ID3D11DeviceContext* dc)
 		0U,
 		5U
 	);
-
 }
 
 
@@ -508,56 +523,133 @@ void SceneResult::SetUpObjects()
 		GameObject* obj = GameObjectManager::Instance().Add(
 			std::make_shared<GameObject>(),
 			Vector3(30.0f, 30.0f, 0.0f),
-			NULL
+			BehaviorManager::Instance().GetBehavior("ResultUI")
 		);
 
 		obj->name_ = u8"リザルトのテキスト";
 		obj->eraser_ = EraserManager::Instance().GetEraser("Scene");
-
-		obj->transform_->scaling_ *= 0.67f;
+		obj->layer_ = -5;
 
 		auto* renderer = obj->AddComponent<SpriteRendererComponent>();
 		Texture* texture = TextureManager::Instance().GetTexture(L"./Data/Texture/UI/result.png");
 		renderer->texture_ = texture;
 		renderer->texSize_ = { texture->width_, texture->height_ };
+
+		auto* ui = obj->AddComponent<UIComponent>();
+		ui->easeData_.function_ = RootsLib::Easing::GetFunction(EaseOutCubic);
+		ui->basePosition_ = { 30.0f, 1110.0f, 0.0f };
+		ui->easeScale_ = -1080.0f;
 	}
 
 
 	{
 		GameObject* obj = GameObjectManager::Instance().Add(
 			std::make_shared<GameObject>(),
-			Vector3(234.0f, 162.0f, 0.0f),
-			NULL
+			Vector3(225.0f, 225.0f, 0.0f),
+			BehaviorManager::Instance().GetBehavior("ResultUI")
 		);
 
 		obj->name_ = u8"フレーム";
 		obj->eraser_ = EraserManager::Instance().GetEraser("Scene");
-
-		obj->transform_->scaling_ *= 0.67f;
-
+		obj->layer_ = -5;
+		obj->timer_ = 1.0f;
+\
 		auto* renderer = obj->AddComponent<SpriteRendererComponent>();
 		Texture* texture = TextureManager::Instance().GetTexture(L"./Data/Texture/UI/resultframe.png");
 		renderer->texture_ = texture;
 		renderer->texSize_ = { texture->width_, texture->height_ };
+
+		auto* ui = obj->AddComponent<UIComponent>();
+		ui->easeData_.function_ = RootsLib::Easing::GetFunction(EaseOutCubic);
+		ui->basePosition_ = { 225.0f, 1305.0f, 0.0f };
+		obj->transform_->position_ = ui->basePosition_;
+		ui->easeScale_ = -1080.0f;
 	}
 
 
 	{
 		GameObject* obj = GameObjectManager::Instance().Add(
 			std::make_shared<GameObject>(),
-			Vector3(429.0f, 584.0f, 0.0f),
-			NULL
+			Vector3(300.0f, 350.0f, 0.0f),
+			BehaviorManager::Instance().GetBehavior("ResultUI")
+		);
+
+		obj->name_ = u8"スコア";
+		obj->eraser_ = EraserManager::Instance().GetEraser("Scene");
+		obj->layer_ = -5;
+		obj->timer_ = 2.0f;
+\
+		auto* renderer = obj->AddComponent<SpriteRendererComponent>();
+		Texture* texture = TextureManager::Instance().GetTexture(L"./Data/Texture/UI/score.png");
+		renderer->texture_ = texture;
+		renderer->texSize_ = { texture->width_, texture->height_ };
+
+		auto* ui = obj->AddComponent<UIComponent>();
+		ui->easeData_.function_ = RootsLib::Easing::GetFunction(EaseOutCubic);
+		ui->basePosition_ = { 300.0f, 350.0f + 1080.0f, 0.0f };
+		obj->transform_->position_ = ui->basePosition_;
+		ui->easeScale_ = -1080.0f;
+	}
+
+
+	{
+		GameObject* obj = GameObjectManager::Instance().Add(
+			std::make_shared<GameObject>(),
+			Vector3(790.0f, 350.0f, 0.0f),
+			BehaviorManager::Instance().GetBehavior("ResultUI")
+		);
+
+		obj->name_ = u8"ウェーブ";
+		obj->eraser_ = EraserManager::Instance().GetEraser("Scene");
+		obj->layer_ = -5;
+		obj->timer_ = 2.5f;
+
+		obj->transform_->scaling_ *= 1.25f;
+
+		auto* renderer = obj->AddComponent<SpriteRendererComponent>();
+		Texture* texture = TextureManager::Instance().GetTexture(L"./Data/Texture/UI/wave.png");
+		renderer->texture_ = texture;
+		renderer->texSize_ = { texture->width_, texture->height_ / 10.0f };
+
+		// --- 描画位置とサイズの設定 ---
+		int wave = EventManager::Instance().enemySpawner_->state_ / 2;	// 現在のウェーブ
+		if (wave > 10)
+			return;
+
+		renderer->texSize_.x = (wave != 10) ? 330.0f : texture->width_;
+		renderer->texPos_.y = renderer->texSize_.y * (wave - 1);
+
+		auto* ui = obj->AddComponent<UIComponent>();
+		ui->easeData_.function_ = RootsLib::Easing::GetFunction(EaseOutCubic);
+		ui->basePosition_ = { 790.0f, 350.0f + 1080.0f, 0.0f };
+		obj->transform_->position_ = ui->basePosition_;
+		ui->easeScale_ = -1080.0f;
+
+	}
+
+
+	{
+		GameObject* obj = GameObjectManager::Instance().Add(
+			std::make_shared<GameObject>(),
+			Vector3(546.0f, 859.0f, 0.0f),
+			BehaviorManager::Instance().GetBehavior("ResultUI")
 		);
 
 		obj->name_ = u8"タイトルに戻る";
 		obj->eraser_ = EraserManager::Instance().GetEraser("Scene");
-
-		obj->transform_->scaling_ *= 0.67f;
+		obj->layer_ = -5;
+		obj->timer_ = 6.0f;
 
 		auto* renderer = obj->AddComponent<SpriteRendererComponent>();
 		Texture* texture = TextureManager::Instance().GetTexture(L"./Data/Texture/UI/backtitle.png");
 		renderer->texture_ = texture;
 		renderer->texSize_ = { texture->width_, texture->height_ };
+
+		auto* ui = obj->AddComponent<UIComponent>();
+		ui->easeData_.function_ = RootsLib::Easing::GetFunction(EaseOutCubic);
+		ui->basePosition_ = { 546.0f, 859.0f + 1080.0f, 0.0f };
+		obj->transform_->position_ = ui->basePosition_;
+		ui->easeScale_ = -1080.0f;
 	}
 
 
@@ -567,20 +659,26 @@ void SceneResult::SetUpObjects()
 		GameObject* gaugeBack = GameObjectManager::Instance().Add(
 			std::make_shared<GameObject>(),
 			Vector3(),
-			NULL
+			BehaviorManager::Instance().GetBehavior("ResultUI")
 		);
 		{
-			gaugeBack->state_ = static_cast<int>(i);
 			gaugeBack->name_ = u8"ライフゲージの背景" + std::to_string(i);
 			gaugeBack->eraser_ = EraserManager::Instance().GetEraser("Scene");
+			gaugeBack->layer_ = -5;
+			gaugeBack->timer_ = 3.5f + i * 0.5f;
 
-			gaugeBack->transform_->position_ = { 290.0f + i * 210.0f, 360.0f, 0.0f };
-			gaugeBack->transform_->scaling_ *= 0.695f;
+			gaugeBack->transform_->position_ = { 300.0f + i * 320.0f, 530.0f, 0.0f };
 
 			SpriteRendererComponent* renderer = gaugeBack->AddComponent<SpriteRendererComponent>();
 			Texture* texture = TextureManager::Instance().GetTexture(L"./Data/Texture/UI/HP_base.png");
 			renderer->texture_ = texture;
 			renderer->texSize_ = { texture->width_, texture->height_ };
+
+			auto* ui = gaugeBack->AddComponent<UIComponent>();
+			ui->easeData_.function_ = RootsLib::Easing::GetFunction(EaseOutCubic);
+			ui->basePosition_ = { 300.0f + i * 320.0f, 530.0f + 1080.0f, 0.0f };
+			gaugeBack->transform_->position_ = ui->basePosition_;
+			ui->easeScale_ = -1080.0f;
 		}
 
 
@@ -595,8 +693,8 @@ void SceneResult::SetUpObjects()
 			lifeGauge->name_ = u8"ライフゲージ" + std::to_string(i);
 			lifeGauge->eraser_ = EraserManager::Instance().GetEraser("Scene");
 			lifeGauge->parent_ = gaugeBack;
+			lifeGauge->layer_ = -5;
 
-			lifeGauge->transform_->scaling_ *= 0.69f;
 
 			SpriteRendererComponent* renderer = lifeGauge->AddComponent<SpriteRendererComponent>();
 			Texture* texture = TextureManager::Instance().GetTexture(L"./Data/Texture/UI/HP_contents.png");

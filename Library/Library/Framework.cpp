@@ -114,14 +114,15 @@ bool Framework::Initialize()
 
 
 	// --- フレームバッファの作成 ---
-	Shader::CreateFrameBuffer(RootsLib::DX11::GetDevice(), 1280, 720, DXGI_FORMAT_R32G32B32A32_FLOAT, static_cast<size_t>(FrameBufferLabel::SCENE));
-	Shader::CreateFrameBuffer(RootsLib::DX11::GetDevice(), 640, 720, DXGI_FORMAT_R32G32B32A32_FLOAT, static_cast<size_t>(FrameBufferLabel::HORIZONTAL_BLUR));
-	Shader::CreateFrameBuffer(RootsLib::DX11::GetDevice(), 1280, 360, DXGI_FORMAT_R32G32B32A32_FLOAT, static_cast<size_t>(FrameBufferLabel::VERTICAL_BLUR));
-	Shader::CreateFrameBuffer(RootsLib::DX11::GetDevice(), 1280, 720, DXGI_FORMAT_R32G32B32A32_FLOAT, static_cast<size_t>(FrameBufferLabel::LUMINANCE_EXTRACTION));
-	Shader::CreateFrameBuffer(RootsLib::DX11::GetDevice(), 640, 360, DXGI_FORMAT_R32G32B32A32_FLOAT, static_cast<size_t>(FrameBufferLabel::GAUSSIAN_BLUR00));
-	Shader::CreateFrameBuffer(RootsLib::DX11::GetDevice(), 320, 180, DXGI_FORMAT_R32G32B32A32_FLOAT, static_cast<size_t>(FrameBufferLabel::GAUSSIAN_BLUR01));
-	Shader::CreateFrameBuffer(RootsLib::DX11::GetDevice(), 160, 90, DXGI_FORMAT_R32G32B32A32_FLOAT, static_cast<size_t>(FrameBufferLabel::GAUSSIAN_BLUR02));
-	Shader::CreateFrameBuffer(RootsLib::DX11::GetDevice(), 80, 45, DXGI_FORMAT_R32G32B32A32_FLOAT, static_cast<size_t>(FrameBufferLabel::GAUSSIAN_BLUR03));
+	uint32_t screenWidth = static_cast<uint32_t>(RootsLib::Window::GetWidth()), screenHeight = static_cast<uint32_t>(RootsLib::Window::GetHeight());
+	Shader::CreateFrameBuffer(RootsLib::DX11::GetDevice(), screenWidth,		 screenHeight,		DXGI_FORMAT_R32G32B32A32_FLOAT, static_cast<size_t>(FrameBufferLabel::SCENE));
+	Shader::CreateFrameBuffer(RootsLib::DX11::GetDevice(), screenWidth / 2,  screenHeight,		DXGI_FORMAT_R32G32B32A32_FLOAT, static_cast<size_t>(FrameBufferLabel::HORIZONTAL_BLUR));
+	Shader::CreateFrameBuffer(RootsLib::DX11::GetDevice(), screenWidth,		 screenHeight / 2,	DXGI_FORMAT_R32G32B32A32_FLOAT, static_cast<size_t>(FrameBufferLabel::VERTICAL_BLUR));
+	Shader::CreateFrameBuffer(RootsLib::DX11::GetDevice(), screenWidth,		 screenHeight,		DXGI_FORMAT_R32G32B32A32_FLOAT, static_cast<size_t>(FrameBufferLabel::LUMINANCE_EXTRACTION));
+	Shader::CreateFrameBuffer(RootsLib::DX11::GetDevice(), screenWidth / 2,  screenHeight / 2,	DXGI_FORMAT_R32G32B32A32_FLOAT, static_cast<size_t>(FrameBufferLabel::GAUSSIAN_BLUR00));
+	Shader::CreateFrameBuffer(RootsLib::DX11::GetDevice(), screenWidth / 4,  screenHeight / 4,	DXGI_FORMAT_R32G32B32A32_FLOAT, static_cast<size_t>(FrameBufferLabel::GAUSSIAN_BLUR01));
+	Shader::CreateFrameBuffer(RootsLib::DX11::GetDevice(), screenWidth / 8,  screenHeight / 8,	DXGI_FORMAT_R32G32B32A32_FLOAT, static_cast<size_t>(FrameBufferLabel::GAUSSIAN_BLUR02));
+	Shader::CreateFrameBuffer(RootsLib::DX11::GetDevice(), screenWidth / 16, screenHeight / 16, DXGI_FORMAT_R32G32B32A32_FLOAT, static_cast<size_t>(FrameBufferLabel::GAUSSIAN_BLUR03));
 
 	// --- ポストエフェクト用のピクセルシェーダーの作成 ---
 	Shader::CreatePostEffectShaders(RootsLib::DX11::GetDevice());
@@ -154,7 +155,7 @@ bool Framework::Initialize()
 	{
 		GameObject* obj = GameObjectManager::Instance().Add(
 			std::make_shared<GameObject>(),
-			Vector3(640.0f, 600.0f, 0.0f)
+			Vector3(960.0f, 750.0f, 0.0f)
 		);
 
 		obj->name_ = u8"PushEnter";
@@ -185,6 +186,9 @@ void Framework::Finalize()
 	RootsLib::ImGui::Finalize();
 
 	VideoTexture::DestroyAPI();
+
+	HRESULT hr = RootsLib::DX11::GetSwapChain()->SetFullscreenState(FALSE, 0);
+	_ASSERT_EXPR(SUCCEEDED(hr), hrTrace(hr));
 }
 
 

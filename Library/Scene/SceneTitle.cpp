@@ -30,7 +30,18 @@
 void SceneTitle::Initialize()
 {
 	if (EventManager::Instance().button_.state_ != ButtonState::SCENE_BEGIN)
+	{
 		EventManager::Instance().button_.state_ = ButtonState::TITLE;
+
+		auto* controller = EventManager::Instance().controller_;
+		controller->state_ = 1;
+		controller->child_[0]->state_ = 1;
+		controller->child_[1]->state_ = 1;
+
+		auto* camera = CameraManager::Instance().currentCamera_;
+		camera->state_ = 5;
+		camera->timer_ = 0.0f;
+	}
 
 	SetUpObjects();
 
@@ -44,7 +55,7 @@ void SceneTitle::Finalize()
 	controller->child_[0]->state_++;
 	controller->child_[1]->state_++;
 
-	CameraManager::Instance().currentCamera_->state_++;
+	CameraManager::Instance().currentCamera_->state_ = 2;
 	CameraManager::Instance().currentCamera_->GetComponent<CameraComponent>()->target_ = Vector3::Zero_;
 
 	AudioManager::instance().StopMusic();
@@ -220,13 +231,14 @@ void SceneTitle::SetUpObjects()
 	{
 		GameObject* startButton = GameObjectManager::Instance().Add(
 			std::make_shared<GameObject>(),
-			Vector3(1325.0f, 500.0f, 0.0f),
+			Vector3(1925.0f, 500.0f, 0.0f),
 			BehaviorManager::Instance().GetBehavior("TitleStartButton")
 		);
-		
-		startButton->name_ = u8"スタートボタン";
 
-		startButton->transform_->scaling_ *= 0.67f;
+		startButton->name_ = u8"スタートボタン";
+		startButton->layer_ = -5;
+
+		//startButton->transform_->scaling_ *= 0.67f;
 
 		SpriteRendererComponent* renderer = startButton->AddComponent<SpriteRendererComponent>();
 		Texture* texture = TextureManager::Instance().GetTexture(L"./Data/Texture/UI/gamestart.png");
@@ -235,20 +247,20 @@ void SceneTitle::SetUpObjects()
 
 		UIComponent* ui = startButton->AddComponent<UIComponent>();
 		ui->easeData_.function_ = RootsLib::Easing::GetFunction(EaseOutCubic);
-		ui->basePosition_ = { 1325.0f, 500.0f, 0.0f };
+		ui->basePosition_ = { 1925.0f, 650.0f, 0.0f };
 	}
 
 
 	{
 		GameObject* tutorial = GameObjectManager::Instance().Add(
 			std::make_shared<GameObject>(),
-			Vector3(1370.0f, 630.0f, 0.0f),
+			Vector3(1970.0f, 630.0f, 0.0f),
 			BehaviorManager::Instance().GetBehavior("TitleTutorialButton")
 		);
-		
-		tutorial->name_ = u8"チュートリアルボタン";
 
-		tutorial->transform_->scaling_ *= 0.67f;
+		tutorial->name_ = u8"チュートリアルボタン";
+		tutorial->layer_ = -5;
+
 
 		SpriteRendererComponent* renderer = tutorial->AddComponent<SpriteRendererComponent>();
 		Texture* texture = TextureManager::Instance().GetTexture(L"./Data/Texture/UI/tutorial.png");
@@ -257,31 +269,37 @@ void SceneTitle::SetUpObjects()
 
 		UIComponent* ui = tutorial->AddComponent<UIComponent>();
 		ui->easeData_.function_ = RootsLib::Easing::GetFunction(EaseOutCubic);
-		ui->basePosition_ = { 1370.0f, 630.0f, 0.0f };
+		ui->basePosition_ = { 1970.0f, 830.0f, 0.0f };
 	}
 
 
 	{
 		GameObject* logo = GameObjectManager::Instance().Add(
 			std::make_shared<GameObject>(),
-			Vector3(50.0f, 50.0f, 0.0f)
+			Vector3(50.0f, 50.0f, 0.0f),
+			BehaviorManager::Instance().GetBehavior("TitleLogo")
 		);
-		
-		logo->name_ = u8"タイトルロゴ";
-		logo->eraser_ = EraserManager::Instance().GetEraser("Scene");
 
-		logo->transform_->scaling_ *= 0.7f;
+		logo->name_ = u8"タイトルロゴ";
+		logo->layer_ = -5;
+
 
 		SpriteRendererComponent* renderer = logo->AddComponent<SpriteRendererComponent>();
 		Texture* texture = TextureManager::Instance().GetTexture(L"./Data/Texture/UI/titlelogo.png");
 		renderer->texture_ = texture;
 		renderer->texSize_ = { texture->width_, texture->height_ };
+
+		UIComponent* ui = logo->AddComponent<UIComponent>();
+		ui->easeData_.function_ = RootsLib::Easing::GetFunction(EaseOutCubic);
 	}
+
 }
 
 
 void SceneTitle::ApplyBloom(ID3D11DeviceContext* dc)
 {	
+	Vector2 screenSize = { RootsLib::Window::GetWidth(), RootsLib::Window::GetHeight() };
+
 	// --- 輝度抽出 ---
 	Shader::GetFrameBuffer(FrameBufferLabel::LUMINANCE_EXTRACTION)->Clear(dc);
 	Shader::GetFrameBuffer(FrameBufferLabel::LUMINANCE_EXTRACTION)->Active(dc);
@@ -289,12 +307,12 @@ void SceneTitle::ApplyBloom(ID3D11DeviceContext* dc)
 	Graphics::Instance().GetSpriteRenderer()->Draw(
 		dc,
 		Shader::GetFrameBuffer(FrameBufferLabel::SCENE)->shaderResourceViews_[0].GetAddressOf(),
-		1280.0f,
-		720.0f,
+		screenSize.x,
+		screenSize.y,
 		{ 0.0f, 0.0f, 0.0f },
 		{ 1.0f, 1.0f, 1.0f },
 		{ 0.0f, 0.0f },
-		{ 1280.0f, 720.0f },
+		screenSize,
 		Vector2::Zero_,
 		Vector3::Zero_,
 		Vector4::White_,
@@ -315,12 +333,12 @@ void SceneTitle::ApplyBloom(ID3D11DeviceContext* dc)
 	Graphics::Instance().GetSpriteRenderer()->Draw(
 		dc,
 		Shader::GetFrameBuffer(FrameBufferLabel::LUMINANCE_EXTRACTION)->shaderResourceViews_[0].GetAddressOf(),
-		1280.0f,
-		720.0f,
+		screenSize.x,
+		screenSize.y,
 		{ 0.0f, 0.0f, 0.0f },
 		{ 1.0f, 1.0f, 1.0f },
 		{ 0.0f, 0.0f },
-		{ 1280.0f, 720.0f },
+		screenSize,
 		Vector2::Zero_,
 		Vector3::Zero_,
 		Vector4::White_,
@@ -340,12 +358,12 @@ void SceneTitle::ApplyBloom(ID3D11DeviceContext* dc)
 	Graphics::Instance().GetSpriteRenderer()->Draw(
 		dc,
 		Shader::GetFrameBuffer(FrameBufferLabel::HORIZONTAL_BLUR)->shaderResourceViews_[0].GetAddressOf(),
-		1280.0f,
-		720.0f,
+		screenSize.x,
+		screenSize.y,
 		{ 0.0f, 0.0f, 0.0f },
 		{ 1.0f, 1.0f, 1.0f },
 		{ 0.0f, 0.0f },
-		{ 1280.0f, 720.0f },
+		screenSize,
 		Vector2::Zero_,
 		Vector3::Zero_,
 		Vector4::White_,
@@ -365,12 +383,12 @@ void SceneTitle::ApplyBloom(ID3D11DeviceContext* dc)
 	Graphics::Instance().GetSpriteRenderer()->Draw(
 		dc,
 		Shader::GetFrameBuffer(FrameBufferLabel::HORIZONTAL_BLUR)->shaderResourceViews_[0].GetAddressOf(),
-		1280.0f,
-		720.0f,
+		screenSize.x,
+		screenSize.y,
 		{ 0.0f, 0.0f, 0.0f },
 		{ 1.0f, 1.0f, 1.0f },
 		{ 0.0f, 0.0f },
-		{ 1280.0f, 720.0f },
+		screenSize,
 		Vector2::Zero_,
 		Vector3::Zero_,
 		Vector4::White_,
@@ -396,12 +414,12 @@ void SceneTitle::ApplyBloom(ID3D11DeviceContext* dc)
 	Graphics::Instance().GetSpriteRenderer()->Draw(
 		dc,
 		Shader::GetFrameBuffer(FrameBufferLabel::GAUSSIAN_BLUR00)->shaderResourceViews_[0].GetAddressOf(),
-		1280.0f,
-		720.0f,
+		screenSize.x,
+		screenSize.y,
 		{ 0.0f, 0.0f, 0.0f },
 		{ 1.0f, 1.0f, 1.0f },
 		{ 0.0f, 0.0f },
-		{ 1280.0f, 720.0f },
+		screenSize,
 		Vector2::Zero_,
 		Vector3::Zero_,
 		Vector4::White_,
@@ -422,12 +440,12 @@ void SceneTitle::ApplyBloom(ID3D11DeviceContext* dc)
 	Graphics::Instance().GetSpriteRenderer()->Draw(
 		dc,
 		Shader::GetFrameBuffer(FrameBufferLabel::HORIZONTAL_BLUR)->shaderResourceViews_[0].GetAddressOf(),
-		1280.0f,
-		720.0f,
+		screenSize.x,
+		screenSize.y,
 		{ 0.0f, 0.0f, 0.0f },
 		{ 1.0f, 1.0f, 1.0f },
 		{ 0.0f, 0.0f },
-		{ 1280.0f, 720.0f },
+		screenSize,
 		Vector2::Zero_,
 		Vector3::Zero_,
 		Vector4::White_,
@@ -453,12 +471,12 @@ void SceneTitle::ApplyBloom(ID3D11DeviceContext* dc)
 	Graphics::Instance().GetSpriteRenderer()->Draw(
 		dc,
 		Shader::GetFrameBuffer(FrameBufferLabel::GAUSSIAN_BLUR01)->shaderResourceViews_[0].GetAddressOf(),
-		1280.0f,
-		720.0f,
+		screenSize.x,
+		screenSize.y,
 		{ 0.0f, 0.0f, 0.0f },
 		{ 1.0f, 1.0f, 1.0f },
 		{ 0.0f, 0.0f },
-		{ 1280.0f, 720.0f },
+		screenSize,
 		Vector2::Zero_,
 		Vector3::Zero_,
 		Vector4::White_,
@@ -479,12 +497,12 @@ void SceneTitle::ApplyBloom(ID3D11DeviceContext* dc)
 	Graphics::Instance().GetSpriteRenderer()->Draw(
 		dc,
 		Shader::GetFrameBuffer(FrameBufferLabel::HORIZONTAL_BLUR)->shaderResourceViews_[0].GetAddressOf(),
-		1280.0f,
-		720.0f,
+		screenSize.x,
+		screenSize.y,
 		{ 0.0f, 0.0f, 0.0f },
 		{ 1.0f, 1.0f, 1.0f },
 		{ 0.0f, 0.0f },
-		{ 1280.0f, 720.0f },
+		screenSize,
 		Vector2::Zero_,
 		Vector3::Zero_,
 		Vector4::White_,
@@ -510,12 +528,12 @@ void SceneTitle::ApplyBloom(ID3D11DeviceContext* dc)
 	Graphics::Instance().GetSpriteRenderer()->Draw(
 		dc,
 		Shader::GetFrameBuffer(FrameBufferLabel::GAUSSIAN_BLUR02)->shaderResourceViews_[0].GetAddressOf(),
-		1280.0f,
-		720.0f,
+		screenSize.x,
+		screenSize.y,
 		{ 0.0f, 0.0f, 0.0f },
 		{ 1.0f, 1.0f, 1.0f },
 		{ 0.0f, 0.0f },
-		{ 1280.0f, 720.0f },
+		screenSize,
 		Vector2::Zero_,
 		Vector3::Zero_,
 		Vector4::White_,
@@ -536,12 +554,12 @@ void SceneTitle::ApplyBloom(ID3D11DeviceContext* dc)
 	Graphics::Instance().GetSpriteRenderer()->Draw(
 		dc,
 		Shader::GetFrameBuffer(FrameBufferLabel::HORIZONTAL_BLUR)->shaderResourceViews_[0].GetAddressOf(),
-		1280.0f,
-		720.0f,
+		screenSize.x,
+		screenSize.y,
 		{ 0.0f, 0.0f, 0.0f },
 		{ 1.0f, 1.0f, 1.0f },
 		{ 0.0f, 0.0f },
-		{ 1280.0f, 720.0f },
+		screenSize,
 		Vector2::Zero_,
 		Vector3::Zero_,
 		Vector4::White_,
@@ -567,12 +585,12 @@ void SceneTitle::ApplyBloom(ID3D11DeviceContext* dc)
 	Graphics::Instance().GetSpriteRenderer()->Draw(
 		dc,
 		srvs,
-		1280.0f,
-		720.0f,
+		screenSize.x,
+		screenSize.y,
 		{ 0.0f, 0.0f, 0.0f },
 		{ 1.0f, 1.0f, 1.0f },
 		{ 0.0f, 0.0f },
-		{ 1280.0f, 720.0f },
+		screenSize,
 		Vector2::Zero_,
 		Vector3::Zero_,
 		Vector4::White_,

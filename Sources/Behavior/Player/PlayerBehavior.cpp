@@ -149,6 +149,7 @@ void BasePlayerBehavior::AddBullet(GameObject* parent, const float scaling, cons
 
 	InstancedMeshComponent* renderer = bullet->AddComponent<InstancedMeshComponent>();
 	renderer->model_ = ModelManager::Instance().GetInstancedMesh("./Data/Model/InstancedMesh/Bullet.fbx", 1000, nullptr, true);
+	renderer->color_ = parent->GetComponent<PlayerComponent>()->type_ == CharacterType::WHITE ? Vector4::White_ : Vector4::Black_;
 
 	BulletComponent* bulletComp = bullet->AddComponent<BulletComponent>();
 	bulletComp->attack_ = attackAmount;

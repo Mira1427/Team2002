@@ -18,7 +18,7 @@ void PauseOverlayBehavior::Execute(GameObject* obj, float elapsedTime)
 		renderer->testDepth_ = true;
 		renderer->size_  = { RootsLib::Window::GetWidth(), RootsLib::Window::GetHeight() };
 		renderer->color_ = Vector4::Black_;
-		renderer->color_.a = 0.3f;
+		renderer->color_.a = 0.9f;
 	}
 		obj->state_++;
 
