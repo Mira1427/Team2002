@@ -1,5 +1,7 @@
 #include "LaserBehavior.h"
 
+#include "../../Library/Audio/Audio.h"
+
 #include "../../Component/Component.h"
 
 #include "../../EventManager.h"
@@ -66,6 +68,22 @@ void LaserBehavior::Hit(GameObject* src, GameObject* dst, float elapsedTime)
 		{
 			EnemyComponent* enemy = dst->GetComponent<EnemyComponent>();
 			dst->Destroy();
+
+			AudioManager::instance().playSound(3/*Kill*/);
 		}
+	}
+
+
+	else if (dst->type_ == ObjectType::ITEM)
+	{
+		dst->Destroy();
+
+		auto* controller = EventManager::Instance().controller_->GetComponent<PlayerControllerComponent>();
+
+		if (dst->state_ == 0/*Color*/)
+			controller->hasSwapColor_ = true;
+
+		else if (dst->state_ == 1/*Gauge*/)
+			controller->hasSwapGauge_ = true;
 	}
 }

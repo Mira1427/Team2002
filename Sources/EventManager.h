@@ -87,6 +87,8 @@ public:
 
 
 	void AddWaveCutIn();
+	void AddColorItem();
+	void AddGaugeItem();
 
 	void InitializeObjects();
 

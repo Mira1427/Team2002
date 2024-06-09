@@ -79,6 +79,7 @@ void EnemyComponent::UpdateDebugGui(float elapsedTime)
 		ImGui::Spacing();
 
 		ImGui::DragFloat(u8"ライフ", &life_, 0.1f);
+		ImGui::InputInt(u8"アイテムの種類", &itemType_);
 
 		static const char* typeNames[3] = { u8"白", u8"黒", u8"グレー" };
 		ImGui::Text(typeNames[static_cast<size_t>(type_)]);

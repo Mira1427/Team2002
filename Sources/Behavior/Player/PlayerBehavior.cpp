@@ -4,6 +4,8 @@
 
 #include "../../Library/Input/InputManager.h"
 
+#include "../../Library/Audio/Audio.h"
+
 #include "../../Library/GameObject/BehaviorManager.h"
 #include "../../Library/GameObject/EraserManager.h"
 
@@ -114,6 +116,10 @@ void BasePlayerBehavior::Shot(GameObject* obj, PlayerComponent* player, PlayerCo
 			// --- ’e–ò‚ÌŒ¸ŽZ ---
 			controller->bullet_[playerIndex] -= controller->bulletCost_;
 			controller->bullet_[playerIndex] = (std::max)(controller->bullet_[playerIndex], 0.0f);
+
+
+			int audioIndex = (playerIndex == 0) ? 5 : 6;
+			AudioManager::instance().playSound(audioIndex);
 		}
 	}
 }
@@ -203,6 +209,9 @@ void PlayerControllerBehavior::Execute(GameObject* obj, float elapsedTime)
 			std::swap(controller->bullet_[0], controller->bullet_[1]);	// ’e–ò‚Ì“ü‚ê‘Ö‚¦
 
 			controller->hasSwapColor_ = false;
+
+
+			AudioManager::instance().playSound(2/*Item*/);
 		}
 
 
@@ -211,6 +220,8 @@ void PlayerControllerBehavior::Execute(GameObject* obj, float elapsedTime)
 		{
 			controller->attackGauge_ *= -1.0f;
 			controller->hasSwapGauge_ = false;
+
+			AudioManager::instance().playSound(2/*Item*/);
 		}
 
 
@@ -298,6 +309,9 @@ void PlayerControllerBehavior::ShotLaser(GameObject* obj, PlayerControllerCompon
 			ParameterManager::Instance().laserEffect_->play(obj->child_[0]->transform_->position_ + offset, { 1.0f, 1.0f, 5.0f }, { 0.0f, -atan + DirectX::XMConvertToRadians(-90.0f), 0.0f });
 			atan = atan2(0.0f - obj->child_[1]->transform_->position_.z, 0.0f - obj->child_[1]->transform_->position_.x);
 			ParameterManager::Instance().laserEffect_->play(obj->child_[1]->transform_->position_ + offset, { 1.0f, 1.0f, 5.0f }, { 0.0f, -atan + DirectX::XMConvertToRadians(-90.0f), 0.0f });
+		
+		
+			AudioManager::instance().playSound(0/*Beam*/);
 		}
 	}
 

@@ -56,7 +56,11 @@ public:
 			float fps = static_cast<float>(frames_);
 			std::wostringstream outs;
 			outs.precision(6);
+#ifdef _DEBUG
 			outs << windowData_.caption_ << L" : FPS : " << fps << L" / " << L"Frame Time : " << 1000.0f / fps << L" (ms)";
+#else
+			outs << windowData_.caption_;
+#endif
 			SetWindowTextW(windowData_.handle_, outs.str().c_str());
 
 			frames_ = 0;

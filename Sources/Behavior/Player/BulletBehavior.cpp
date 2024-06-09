@@ -2,6 +2,8 @@
 
 #include "../../Library/Math/Easing.h"
 
+#include "../../Library/Audio/Audio.h"
+
 #include "../../Library/GameObject/BehaviorManager.h"
 #include "../../Library/GameObject/EraserManager.h"
 
@@ -53,7 +55,27 @@ void BaseBulletBehavior::Hit(GameObject* src, GameObject* dst, float elapsedTime
 		if (bullet->type_ == enemy->type_ || enemy->type_ == CharacterType::GRAY)
 		{
 			AddExplosion(src->transform_->position_, bullet->type_, bullet->attack_, bullet->radius_);
+
+			AudioManager::instance().playSound(9/*HitBullet_1*/);
 		}
+
+		else
+		{
+			AudioManager::instance().playSound(10/*HitBullet_2*/);
+		}
+	}
+
+	else if (dst->type_ == ObjectType::ITEM)
+	{
+		dst->Destroy();
+
+		auto* controller = EventManager::Instance().controller_->GetComponent<PlayerControllerComponent>();
+		
+		if (dst->state_ == 0/*Color*/)
+			controller->hasSwapColor_ = true;
+
+		else if (dst->state_ == 1/*Gauge*/)
+			controller->hasSwapGauge_ = true;
 	}
 }
 
@@ -116,7 +138,18 @@ void BulletExplosionBehavior::Hit(GameObject* src, GameObject* dst, float elapse
 
 				// --- Ž€–Sˆ— ---
 				if (enemy->life_ <= 0.0f)
+				{
 					dst->Destroy();
+
+					if (enemy->itemType_ == 0)
+						EventManager::Instance().AddColorItem();
+
+					else if (enemy->itemType_ == 1)
+						EventManager::Instance().AddGaugeItem();
+
+
+					AudioManager::instance().playSound(3/*Kill*/);
+				}
 			//}
 		}
 	}

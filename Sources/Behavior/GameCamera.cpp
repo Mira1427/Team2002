@@ -42,6 +42,11 @@ void GameCameraBehavior::Execute(GameObject* obj, float elapsedTime)
 		ImGui::DragFloat(u8"オフセット", &offset);
 		ImGui::DragFloat(u8"高さ", &height);
 		ImGui::DragFloat(u8"横", &horizontalOffset);
+#else
+		const float dist = 26.0f;
+		const float offset = 11.0f;
+		const float height = 3.0f;
+		const float horizontalOffset = 8.0f;
 #endif
 
 		const float rotateSpeed = DirectX::XMConvertToRadians(22.5f) * elapsedTime;

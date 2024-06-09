@@ -609,6 +609,7 @@ enum class ObjectType
 	BULLET,
 	SPAWNER,
 	ENEMY,
+	ITEM,
 };
 
 class GameObject

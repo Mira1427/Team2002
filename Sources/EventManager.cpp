@@ -11,6 +11,8 @@
 
 #include "../Library/Input/InputManager.h"
 
+#include "../Library/Audio/Audio.h"
+
 #include "../Library/GameObject/GameObject.h"
 #include "../Library/GameObject/BehaviorManager.h"
 #include "../Library/GameObject/EraserManager.h"
@@ -95,6 +97,8 @@ void EventManager::UpdateButton()
 		{
 			TranslateMessage(EventMessage::TO_TITLE_SCENE);
 			button_.state_ = ButtonState::TITLE;
+
+			AudioManager::instance().playSound(8/*Confirm*/);
 		}
 		break;
 
@@ -144,10 +148,24 @@ void EventManager::UpdateTitleEvent()
 
 
 	if (input.down(0) & Input::LEFT)
+	{
 		button_.subEventIndex_--;
 
+		if (button_.subEventIndex_ >= 0)
+		{
+			AudioManager::instance().playSound(7/*Select*/);
+		}
+	}
+
 	if (input.down(0) & Input::RIGHT)
+	{
 		button_.subEventIndex_++;
+
+		if (button_.subEventIndex_ < static_cast<int>(TutorialSelectEvent::MAX))
+		{
+			AudioManager::instance().playSound(7/*Select*/);
+		}
+	}
 
 	button_.subEventIndex_ = RootsLib::Math::Clamp(button_.subEventIndex_, 0, static_cast<int>(TutorialSelectEvent::MAX) - 1);
 
@@ -162,6 +180,8 @@ void EventManager::UpdateTitleEvent()
 			button_.state_ = ButtonState::GAME;
 			button_.eventIndex_ = 0;
 			button_.subEventIndex_ = 0;
+
+			AudioManager::instance().playSound(8/*Confirm*/);
 		}
 		break;
 	}
@@ -318,10 +338,24 @@ void EventManager::UpdatePauseEvent()
 	auto& input = InputManager::Instance();
 
 	if (input.down(0) & Input::UP)
+	{
 		button_.eventIndex_--;
 
+		if (button_.eventIndex_ >= 0)
+		{
+			AudioManager::instance().playSound(7/*Select*/);
+		}
+	}
+
 	else if (input.down(0) & Input::DOWN)
+	{
 		button_.eventIndex_++;
+
+		if (button_.eventIndex_ < static_cast<int>(PauseEvent::MAX))
+		{
+			AudioManager::instance().playSound(7/*Select*/);
+		}
+	}
 
 	button_.eventIndex_ = RootsLib::Math::Clamp(button_.eventIndex_, 0, static_cast<int>(PauseEvent::MAX) - 1);
 
@@ -344,6 +378,8 @@ void EventManager::UpdatePauseEvent()
 			paused_ = false;
 			button_.state_ = ButtonState::GAME;
 			button_.eventIndex_ = 0;
+
+			AudioManager::instance().playSound(8/*Confirm*/);
 		}
 
 		break;
@@ -356,6 +392,8 @@ void EventManager::UpdatePauseEvent()
 			TranslateMessage(EventMessage::TO_TITLE_SCENE);
 			button_.state_ = ButtonState::TITLE;
 			button_.eventIndex_ = 0;
+
+			AudioManager::instance().playSound(8/*Confirm*/);
 		}
 
 		break;
@@ -398,6 +436,75 @@ void EventManager::AddWaveCutIn()
 	renderer->center_ = renderer->texSize_ * 0.5f;
 
 	obj->AddComponent<UIComponent>();
+}
+
+
+static const float itemEraseTimer = 15.0f;
+void EventManager::AddColorItem()
+{
+	float angle = DirectX::XMConvertToRadians(static_cast<float>(rand() % 360));
+	int range = rand() % 60 + 20;
+
+	Vector3 position = { cosf(angle) * range, 0.0f, sinf(angle) * range };
+
+	GameObject* obj = GameObjectManager::Instance().Add(
+		std::make_shared<GameObject>(),
+		position,
+		BehaviorManager::Instance().GetBehavior("ItemUI")
+	);
+
+	obj->state_ = 0;
+	obj->timer_ = itemEraseTimer;
+	obj->name_ = u8"色交換";
+	obj->eraser_ = EraserManager::Instance().GetEraser("Scene");
+	obj->type_ = ObjectType::ITEM;
+
+	obj->transform_->scaling_ *= 0.1f;
+	obj->transform_->rotation_.x = 1.57f;
+
+	auto* renderer = obj->AddComponent<SpriteRendererComponent>();
+	Texture* texture = TextureManager::Instance().GetTexture(L"./Data/Texture/UI/item_change.png");
+	renderer->texture_ = texture;
+	renderer->texSize_ = { texture->width_, texture->height_ };
+	renderer->inWorld_ = true;
+
+	auto* collider = obj->AddCollider<SphereCollider>();
+	collider->radius_ = 5.0f;
+	collider->offset_.y = 5.0f;
+}
+
+
+void EventManager::AddGaugeItem()
+{
+	float angle = DirectX::XMConvertToRadians(static_cast<float>(rand() % 360));
+	int range = rand() % 60 + 20;
+
+	Vector3 position = { cosf(angle) * range, 0.0f, sinf(angle) * range };
+
+	GameObject* obj = GameObjectManager::Instance().Add(
+		std::make_shared<GameObject>(),
+		position,
+		BehaviorManager::Instance().GetBehavior("ItemUI")
+	);
+
+	obj->state_ = 1;
+	obj->timer_ = itemEraseTimer;
+	obj->name_ = u8"ゲージ交換";
+	obj->eraser_ = EraserManager::Instance().GetEraser("Scene");
+	obj->type_ = ObjectType::ITEM;
+
+	obj->transform_->scaling_ *= 0.1f;
+	obj->transform_->rotation_.x = 1.57f;
+
+	auto* renderer = obj->AddComponent<SpriteRendererComponent>();
+	Texture* texture = TextureManager::Instance().GetTexture(L"./Data/Texture/UI/item_P_R.png");
+	renderer->texture_ = texture;
+	renderer->texSize_ = { texture->width_, texture->height_ };
+	renderer->inWorld_ = true;
+
+	auto* collider = obj->AddCollider<SphereCollider>();
+	collider->radius_ = 5.0f;
+	collider->offset_.y = 5.0f;
 }
 
 
@@ -549,5 +656,18 @@ void EventManager::InitializeObjects()
 		player->angleOffset_ = i * 180.0f;
 		player->playerNum_ = i;
 		player->type_ = static_cast<CharacterType>(i);
+	}
+
+
+	{
+		GameObject* obj = GameObjectManager::Instance().Add(
+			std::make_shared<GameObject>(),
+			Vector3::Zero_,
+			NULL
+		);
+
+		obj->name_ = u8"ビル　テスト";
+		auto* renderer = obj->AddComponent<InstancedMeshComponent>();
+		renderer->model_ = ModelManager::Instance().LoadInstancedMesh(RootsLib::DX11::GetDevice(), "./Data/Model/building_ontx_ver2.fbx", 3, true);
 	}
 }

@@ -41,6 +41,7 @@ BehaviorManager::BehaviorManager()
 	behaviors_.insert(std::make_pair("AttackGaugeBar",		std::make_shared<AttackGaugeBarBehavior>()));
 	behaviors_.insert(std::make_pair("ColorItemUI",			std::make_shared<ColorItemUIBehavior>()));
 	behaviors_.insert(std::make_pair("GaugeItemUI",			std::make_shared<GaugeItemUIBehavior>()));
+	behaviors_.insert(std::make_pair("ItemUI",				std::make_shared<ItemUIBehavior>()));
 
 	behaviors_.insert(std::make_pair("BaseEnemy",			std::make_shared<BaseEnemyBehavior>()));
 	behaviors_.insert(std::make_pair("FlyEnemy",			std::make_shared<FlyEnemyBehavior>()));

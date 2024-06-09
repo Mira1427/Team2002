@@ -14,6 +14,8 @@
 
 #include "../Input/InputManager.h"
 
+#include "../Audio/Audio.h"
+
 #include "../Library/CameraManager.h"
 #include "../Library/Library.h"
 
@@ -84,7 +86,7 @@ void SceneGame::Initialize()
 			BehaviorManager::Instance().GetBehavior("ColorItemUI")
 		);
 
-		obj->name_ = u8"FŒðŠ·";
+		obj->name_ = u8"FŒðŠ·UI";
 		obj->eraser_ = EraserManager::Instance().GetEraser("Scene");
 		obj->parent_ = controller;
 
@@ -104,7 +106,7 @@ void SceneGame::Initialize()
 			BehaviorManager::Instance().GetBehavior("GaugeItemUI")
 		);
 
-		obj->name_ = u8"UŒ‚ŒðŠ·";
+		obj->name_ = u8"UŒ‚ŒðŠ·UI";
 		obj->eraser_ = EraserManager::Instance().GetEraser("Scene");
 		obj->parent_ = controller;
 
@@ -115,6 +117,9 @@ void SceneGame::Initialize()
 		renderer->texture_ = texture;
 		renderer->texSize_ = { texture->width_, texture->height_ };
 	}
+
+
+	AudioManager::instance().PlayMusic(1);
 }
 
 
@@ -133,6 +138,9 @@ void SceneGame::Finalize()
 	camera->timer_ = 0.0f;
 	auto* cameraShake = CameraManager::Instance().currentCamera_->GetComponent<CameraShakeComponent>();
 	cameraShake->offset_ = Vector3::Zero_;
+
+
+	AudioManager::instance().StopMusic(1);
 }
 
 

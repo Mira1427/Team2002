@@ -27,6 +27,6 @@ private:
 	void Wave9Enemy(GameObject* obj, EnemySpawnerComponent* spawner);
 	void Wave10Enemy(GameObject* obj, EnemySpawnerComponent* spawner);
 
-	void Enemy(GameObject* obj, EnemySpawnerComponent* spawner, float life, int color, int angle);
+	void Enemy(GameObject* obj, EnemySpawnerComponent* spawner, float life, int color, int angle, int item = -1);
 
 };

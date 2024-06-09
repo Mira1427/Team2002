@@ -24,3 +24,11 @@ class GaugeItemUIBehavior final : public BaseItemUIBehavior
 private:
 	void Update(GameObject* obj) override;
 };
+
+
+class ItemUIBehavior final : public Behavior
+{
+public:
+	void Execute(GameObject* obj, float elapsedTime) override;
+	void Hit(GameObject* src, GameObject* dst, float elapsedTime) override {};
+};

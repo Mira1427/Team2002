@@ -23,6 +23,7 @@
 
 void SceneResult::Initialize()
 {
+	SetUpObjects();
 }
 
 void SceneResult::Finalize()
@@ -498,4 +499,64 @@ void SceneResult::ApplyBloom(ID3D11DeviceContext* dc)
 		5U
 	);
 
+}
+
+
+void SceneResult::SetUpObjects()
+{
+	{
+		GameObject* obj = GameObjectManager::Instance().Add(
+			std::make_shared<GameObject>(),
+			Vector3(30.0f, 30.0f, 0.0f),
+			NULL
+		);
+
+		obj->name_ = u8"リザルトのテキスト";
+		obj->eraser_ = EraserManager::Instance().GetEraser("Scene");
+
+		obj->transform_->scaling_ *= 0.67f;
+
+		auto* renderer = obj->AddComponent<SpriteRendererComponent>();
+		Texture* texture = TextureManager::Instance().GetTexture(L"./Data/Texture/UI/result.png");
+		renderer->texture_ = texture;
+		renderer->texSize_ = { texture->width_, texture->height_ };
+	}
+
+
+	{
+		GameObject* obj = GameObjectManager::Instance().Add(
+			std::make_shared<GameObject>(),
+			Vector3(234.0f, 162.0f, 0.0f),
+			NULL
+		);
+
+		obj->name_ = u8"フレーム";
+		obj->eraser_ = EraserManager::Instance().GetEraser("Scene");
+
+		obj->transform_->scaling_ *= 0.67f;
+
+		auto* renderer = obj->AddComponent<SpriteRendererComponent>();
+		Texture* texture = TextureManager::Instance().GetTexture(L"./Data/Texture/UI/resultframe.png");
+		renderer->texture_ = texture;
+		renderer->texSize_ = { texture->width_, texture->height_ };
+	}
+
+
+	{
+		GameObject* obj = GameObjectManager::Instance().Add(
+			std::make_shared<GameObject>(),
+			Vector3(429.0f, 584.0f, 0.0f),
+			NULL
+		);
+
+		obj->name_ = u8"タイトルに戻る";
+		obj->eraser_ = EraserManager::Instance().GetEraser("Scene");
+
+		obj->transform_->scaling_ *= 0.67f;
+
+		auto* renderer = obj->AddComponent<SpriteRendererComponent>();
+		Texture* texture = TextureManager::Instance().GetTexture(L"./Data/Texture/UI/backtitle.png");
+		renderer->texture_ = texture;
+		renderer->texSize_ = { texture->width_, texture->height_ };
+	}
 }

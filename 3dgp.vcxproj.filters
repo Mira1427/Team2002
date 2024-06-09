@@ -336,8 +336,12 @@
     <ClInclude Include="Sources\Behavior\UI\ItemUIBehavior.h">
       <Filter>Sources\Behavior\UI</Filter>
     </ClInclude>
-    <ClInclude Include="Library\Scene\SceneBegin.h" />
-    <ClInclude Include="Library\Scene\SceneResult.h" />
+    <ClInclude Include="Library\Scene\SceneBegin.h">
+      <Filter>Library\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Library\Scene\SceneResult.h">
+      <Filter>Library\Scene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="External\ImGui\imgui.cpp">
@@ -553,8 +557,12 @@
     <ClCompile Include="Sources\Behavior\UI\ItemUIBehavior.cpp">
       <Filter>Sources\Behavior\UI</Filter>
     </ClCompile>
-    <ClCompile Include="Library\Scene\SceneBegin.cpp" />
-    <ClCompile Include="Library\Scene\SceneResult.cpp" />
+    <ClCompile Include="Library\Scene\SceneBegin.cpp">
+      <Filter>Library\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Library\Scene\SceneResult.cpp">
+      <Filter>Library\Scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="HLSL\Primitive.hlsli">

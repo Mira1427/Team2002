@@ -1,12 +1,13 @@
 #include "EnemyBehavior.h"
 
+#include "../../Library/Audio/Audio.h"
+
 #include "../../Library/Scene/SceneManager.h"
 #include "../../Library/Scene/SceneOver.h"
 
-#include "../../Sources/Component/Component.h"
-
 #include "../../Library/Library/CameraManager.h"
 
+#include "../../Sources/Component/Component.h"
 #include "../../Sources/EventManager.h"
 #include "../../Sources/ParameterManager.h"
 
@@ -80,6 +81,8 @@ void BaseEnemyBehavior::HitTown(GameObject* obj, const float range)
 		ParameterManager::Instance().smokeEffect_->play(obj->transform_->position_, { 10.0f, 10.0f, 10.0f }, Vector3::Zero_);
 
 		CameraManager::Instance().currentCamera_->timer_ = 0.5f;
+
+		AudioManager::instance().playSound(1/*Damage*/);
 
 
 		if (stage->life_ <= 0)

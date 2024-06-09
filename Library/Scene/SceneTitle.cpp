@@ -12,6 +12,8 @@
 
 #include "../Input/InputManager.h"
 
+#include "../Audio/Audio.h"
+
 #include "../Library/CameraManager.h"
 #include "../Library/Library.h"
 
@@ -29,6 +31,8 @@ void SceneTitle::Initialize()
 		EventManager::Instance().button_.state_ = ButtonState::TITLE;
 
 	SetUpObjects();
+
+	AudioManager::instance().PlayMusic(0);
 }
 
 void SceneTitle::Finalize()
@@ -40,6 +44,8 @@ void SceneTitle::Finalize()
 
 	CameraManager::Instance().currentCamera_->state_++;
 	CameraManager::Instance().currentCamera_->GetComponent<CameraComponent>()->target_ = Vector3::Zero_;
+
+	AudioManager::instance().StopMusic();
 }
 
 void SceneTitle::Update(float elapsedTime)

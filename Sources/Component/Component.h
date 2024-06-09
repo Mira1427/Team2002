@@ -110,7 +110,8 @@ class EnemyComponent final : public Component
 {
 public:
 	EnemyComponent() :
-		life_()
+		life_(),
+		itemType_(-1)
 	{}
 
 	void Draw(ID3D11DeviceContext* dc) override {};
@@ -118,6 +119,7 @@ public:
 
 	float life_;
 	CharacterType type_;
+	int itemType_;
 };
 
 

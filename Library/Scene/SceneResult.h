@@ -11,5 +11,6 @@ public:
 
 private:
 	void ApplyBloom(ID3D11DeviceContext* dc);
+	void SetUpObjects();
 };
 
