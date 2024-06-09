@@ -76,6 +76,8 @@ void BaseBulletBehavior::Hit(GameObject* src, GameObject* dst, float elapsedTime
 
 		else if (dst->state_ == 1/*Gauge*/)
 			controller->hasSwapGauge_ = true;
+
+		AudioManager::instance().playSound(11/*GetItem*/);
 	}
 }
 
@@ -102,7 +104,7 @@ void BaseBulletBehavior::AddExplosion(const Vector3& position, CharacterType typ
 	// --- エフェクトのサイズを計算 ---
 	Vector3 scale = Vector3::Unit_;
 	auto func = RootsLib::Easing::GetFunction(EaseOutCubic);
-	float rate = RootsLib::Math::Lerp(1.0f, 0.2f, func((collider->radius_ - 1.0f) / (30.0f - 1.0f)/*MaxRadius*/));
+	float rate = RootsLib::Math::Lerp(1.0f, 0.2f, func(static_cast<double>((collider->radius_ - 1.0f) / (30.0f - 1.0f)/*MaxRadius*/)));
 	scale *= collider->radius_;
 	scale *= rate;
 

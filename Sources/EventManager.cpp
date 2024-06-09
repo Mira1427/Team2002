@@ -31,7 +31,7 @@ void EventManager::Initialize()
 	messages_.clear();
 
 	for (GameObject* obj : stages_)
-		obj = NULL;
+		obj->GetComponent<StageComponent>()->life_ = 3;
 
 	enemySpawner_ = NULL;
 
@@ -365,6 +365,7 @@ void EventManager::UpdatePauseEvent()
 		paused_ = false;
 		button_.state_ = ButtonState::GAME;
 		button_.eventIndex_ = 0;
+
 		return;
 	}
 
@@ -592,6 +593,26 @@ void EventManager::InitializeObjects()
 	}
 
 
+	// --- 街のライフ ---
+	for (size_t i = 0; i < 4; i++)
+	{
+		stages_[i] = GameObjectManager::Instance().Add(
+			std::make_shared<GameObject>()
+		);
+
+		stages_[i]->name_ = u8"街" + std::to_string(i);
+
+		float angle = DirectX::XMConvertToRadians(90.0f * i);
+		stages_[i]->transform_->position_.x = cosf(angle) * 94.0f;
+		stages_[i]->transform_->position_.z = sinf(angle) * 94.0f;
+
+		// --- ステージコンポーネントの追加 ---
+		StageComponent* stage = stages_[i]->AddComponent<StageComponent>();
+		stage->life_ = 3;
+	}
+
+
+
 	// --- コントローラー ---
 	{
 		GameObject* obj = GameObjectManager::Instance().Add(
@@ -654,20 +675,16 @@ void EventManager::InitializeObjects()
 
 		PlayerComponent* player = obj->AddComponent<PlayerComponent>();
 		player->angleOffset_ = i * 180.0f;
-		player->playerNum_ = i;
+		player->playerNum_ = static_cast<int>(i);
 		player->type_ = static_cast<CharacterType>(i);
 	}
 
+	//{
+	//	GameObject* obj = GameObjectManager::Instance().Add(
+	//		std::make_shared<GameObject>()
+	//	);
 
-	{
-		GameObject* obj = GameObjectManager::Instance().Add(
-			std::make_shared<GameObject>(),
-			Vector3::Zero_,
-			NULL
-		);
-
-		obj->name_ = u8"ビル　テスト";
-		auto* renderer = obj->AddComponent<InstancedMeshComponent>();
-		renderer->model_ = ModelManager::Instance().LoadInstancedMesh(RootsLib::DX11::GetDevice(), "./Data/Model/building_ontx_ver2.fbx", 3, true);
-	}
+	//	auto* renderer = obj->AddComponent<InstancedMeshComponent>();
+	//	renderer->model_ = ModelManager::Instance().LoadInstancedMesh(RootsLib::DX11::GetDevice(), "./Data/Model/building_ontx_ver2.fbx", 3, true);
+	//}
 }

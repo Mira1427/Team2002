@@ -14,6 +14,8 @@
 
 #include "../Audio/Audio.h"
 
+#include "../Math/Easing.h"
+
 #include "../Library/CameraManager.h"
 #include "../Library/Library.h"
 
@@ -215,44 +217,14 @@ void SceneTitle::Render(ID3D11DeviceContext* dc)
 
 void SceneTitle::SetUpObjects()
 {
-	//{
-	//	GameObject* obj = GameObjectManager::Instance().Add(
-	//		std::make_shared<GameObject>(),
-	//		Vector3(),
-	//		NULL
-	//	);
-
-	//	obj->name_ = u8"街";
-	//	obj->eraser_ = EraserManager::Instance().GetEraser("Scene");
-
-	//	InstancedMeshComponent* renderer = obj->AddComponent<InstancedMeshComponent>();
-	//	renderer->model_ = ModelManager::Instance().LoadInstancedMesh(RootsLib::DX11::GetDevice(), "./Data/Model/InstancedMesh/b.fbx", 3, true);
-	//}
-
-	//{
-	//	GameObject* obj = GameObjectManager::Instance().Add(
-	//		std::make_shared<GameObject>(),
-	//		Vector3(),
-	//		NULL
-	//	);
-
-	//	obj->name_ = u8"ビル";
-	//	obj->eraser_ = EraserManager::Instance().GetEraser("Scene");
-
-	//	InstancedMeshComponent* renderer = obj->AddComponent<InstancedMeshComponent>();
-	//	renderer->model_ = ModelManager::Instance().LoadInstancedMesh(RootsLib::DX11::GetDevice(), "./Data/Model/InstancedMesh/Stage/building_ontx.fbx", 100, true);
-	//}
-
 	{
 		GameObject* startButton = GameObjectManager::Instance().Add(
 			std::make_shared<GameObject>(),
-			Vector3(725.0f, 500.0f, 0.0f),
-			BehaviorManager::Instance().GetBehavior("BaseButton")
+			Vector3(1325.0f, 500.0f, 0.0f),
+			BehaviorManager::Instance().GetBehavior("TitleStartButton")
 		);
 		
-		startButton->state_ = static_cast<int>(ButtonState::TITLE);
 		startButton->name_ = u8"スタートボタン";
-		startButton->eraser_ = EraserManager::Instance().GetEraser("Scene");
 
 		startButton->transform_->scaling_ *= 0.67f;
 
@@ -262,20 +234,19 @@ void SceneTitle::SetUpObjects()
 		renderer->texSize_ = { texture->width_, texture->height_ * 0.5f };
 
 		UIComponent* ui = startButton->AddComponent<UIComponent>();
-		ui->eventID_ = static_cast<int>(TitleEvent::START);
+		ui->easeData_.function_ = RootsLib::Easing::GetFunction(EaseOutCubic);
+		ui->basePosition_ = { 1325.0f, 500.0f, 0.0f };
 	}
 
 
 	{
 		GameObject* tutorial = GameObjectManager::Instance().Add(
 			std::make_shared<GameObject>(),
-			Vector3(770.0f, 630.0f, 0.0f),
-			BehaviorManager::Instance().GetBehavior("SubButton")
+			Vector3(1370.0f, 630.0f, 0.0f),
+			BehaviorManager::Instance().GetBehavior("TitleTutorialButton")
 		);
 		
-		tutorial->state_ = static_cast<int>(ButtonState::TITLE);
 		tutorial->name_ = u8"チュートリアルボタン";
-		tutorial->eraser_ = EraserManager::Instance().GetEraser("Scene");
 
 		tutorial->transform_->scaling_ *= 0.67f;
 
@@ -283,6 +254,10 @@ void SceneTitle::SetUpObjects()
 		Texture* texture = TextureManager::Instance().GetTexture(L"./Data/Texture/UI/tutorial.png");
 		renderer->texture_ = texture;
 		renderer->texSize_ = { texture->width_, texture->height_ * 0.5f };
+
+		UIComponent* ui = tutorial->AddComponent<UIComponent>();
+		ui->easeData_.function_ = RootsLib::Easing::GetFunction(EaseOutCubic);
+		ui->basePosition_ = { 1370.0f, 630.0f, 0.0f };
 	}
 
 

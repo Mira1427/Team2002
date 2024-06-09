@@ -271,6 +271,7 @@
     <ClInclude Include="Sources\Behavior\UI\ItemUIBehavior.h" />
     <ClInclude Include="Sources\Behavior\UI\LifeGaugeBehavior.h" />
     <ClInclude Include="Sources\Behavior\UI\PauseBehavior.h" />
+    <ClInclude Include="Sources\Behavior\UI\TitleUIBehavior.h" />
     <ClInclude Include="Sources\Behavior\UI\WaveUIBehavior.h" />
     <ClInclude Include="Sources\Component\Component.h" />
     <ClInclude Include="Sources\Eraser\SceneEraser.h" />
@@ -346,6 +347,7 @@
     <ClCompile Include="Sources\Behavior\UI\ItemUIBehavior.cpp" />
     <ClCompile Include="Sources\Behavior\UI\LifeGaugeBehavior.cpp" />
     <ClCompile Include="Sources\Behavior\UI\PauseBehavior.cpp" />
+    <ClCompile Include="Sources\Behavior\UI\TitleUIBehavior.cpp" />
     <ClCompile Include="Sources\Behavior\UI\WaveUIBehavior.cpp" />
     <ClCompile Include="Sources\Component\Component.cpp" />
     <ClCompile Include="Sources\Eraser\SceneEraser.cpp" />

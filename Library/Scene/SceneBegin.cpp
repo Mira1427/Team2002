@@ -24,10 +24,12 @@ void SceneBegin::Initialize()
 		AudioManager::instance().LoadSound("./Data/Sound/Result.wav");
 		AudioManager::instance().LoadSound("./Data/Sound/Shot_White.wav");
 		AudioManager::instance().LoadSound("./Data/Sound/Shot_Black.wav");
-		AudioManager::instance().LoadSound("./Data/Sound/Select.wav");	// 7
-		AudioManager::instance().LoadSound("./Data/Sound/Confirm.wav");	// 8
-		AudioManager::instance().LoadSound("./Data/Sound/Confirm.wav");	// 9
+		AudioManager::instance().LoadSound("./Data/Sound/Select.wav");		// 7
+		AudioManager::instance().LoadSound("./Data/Sound/Confirm.wav");		// 8
+		AudioManager::instance().LoadSound("./Data/Sound/HitBullet_1.wav");	// 9
 		AudioManager::instance().LoadSound("./Data/Sound/HitBullet_2.wav");	// 10
+		AudioManager::instance().LoadSound("./Data/Sound/GetItem.wav");		// 11
+		AudioManager::instance().LoadSound("./Data/Sound/Charge.wav");		// 12
 	}
 }
 

@@ -559,4 +559,51 @@ void SceneResult::SetUpObjects()
 		renderer->texture_ = texture;
 		renderer->texSize_ = { texture->width_, texture->height_ };
 	}
+
+
+	// --- 最終ライフ ---
+	for (size_t i = 0; i < 4; i++)
+	{
+		GameObject* gaugeBack = GameObjectManager::Instance().Add(
+			std::make_shared<GameObject>(),
+			Vector3(),
+			NULL
+		);
+		{
+			gaugeBack->state_ = static_cast<int>(i);
+			gaugeBack->name_ = u8"ライフゲージの背景" + std::to_string(i);
+			gaugeBack->eraser_ = EraserManager::Instance().GetEraser("Scene");
+
+			gaugeBack->transform_->position_ = { 290.0f + i * 210.0f, 360.0f, 0.0f };
+			gaugeBack->transform_->scaling_ *= 0.695f;
+
+			SpriteRendererComponent* renderer = gaugeBack->AddComponent<SpriteRendererComponent>();
+			Texture* texture = TextureManager::Instance().GetTexture(L"./Data/Texture/UI/HP_base.png");
+			renderer->texture_ = texture;
+			renderer->texSize_ = { texture->width_, texture->height_ };
+		}
+
+
+		{
+			GameObject* lifeGauge = GameObjectManager::Instance().Add(
+				std::make_shared<GameObject>(),
+				Vector3(),
+				BehaviorManager::Instance().GetBehavior("LifeGauge")
+			);
+
+			lifeGauge->state_ = static_cast<int>(i);
+			lifeGauge->name_ = u8"ライフゲージ" + std::to_string(i);
+			lifeGauge->eraser_ = EraserManager::Instance().GetEraser("Scene");
+			lifeGauge->parent_ = gaugeBack;
+
+			lifeGauge->transform_->scaling_ *= 0.69f;
+
+			SpriteRendererComponent* renderer = lifeGauge->AddComponent<SpriteRendererComponent>();
+			Texture* texture = TextureManager::Instance().GetTexture(L"./Data/Texture/UI/HP_contents.png");
+			renderer->texture_ = texture;
+			renderer->texSize_ = { texture->width_ / 3.0f, texture->height_ / 4.0f };
+			renderer->texPos_.x = renderer->texSize_.x * 2.0f;
+			renderer->texPos_.y = renderer->texSize_.y * i;
+		}
+	}
 }

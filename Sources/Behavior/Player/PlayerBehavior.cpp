@@ -93,12 +93,12 @@ void BasePlayerBehavior::Shot(GameObject* obj, PlayerComponent* player, PlayerCo
 
 
 
-	// --- 左右のキーを押してなかったら ---
 	switch (input.state(0) & (Input::LEFT | Input::RIGHT))
 	{
 	case Input::LEFT:
 	case Input::RIGHT: break;
 
+	// --- 左右のキーを押してなかったら ---
 	default:
 
 		// --- 射撃処理 ---
@@ -121,6 +121,8 @@ void BasePlayerBehavior::Shot(GameObject* obj, PlayerComponent* player, PlayerCo
 			int audioIndex = (playerIndex == 0) ? 5 : 6;
 			AudioManager::instance().playSound(audioIndex);
 		}
+
+		break;
 	}
 }
 
@@ -244,6 +246,21 @@ void PlayerControllerBehavior::Rotate(GameObject* obj, PlayerControllerComponent
 	// --- 中心を原点に回転 ---
 	float rotateSpeed = controller->rotateSpeed_ * elapsedTime;
 
+	// --- 音用のタイマー ---
+	const float maxTimer = 1.5f;
+	static float soundTimer = 0.0f;
+
+	auto playSound = [](const float elapsedTime, const float maxTimer)
+	{
+		soundTimer -= elapsedTime;
+
+		if (soundTimer < 0.0f)
+		{
+			AudioManager::instance().playSound(12/*Charge*/);
+			soundTimer = maxTimer;
+		}
+	};
+
 	// --- 回転処理 ---
 	switch (input.state(0) & (Input::LEFT | Input::RIGHT))
 	{
@@ -253,6 +270,9 @@ void PlayerControllerBehavior::Rotate(GameObject* obj, PlayerControllerComponent
 		controller->bullet_[1] += controller->addBulletValue_ * elapsedTime;		//
 		controller->attackGauge_ -= controller->addAttackGaugeValue_ * elapsedTime;	// 攻撃ゲージの減少
 		controller->attackGauge_ = (std::max)(controller->attackGauge_, -1.0f);		// 攻撃ゲージの制限
+
+		playSound(elapsedTime, maxTimer);
+
 		break;
 
 	case Input::RIGHT:
@@ -261,6 +281,9 @@ void PlayerControllerBehavior::Rotate(GameObject* obj, PlayerControllerComponent
 		controller->bullet_[1] += controller->addBulletValue_ * elapsedTime;		//
 		controller->attackGauge_ += controller->addAttackGaugeValue_ * elapsedTime;	// 攻撃ゲージの増加
 		controller->attackGauge_ = (std::min)(controller->attackGauge_, 1.0f);		// 攻撃ゲージの制限
+
+		playSound(elapsedTime, maxTimer);
+
 		break;
 	}
 

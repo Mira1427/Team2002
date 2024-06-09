@@ -47,7 +47,7 @@ void SceneGame::Initialize()
 
 
 	// --- 街の4等分された判定用 ---
-	AddTownLife(3, 94.0f);
+	//AddTownLife(3, 94.0f);
 
 	// --- ライフゲージの追加 ---
 	AddLifeGauge();
@@ -846,12 +846,12 @@ void SceneGame::AddLifeGauge()
 {
 	for (size_t i = 0; i < 4; i++)
 	{
+		GameObject* gaugeBack = GameObjectManager::Instance().Add(
+			std::make_shared<GameObject>(),
+			Vector3(),
+			NULL
+		);
 		{
-			GameObject* gaugeBack = GameObjectManager::Instance().Add(
-				std::make_shared<GameObject>(),
-				Vector3(),
-				NULL
-			);
 
 			gaugeBack->state_ = static_cast<int>(i);
 			gaugeBack->name_ = u8"ライフゲージの背景" + std::to_string(i);
@@ -877,8 +877,8 @@ void SceneGame::AddLifeGauge()
 			lifeGauge->state_ = static_cast<int>(i);
 			lifeGauge->name_ = u8"ライフゲージ" + std::to_string(i);
 			lifeGauge->eraser_ = EraserManager::Instance().GetEraser("Scene");
+			lifeGauge->parent_ = gaugeBack;
 
-			lifeGauge->transform_->position_ = { 1158.0f, (RootsLib::Window::GetHeight() / 4.0f) * i + 26.0f, 0.0f };
 			lifeGauge->transform_->scaling_ *= 0.69f;
 
 			SpriteRendererComponent* renderer = lifeGauge->AddComponent<SpriteRendererComponent>();

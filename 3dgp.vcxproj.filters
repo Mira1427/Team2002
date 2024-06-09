@@ -342,6 +342,7 @@
     <ClInclude Include="Library\Scene\SceneResult.h">
       <Filter>Library\Scene</Filter>
     </ClInclude>
+    <ClInclude Include="Sources\Behavior\UI\TitleUIBehavior.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="External\ImGui\imgui.cpp">
@@ -563,6 +564,7 @@
     <ClCompile Include="Library\Scene\SceneResult.cpp">
       <Filter>Library\Scene</Filter>
     </ClCompile>
+    <ClCompile Include="Sources\Behavior\UI\TitleUIBehavior.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="HLSL\Primitive.hlsli">

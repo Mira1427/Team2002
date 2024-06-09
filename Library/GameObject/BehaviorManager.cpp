@@ -17,8 +17,8 @@
 #include "../../Sources/Behavior/UI/PauseBehavior.h"
 #include "../../Sources/Behavior/UI/LifeGaugeBehavior.h"
 #include "../../Sources/Behavior/UI/WaveUIBehavior.h"
-#include "../../Sources/Behavior/UI/ButtonBehavior.h"
 #include "../../Sources/Behavior/UI/ItemUIBehavior.h"
+#include "../../Sources/Behavior/UI/TitleUIBehavior.h"
 
 #include "../../Sources/Behavior/GameCamera.h"
 
@@ -54,6 +54,11 @@ BehaviorManager::BehaviorManager()
 	behaviors_.insert(std::make_pair("BaseButton",			std::make_shared<BaseButtonBehavior>()));
 	behaviors_.insert(std::make_pair("SubButton",			std::make_shared<SubButtonBehavior>()));
 	behaviors_.insert(std::make_pair("PauseButton",			std::make_shared<PauseButtonBehavior>()));
+
+	// --- ƒ^ƒCƒgƒ‹‚Ìˆ— ---
+	behaviors_.insert(std::make_pair("TitleStartButton",	std::make_shared<TitleUIBehavior>()));
+	behaviors_.insert(std::make_pair("TitleTutorialButton",	std::make_shared<TutorialButtonBehavior>()));
+
 }
 
 
