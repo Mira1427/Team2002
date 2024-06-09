@@ -37,7 +37,7 @@ public:
 	struct Constants
 	{
 		Vector3 emitterPosition_;
-		float particleSize_{ 0.05f };
+		float particleSize_{ 0.08f };
 		float time_{};
 		float deltaTime_{};
 		float pad_[2];

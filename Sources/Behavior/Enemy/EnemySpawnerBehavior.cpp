@@ -5,6 +5,8 @@
 
 #include "../../Library/Scene/SceneGame.h"
 
+#include "../../Library/Input/InputManager.h"
+
 #include "../../Library/Graphics/ModelManager.h"
 
 #include "../../Component/Component.h"
@@ -21,7 +23,12 @@ void EnemySpawnerBehavior::Execute(GameObject* obj, float elapsedTime)
 	if (EventManager::Instance().button_.state_ == ButtonState::TITLE)
 		obj->Destroy();
 
+	if (EventManager::Instance().button_.state_ != ButtonState::GAME)
+		return;
+
 	EnemySpawnerComponent* spawner = obj->GetComponent<EnemySpawnerComponent>();	// スポナーのコンポーネントの取得
+
+	auto& input = InputManager::Instance();
 
 	switch (obj->state_)
 	{
@@ -51,7 +58,12 @@ void EnemySpawnerBehavior::Execute(GameObject* obj, float elapsedTime)
 			spawner->spawnCount_--;
 		}
 
-		if (spawner->spawnCount_ <= 0) obj->state_++;
+		if (spawner->spawnCount_ <= 0)
+		{
+			// --- カットインの追加 ---
+			EventManager::Instance().AddWaveCutIn();
+			obj->state_++;
+		}
 
 		// --- タイマーの減算 ---
 		obj->timer_ -= elapsedTime;
@@ -65,10 +77,15 @@ void EnemySpawnerBehavior::Execute(GameObject* obj, float elapsedTime)
 		// 敵の数
 		spawner->spawnCount_ = 15;
 
-		// --- カットインの追加 ---
-		EventManager::Instance().AddWaveCutIn();
 
-		obj->state_++;
+		if (EventManager::Instance().tutorial_)
+		{
+			if (input.down(0) & Input::CONFIRM)
+				obj->state_++;
+		}
+
+		else
+			obj->state_++;
 
 		break;
 
@@ -80,7 +97,13 @@ void EnemySpawnerBehavior::Execute(GameObject* obj, float elapsedTime)
 			spawner->spawnCount_--;
 		}
 
-		if (spawner->spawnCount_ <= 0) obj->state_++;
+
+		if (spawner->spawnCount_ <= 0)
+		{
+			// --- カットインの追加 ---
+			EventManager::Instance().AddWaveCutIn();
+			obj->state_++;
+		}
 
 		// --- タイマーの減算 ---
 		obj->timer_ -= elapsedTime;
@@ -94,10 +117,15 @@ void EnemySpawnerBehavior::Execute(GameObject* obj, float elapsedTime)
 		// 敵の数
 		spawner->spawnCount_ = 4;
 
-		// --- カットインの追加 ---
-		EventManager::Instance().AddWaveCutIn();
 
-		obj->state_++;
+		if (EventManager::Instance().tutorial_)
+		{
+			if (input.down(0) & Input::CONFIRM)
+				obj->state_++;
+		}
+
+		else
+			obj->state_++;
 
 		break;
 
@@ -109,7 +137,13 @@ void EnemySpawnerBehavior::Execute(GameObject* obj, float elapsedTime)
 			spawner->spawnCount_--;
 		}
 
-		if (spawner->spawnCount_ <= 0) obj->state_++;
+
+		if (spawner->spawnCount_ <= 0)
+		{
+			// --- カットインの追加 ---
+			EventManager::Instance().AddWaveCutIn();
+			obj->state_++;
+		}
 
 		// --- タイマーの減算 ---
 		obj->timer_ -= elapsedTime;
@@ -123,10 +157,15 @@ void EnemySpawnerBehavior::Execute(GameObject* obj, float elapsedTime)
 		// 敵の数
 		spawner->spawnCount_ = 4;
 
-		// --- カットインの追加 ---
-		EventManager::Instance().AddWaveCutIn();
 
-		obj->state_++;
+		if (EventManager::Instance().tutorial_)
+		{
+			if (input.down(0) & Input::CONFIRM)
+				obj->state_++;
+		}
+
+		else
+			obj->state_++;
 
 		break;
 
@@ -138,7 +177,13 @@ void EnemySpawnerBehavior::Execute(GameObject* obj, float elapsedTime)
 			spawner->spawnCount_--;
 		}
 
-		if (spawner->spawnCount_ <= 0) obj->state_++;
+
+		if (spawner->spawnCount_ <= 0)
+		{
+			// --- カットインの追加 ---
+			EventManager::Instance().AddWaveCutIn();
+			obj->state_++;
+		}
 
 		// --- タイマーの減算 ---
 		obj->timer_ -= elapsedTime;
@@ -152,10 +197,15 @@ void EnemySpawnerBehavior::Execute(GameObject* obj, float elapsedTime)
 		// 敵の数
 		spawner->spawnCount_ = 50;
 
-		// --- カットインの追加 ---
-		EventManager::Instance().AddWaveCutIn();
 
-		obj->state_++;
+		if (EventManager::Instance().tutorial_)
+		{
+			if (input.down(0) & Input::CONFIRM)
+				obj->state_++;
+		}
+
+		else
+			obj->state_++;
 
 		break;
 
@@ -167,7 +217,13 @@ void EnemySpawnerBehavior::Execute(GameObject* obj, float elapsedTime)
 			spawner->spawnCount_--;
 		}
 
-		if (spawner->spawnCount_ <= 0) obj->state_++;
+
+		if (spawner->spawnCount_ <= 0)
+		{
+			// --- カットインの追加 ---
+			EventManager::Instance().AddWaveCutIn();
+			obj->state_++;
+		}
 
 		// --- タイマーの減算 ---
 		obj->timer_ -= elapsedTime;
@@ -181,10 +237,15 @@ void EnemySpawnerBehavior::Execute(GameObject* obj, float elapsedTime)
 		// 敵の数
 		spawner->spawnCount_ = 4;
 
-		// --- カットインの追加 ---
-		EventManager::Instance().AddWaveCutIn();
 
-		obj->state_++;
+		if (EventManager::Instance().tutorial_)
+		{
+			if (input.down(0) & Input::CONFIRM)
+				obj->state_++;
+		}
+
+		else
+			obj->state_++;
 
 		break;
 
@@ -196,7 +257,13 @@ void EnemySpawnerBehavior::Execute(GameObject* obj, float elapsedTime)
 			spawner->spawnCount_--;
 		}
 
-		if (spawner->spawnCount_ <= 0) obj->state_++;
+
+		if (spawner->spawnCount_ <= 0)
+		{
+			// --- カットインの追加 ---
+			EventManager::Instance().AddWaveCutIn();
+			obj->state_++;
+		}
 
 		// --- タイマーの減算 ---
 		obj->timer_ -= elapsedTime;
@@ -210,10 +277,15 @@ void EnemySpawnerBehavior::Execute(GameObject* obj, float elapsedTime)
 		// 敵の数
 		spawner->spawnCount_ = 6;
 
-		// --- カットインの追加 ---
-		EventManager::Instance().AddWaveCutIn();
 
-		obj->state_++;
+		if (EventManager::Instance().tutorial_)
+		{
+			if (input.down(0) & Input::CONFIRM)
+				obj->state_++;
+		}
+
+		else
+			obj->state_++;
 
 		break;
 
@@ -225,7 +297,13 @@ void EnemySpawnerBehavior::Execute(GameObject* obj, float elapsedTime)
 			spawner->spawnCount_--;
 		}
 
-		if (spawner->spawnCount_ <= 0) obj->state_++;
+
+		if (spawner->spawnCount_ <= 0)
+		{
+			// --- カットインの追加 ---
+			EventManager::Instance().AddWaveCutIn();
+			obj->state_++;
+		}
 
 		// --- タイマーの減算 ---
 		obj->timer_ -= elapsedTime;
@@ -239,10 +317,15 @@ void EnemySpawnerBehavior::Execute(GameObject* obj, float elapsedTime)
 		// 敵の数
 		spawner->spawnCount_ = 100;
 
-		// --- カットインの追加 ---
-		EventManager::Instance().AddWaveCutIn();
 
-		obj->state_++;
+		if (EventManager::Instance().tutorial_)
+		{
+			if (input.down(0) & Input::CONFIRM)
+				obj->state_++;
+		}
+
+		else
+			obj->state_++;
 
 		break;
 
@@ -254,7 +337,13 @@ void EnemySpawnerBehavior::Execute(GameObject* obj, float elapsedTime)
 			spawner->spawnCount_--;
 		}
 
-		if (spawner->spawnCount_ <= 0) obj->state_++;
+
+		if (spawner->spawnCount_ <= 0)
+		{
+			// --- カットインの追加 ---
+			EventManager::Instance().AddWaveCutIn();
+			obj->state_++;
+		}
 
 		// --- タイマーの減算 ---
 		obj->timer_ -= elapsedTime;
@@ -268,10 +357,15 @@ void EnemySpawnerBehavior::Execute(GameObject* obj, float elapsedTime)
 		// 敵の数
 		spawner->spawnCount_ = 6;
 
-		// --- カットインの追加 ---
-		EventManager::Instance().AddWaveCutIn();
 
-		obj->state_++;
+		if (EventManager::Instance().tutorial_)
+		{
+			if (input.down(0) & Input::CONFIRM)
+				obj->state_++;
+		}
+
+		else
+			obj->state_++;
 
 		break;
 
@@ -283,7 +377,13 @@ void EnemySpawnerBehavior::Execute(GameObject* obj, float elapsedTime)
 			spawner->spawnCount_--;
 		}
 
-		if (spawner->spawnCount_ <= 0) obj->state_++;
+
+		if (spawner->spawnCount_ <= 0)
+		{
+			// --- カットインの追加 ---
+			EventManager::Instance().AddWaveCutIn();
+			obj->state_++;
+		}
 
 		// --- タイマーの減算 ---
 		obj->timer_ -= elapsedTime;
@@ -297,10 +397,15 @@ void EnemySpawnerBehavior::Execute(GameObject* obj, float elapsedTime)
 		// 敵の数
 		spawner->spawnCount_ = 10;
 
-		// --- カットインの追加 ---
-		EventManager::Instance().AddWaveCutIn();
 
-		obj->state_++;
+		if (EventManager::Instance().tutorial_)
+		{
+			if (input.down(0) & Input::CONFIRM)
+				obj->state_++;
+		}
+
+		else
+			obj->state_++;
 
 		break;
 
@@ -312,7 +417,13 @@ void EnemySpawnerBehavior::Execute(GameObject* obj, float elapsedTime)
 			spawner->spawnCount_--;
 		}
 
-		if (spawner->spawnCount_ <= 0) obj->state_++;
+
+		if (spawner->spawnCount_ <= 0)
+		{
+			// --- カットインの追加 ---
+			EventManager::Instance().AddWaveCutIn();
+			obj->state_++;
+		}
 
 		// --- タイマーの減算 ---
 		obj->timer_ -= elapsedTime;
@@ -326,10 +437,15 @@ void EnemySpawnerBehavior::Execute(GameObject* obj, float elapsedTime)
 		// 敵の数
 		spawner->spawnCount_ = 5;
 
-		// --- カットインの追加 ---
-		EventManager::Instance().AddWaveCutIn();
 
-		obj->state_++;
+		if (EventManager::Instance().tutorial_)
+		{
+			if (input.down(0) & Input::CONFIRM)
+				obj->state_++;
+		}
+
+		else
+			obj->state_++;
 
 		break;
 
@@ -341,7 +457,13 @@ void EnemySpawnerBehavior::Execute(GameObject* obj, float elapsedTime)
 			spawner->spawnCount_--;
 		}
 
-		if (spawner->spawnCount_ <= 0) obj->state_++;
+
+		if (spawner->spawnCount_ <= 0)
+		{
+			// --- カットインの追加 ---
+			EventManager::Instance().AddWaveCutIn();
+			obj->state_++;
+		}
 
 		// --- タイマーの減算 ---
 		obj->timer_ -= elapsedTime;

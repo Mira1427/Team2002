@@ -35,6 +35,13 @@ void EventManager::Initialize()
 
 	enemySpawner_ = NULL;
 
+	auto* controller = controller_->GetComponent<PlayerControllerComponent>();
+	controller->bullet_[0] = 0.0f;
+	controller->bullet_[1] = 0.0f;
+	controller->attackGauge_ = 0.0f;
+	controller->hasSwapColor_ = false;
+	controller->hasSwapGauge_ = false;
+
 	paused_ = false;
 
 	button_.state_ = {};
@@ -132,6 +139,7 @@ void EventManager::UpdateDebugGui()
 
 	ImGui::InputInt(u8"イベントのインデックス", &button_.eventIndex_);
 	ImGui::InputInt(u8"サブイベントのインデックス", &button_.subEventIndex_);
+	ImGui::Checkbox(u8"チュートリアル", &tutorial_);
 
 #endif
 }
@@ -176,6 +184,12 @@ void EventManager::UpdateTitleEvent()
 	{
 		if (input.down(0) & Input::CONFIRM)
 		{
+			if (button_.subEventIndex_ == static_cast<int>(TutorialSelectEvent::ON))
+				tutorial_ = true;
+
+			else
+				tutorial_ = false;
+
 			TranslateMessage(EventMessage::TO_GAME_SCENE);
 			button_.state_ = ButtonState::GAME;
 			button_.eventIndex_ = 0;
@@ -234,6 +248,23 @@ void EventManager::UpdateGameEvent()
 			Texture* texture = TextureManager::Instance().GetTexture(L"./Data/Texture/UI/movieframe_con.png");
 			renderer->texture_ = texture;
 			renderer->texSize_ = { texture->width_, texture->height_ };
+		}
+
+
+		// --- 動画 ---
+		{
+			GameObject* obj = GameObjectManager::Instance().Add(
+				std::make_shared<GameObject>(),
+				Vector3(75.0f, 75.0f, 0.0f),
+				BehaviorManager::Instance().GetBehavior("Video")
+			);
+
+			obj->name_ = u8"ポーズの動画";
+			obj->eraser_ = EraserManager::Instance().GetEraser("Pause");
+			obj->layer_ = -5;
+
+			auto* video = obj->AddComponent<VideoComponent>();
+			video->Initialize("./Data/Video/demo.mp4");
 		}
 
 
@@ -424,7 +455,7 @@ void EventManager::AddWaveCutIn()
 	obj->layer_ = -5;
 
 
-	int wave = enemySpawner_->state_ / 2;	// 現在のウェーブ
+	int wave = (enemySpawner_->state_ + 1) / 2;	// 現在のウェーブ
 
 	SpriteRendererComponent* renderer = obj->AddComponent<SpriteRendererComponent>();
 	Texture* texture = TextureManager::Instance().GetTexture(L"./Data/Texture/UI/wave.png");
@@ -698,5 +729,21 @@ void EventManager::InitializeObjects()
 		obj->layer_ = -1;
 
 		obj->AddComponent<EffectComponent>();
+	}
+
+
+	{
+		GameObject* obj = GameObjectManager::Instance().Add(
+			std::make_shared<GameObject>(),
+			Vector3(),
+			BehaviorManager::Instance().GetBehavior("Particle")
+		);
+
+		obj->name_ = u8"パーティクル";
+		obj->layer_ = -1;
+
+		auto* particle = obj->AddComponent<ParticleComponent>();
+		particle->particle_ = std::make_unique<Particle>(RootsLib::DX11::GetDevice(), 1000);
+		particle->Initialize(RootsLib::DX11::GetDeviceContext());
 	}
 }

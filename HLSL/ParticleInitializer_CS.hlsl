@@ -17,7 +17,8 @@ void main(uint3 dtID : SV_DispatchThreadID)
     float f1 = rand(f0 * noiseScale);
     float f2 = rand(f1 * noiseScale);
 
-    p.position_ = particle_.emitterPosition_;
+    //p.position_ = particle_.emitterPosition_;
+    p.position_ = float3(f0 * 200.0 - 100.0f, f1 * 100.0, f2 * 200.0 - 100.0);
 
     p.velocity_.x = 0.5 * sin(2 * PI * f0);
     p.velocity_.y = 2.0 * f1;

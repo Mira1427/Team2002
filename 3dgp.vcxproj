@@ -275,6 +275,7 @@
     <ClInclude Include="Sources\Behavior\UI\ResultUIBehavior.h" />
     <ClInclude Include="Sources\Behavior\UI\TitleUIBehavior.h" />
     <ClInclude Include="Sources\Behavior\UI\WaveUIBehavior.h" />
+    <ClInclude Include="Sources\Behavior\VideoBehavior.h" />
     <ClInclude Include="Sources\Component\Component.h" />
     <ClInclude Include="Sources\Eraser\SceneEraser.h" />
     <ClInclude Include="Sources\EventManager.h" />
@@ -353,6 +354,7 @@
     <ClCompile Include="Sources\Behavior\UI\ResultUIBehavior.cpp" />
     <ClCompile Include="Sources\Behavior\UI\TitleUIBehavior.cpp" />
     <ClCompile Include="Sources\Behavior\UI\WaveUIBehavior.cpp" />
+    <ClCompile Include="Sources\Behavior\VideoBehavior.cpp" />
     <ClCompile Include="Sources\Component\Component.cpp" />
     <ClCompile Include="Sources\Eraser\SceneEraser.cpp" />
     <ClCompile Include="Sources\EventManager.cpp" />

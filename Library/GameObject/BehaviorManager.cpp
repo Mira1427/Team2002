@@ -24,6 +24,7 @@
 #include "../../Sources/Behavior/GameCamera.h"
 
 #include "../../Sources/Behavior/EffectBehavior.h"
+#include "../../Sources/Behavior/VideoBehavior.h"
 
 
 BehaviorManager::BehaviorManager()
@@ -32,6 +33,7 @@ BehaviorManager::BehaviorManager()
 	behaviors_.insert(std::make_pair("GameCamera",			std::make_shared<GameCameraBehavior>()));
 
 	behaviors_.insert(std::make_pair("Effect",				std::make_shared<EffectBehavior>()));
+	behaviors_.insert(std::make_pair("Video",				std::make_shared<VideoBehavior>()));
 
 	behaviors_.insert(std::make_pair("Particle",			std::make_shared<ParticleBehavior>()));
 

@@ -2,6 +2,8 @@
 
 #include "../../Library/Math/Easing.h"
 
+#include "../../Library/Input/InputManager.h"
+
 #include "../../Component/Component.h"
 
 #include "../../EventManager.h"
@@ -126,7 +128,13 @@ void WaveUIBehavior::Execute(GameObject* obj, float elapsedTime)
 		auto* ui = obj->GetComponent<UIComponent>();
 		
 		ui->easeData_.isReverse_ = true;
-		obj->state_++;
+
+
+		if (EventManager::Instance().tutorial_)
+			obj->state_ = 5;
+
+		else
+			obj->state_++;
 
 		// --- 描画位置とサイズの設定 ---
 		int wave = EventManager::Instance().enemySpawner_->state_ / 2;	// 現在のウェーブ
@@ -147,10 +155,22 @@ void WaveUIBehavior::Execute(GameObject* obj, float elapsedTime)
 		if (RootsLib::Easing::Calculate(ui->easeData_, elapsedTime, ui->offset_.y, -400.0f))
 		{
 			ui->easeData_.isReverse_ = false;
+
 			obj->state_ = 1;
 		}
 
 		obj->transform_->position_ = ui->basePosition_ + ui->offset_;
+
+		break;
+	}
+
+
+	case 5:
+	{
+		auto& input = InputManager::Instance();
+
+		if (input.down(0) & Input::CONFIRM)
+			obj->state_ = 4;
 
 		break;
 	}

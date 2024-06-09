@@ -1223,6 +1223,9 @@ void VideoComponent::Draw(ID3D11DeviceContext* dc)
 	if (!visible_)
 		return;
 
+	if (GameObjectManager::Instance().castShadow_)
+		return;
+
 	RootsLib::Blender::SetState(static_cast<BlendState>(blendState_));
 	RootsLib::Raster::SetState(static_cast<RasterState>(rasterState_));
 	RootsLib::Depth::SetState(static_cast<DepthState>(testDepth_), static_cast<DepthState>(writeDepth_));

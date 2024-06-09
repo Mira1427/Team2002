@@ -99,6 +99,7 @@ public:
 	GameObject* enemySpawner_;
 	GameObject* controller_;
 	bool paused_ = false;
+	bool tutorial_ = false;
 
 
 	struct Button

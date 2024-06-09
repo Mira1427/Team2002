@@ -347,6 +347,7 @@
       <Filter>Sources\Behavior</Filter>
     </ClInclude>
     <ClInclude Include="Sources\Behavior\UI\ResultUIBehavior.h" />
+    <ClInclude Include="Sources\Behavior\VideoBehavior.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="External\ImGui\imgui.cpp">
@@ -573,6 +574,7 @@
       <Filter>Sources\Behavior</Filter>
     </ClCompile>
     <ClCompile Include="Sources\Behavior\UI\ResultUIBehavior.cpp" />
+    <ClCompile Include="Sources\Behavior\VideoBehavior.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="HLSL\Primitive.hlsli">
